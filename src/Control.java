@@ -1,3 +1,5 @@
+import java.io.FileNotFoundException;
+
 class Control {
 	private Processor processor;
 	private Storage storage;
@@ -5,20 +7,9 @@ class Control {
 
 	private String MSG_ERROR = "Invalid input!";
 
-	public Control() {
+	public Control() throws FileNotFoundException {
 		// initialise.
 		// load entries
-		// print welcome/help msg etc.
-		showToUser("Welcome To FingerTips!");
-		showToUser("Commands:");
-		showToUser(".a/.add to add, .r/.remove to remove, .e/.edit to edit");
-		showToUser(".u/.undo to undo, .d/.display to display, .q/.quit to quit");
-		showToUser(".h/.help to display help for FingerTips");
-		System.out.print("Command: ");
-	}
-
-	public static void showToUser(String text) {
-		System.out.println(text);
 	}
 
 	public String performAction(String userInput) {
