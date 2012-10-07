@@ -16,5 +16,4 @@ class Storage {
 	// - save function: writes into txt file
 	// - load function
 	//
-	//
 }
