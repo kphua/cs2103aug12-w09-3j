@@ -1,29 +1,38 @@
-
 class Control {
 	private Processor processor;
 	private Storage storage;
-	private boolean edit, newList;		//modes
-	
-	public Control(){
-		//initialise.
-		//load entries
-		//print welcome/help msg etc.
+	private boolean edit, newList; // modes
+
+	public Control() {
+		// initialise.
+		// load entries
+		// print welcome/help msg etc.
 	}
 
 	public String performAction(String userInput) {
 		// TODO Auto-generated method stub
-		
-		CMD[] commands = processor.translateToCMD(userInput);
-		
-		//CMD will be a Pair of enumeration, data
-		
-		for(CMD cmd: commands){
-			switch(cmd.type){
-				default: 
-				return "Invalid Command";
-			}
+
+		CMD commands = processor.translateToCMD(userInput);
+
+		// CMD will be a Pair of enumeration, data
+
+		switch (commands.getCommandType()) {
+		case ADD:
+			return addTask(commands.getCommandType());
+		case DELETE:
+			return delTask(commands.getCommandType());
+		case UNDO:
+			return undoTask(commands.getCommandType());
+		case DISPLAY:
+			return disTask(commands.getCommandType());
+		case EDIT:
+			return editTask(commands.getCommandType());
+		case QUIT:
+			return quitTask(commands.getCommandType());
+		default:
+			return errorMsg(commands.getCommandType());
 		}
-		
+
 		return null;
 	}
 }
