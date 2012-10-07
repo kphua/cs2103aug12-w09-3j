@@ -3,10 +3,22 @@ class Control {
 	private Storage storage;
 	private boolean edit, newList; // modes
 
+	private String MSG_ERROR = "Invalid input!";
+
 	public Control() {
 		// initialise.
 		// load entries
 		// print welcome/help msg etc.
+		showToUser("Welcome To FingerTips!");
+		showToUser("Commands:");
+		showToUser(".a/.add to add, .r/.remove to remove, .e/.edit to edit");
+		showToUser(".u/.undo to undo, .d/.display to display, .q/.quit to quit");
+		showToUser(".h/.help to display help for FingerTips");
+		System.out.print("Command: ");
+	}
+
+	public static void showToUser(String text) {
+		System.out.println(text);
 	}
 
 	public String performAction(String userInput) {
@@ -19,8 +31,8 @@ class Control {
 		switch (commands.getCommandType()) {
 		case ADD:
 			return addTask(commands.getCommandType());
-		case DELETE:
-			return delTask(commands.getCommandType());
+		case REMOVE:
+			return remTask(commands.getCommandType());
 		case UNDO:
 			return undoTask(commands.getCommandType());
 		case DISPLAY:
