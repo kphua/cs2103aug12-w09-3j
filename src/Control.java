@@ -10,6 +10,8 @@ class Control {
 	public Control() throws FileNotFoundException {
 		// initialise.
 		// load entries
+		processor = new Processor();
+		storage = new Storage();
 	}
 
 	public String performAction(String userInput) {
@@ -20,22 +22,24 @@ class Control {
 		// CMD will be a Pair of enumeration, data
 
 		switch (commands.getCommandType()) {
+		// need to store previous version everytime in case of undo action
 		case ADD:
-			return addTask(commands.getCommandType());
+			return processor.add(commands.getData());
 		case REMOVE:
-			return remTask(commands.getCommandType());
+			storage.display();
+			return processor.remove(commands.getData());
 		case UNDO:
-			return undoTask(commands.getCommandType());
+			return storage.undo(commands.getData());
 		case DISPLAY:
-			return disTask(commands.getCommandType());
+			return storage.display(commands.getData());
 		case EDIT:
-			return editTask(commands.getCommandType());
+			return processor.edit(commands.getData());
 		case QUIT:
-			return quitTask(commands.getCommandType());
+			return storage.quit(commands.getData());
 		default:
-			return errorMsg(commands.getCommandType());
+			return MSG_ERROR;
 		}
-
+		
 		return null;
 	}
 }
