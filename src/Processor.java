@@ -10,6 +10,7 @@ public class Processor {
 
 	private static final String ERROR_MSG_INVALID_INPUT = "Invalid Input.";
 
+
 	//loads reserved words into hashTables
 	public Processor() throws FileNotFoundException{
 		reservedWords = new File("reservedWords.txt");
@@ -51,42 +52,61 @@ public class Processor {
 					return newCMD(userCMD, entry);
 			 *note case when user only enters .add alone
 			 */
-							
-  					case DISPLAY:
-					if(temp.length == 1) return new CMD(userCMD, null);
-					else{
-						if(temp.length > 2){
-							String searchCriteria = mergeString(temp, 1, temp.length);
-							return new CMD(userCMD, searchCriteria);
-						} else {
-							try{
-								Integer i = Integer.parseInt(temp[1]);
-								return new CMD(userCMD, i);
-							}
-							catch(NumberFormatException e){
-								return new CMD(userCMD, temp[1]);
-							}
-							
+
+			case DISPLAY:
+				if(temp.length == 1) return new CMD(userCMD, null);
+				else{
+					if(temp.length > 2){
+						String searchCriteria = mergeString(temp, 1, temp.length);
+						return new CMD(userCMD, searchCriteria);
+					} else {
+						if(isInteger(temp[1])){
+							Integer i = Integer.parseInt(temp[1]);
+							return new CMD(userCMD, i);
 						}
-						  
+						return new CMD(userCMD, temp[1]);
 					}
-			 
-			/*				case EDIT:
- 					//set Edit under control to true
-					//if tempList in Control/Storage = null/size=0
-					// return DISPLAY, null
-					// display each field on numbered lines
-			 */
-			//				case REMOVE:
-			//  
-			//				case UNDO: return new CMD(userCMD, UNDO MSG);
-			//				case QUIT: return new CMD(userCMD, QUIT MSG);	
+				}
+			
+			case EDIT:
+				if(temp.length == 1) return new CMD(userCMD, null);
+				else {
+					
+					if(isInteger(temp[1])){
+						Integer i = Integer.parseInt(temp[1]);
+						return new CMD(userCMD, i);
+					}
+					else{
+						return new CMD(userCMD, null);
+					}
+				}
+
+			case REMOVE: 
+				if(temp.length==1) return new CMD(userCMD, null);
+				if(isInteger(temp[1])){
+					Integer i = Integer.parseInt(temp[1]);
+					return new CMD(userCMD, i);
+				}
+				else{
+					return new CMD(userCMD, temp[1]);
+				}
+			case UNDO: return new CMD(userCMD, null);
+			case QUIT: return new CMD(userCMD, null);	
 			default:
-				break;
+				return new CMD(userCMD, ERROR_MSG_INVALID_INPUT);
 			}
 		}
+	}
 
-		return null;		//to be removed
+
+	private boolean isInteger(String string) {
+		try{
+			Integer i = Integer.parseInt(string);
+			return true;
+		}
+		catch(NumberFormatException e){
+			return false;
+		}
 	}
 
 	private String mergeString(String[] temp, int i, int length) {
@@ -98,7 +118,7 @@ public class Processor {
 	}
 
 	enum COMMAND_TYPE {
-		ADD, REMOVE, UNDO, DISPLAY, EDIT, QUIT, ERROR
+		ADD, REMOVE, UNDO, DISPLAY, EDIT, QUIT, ERROR, HELP
 	};
 
 	private COMMAND_TYPE determineCommandType(String commandString) {
@@ -114,6 +134,8 @@ public class Processor {
 			return COMMAND_TYPE.EDIT;
 		} else if (commandString.equalsIgnoreCase(".quit")) {
 			return COMMAND_TYPE.QUIT;
+		} else if (commandString.equalsIgnoreCase(".help")) {
+			return COMMAND_TYPE.HELP;	
 		} else
 			return COMMAND_TYPE.ERROR;
 	}
