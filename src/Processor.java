@@ -51,29 +51,34 @@ public class Processor {
 					return newCMD(userCMD, entry);
 			 *note case when user only enters .add alone
 			 */
-			/*				
+							
   					case DISPLAY:
-					if(temp.length = 1) return new CMD(userCMD, null);
+					if(temp.length == 1) return new CMD(userCMD, null);
 					else{
-						if it starts with # -> hashtag
-						if it is a number -> index
-						if array length is > 2, then need to merge string. String is search criteria  
+						if(temp.length > 2){
+							String searchCriteria = mergeString(temp, 1, temp.length);
+							return new CMD(userCMD, searchCriteria);
+						} else {
+							try{
+								Integer i = Integer.parseInt(temp[1]);
+								return new CMD(userCMD, i);
+							}
+							catch(NumberFormatException e){
+								return new CMD(userCMD, temp[1]);
+							}
+							
+						}
+						  
 					}
-			 */
+			 
 			/*				case EDIT:
  					//set Edit under control to true
 					//if tempList in Control/Storage = null/size=0
 					// return DISPLAY, null
 					// display each field on numbered lines
-					// how to keep a copy for undo command?
 			 */
 			//				case REMOVE:
-			// remove entries. to display list of entries before prompting for removal
-			// in the form of .remove, numberOfEntry
-			// add in confirmation before removal
-			// to update AL
-			// how to keep a copy for undo command?
-			//
+			//  
 			//				case UNDO: return new CMD(userCMD, UNDO MSG);
 			//				case QUIT: return new CMD(userCMD, QUIT MSG);	
 			default:
@@ -82,6 +87,14 @@ public class Processor {
 		}
 
 		return null;		//to be removed
+	}
+
+	private String mergeString(String[] temp, int i, int length) {
+		String mergedString = temp[i];
+		for(i+=1; i<length; i++){
+			mergedString = mergedString.concat(" "+temp[i]);
+		}
+		return mergedString;
 	}
 
 	enum COMMAND_TYPE {
