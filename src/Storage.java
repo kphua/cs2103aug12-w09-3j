@@ -44,19 +44,48 @@ class Storage {
 	}
 
 	public void addEntry(String newEntry) {
-		// file writer to add entry to file
-		// using true to append into file
-		// exception catching if file cannot be found
-		String inputText = newEntry;
+		/*
+		 * For now, assume first time adding new entry into program. New entry
+		 * is added to ArrayList of Entry (entries). Precond: entry passed is in
+		 * the form "Go to the beach--null--Sentosa". cannot have missing fields
+		 * for now, else will have exception.
+		 */
 
-		try {
-			fw = new FileWriter(activeList, true);
-			bw = new BufferedWriter(fw);
-			bw.write(inputText + "\n");
-			bw.close();
-		} catch (IOException ioe) {
-			System.out.println(ERROR_MSG + "addEntry.");
+		String[] entrytest = new String[10];
+		entrytest[0] = "birthday--12--13--14121998--hello--bye--me";
+		entrytest[1] = "birthday--12--13--14121998--hello--bye--you";
+
+		for (int i = 0; i < 2; i++) {
+			String[] arr = entrytest[i].split("--");
+
+			Entry e = new Entry();
+			e.setDesc(arr[0]);
+			int start = Integer.parseInt(arr[1]);
+			e.setStart(start);
+			int end = Integer.parseInt(arr[2]);
+			e.setEnd(end);
+			int date = Integer.parseInt(arr[3]);
+			e.setDate(date);
+			e.setVenue(arr[4]);
+			e.setPriority(arr[5]);
+			e.setTagDesc(arr[6]);
+			e.setCompleteStatus(0); // for all new entry, default to 0
+									// (incomplete)
+
+			// add new entry to activeList
+			activeList.add(printNewEntry(e));
 		}
+
+	}
+
+	public String printNewEntry(Entry entry) {
+		/*
+		 * method to link all attributes to a single string of line
+		 */
+
+		return entry.getDesc() + " " + entry.getStart() + " " + entry.getEnd()
+				+ " " + entry.getDate() + " " + entry.getVenue() + " "
+				+ entry.getPriority() + " " + entry.getTagDesc();
 	}
 
 	// different mtd for each display criteria
