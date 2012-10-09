@@ -88,42 +88,33 @@ class Storage {
 				+ entry.getPriority() + " " + entry.getTagDesc();
 	}
 
-	// different mtd for each display criteria
-	// have to decide on return type
+	/*
+	 * Different methods for different display commands. Have to decide on the
+	 * return type after that 1. displayAll 2. displayKeyword 3. displayDate (to
+	 * be implemented)
+	 */
 
-	// display all
 	public List<String> displayAll() {
+		/*
+		 * Display all - just copy into displayList for all the task. displayList
+		 * will be initialized each time this method is called
+		 */
 
-		// initialise displayList
 		displayList.clear();
-
-		try {
-			fr = new FileReader(activeList);
-			br = new BufferedReader(fr);
-			int lineIndex = 1;
-			while ((currentLine = br.readLine()) != null) {
-				displayList.add(lineIndex + ". " + currentLine);
-				lineIndex++;
-			}
-			br.close();
-		} catch (IOException ioe) {
-			System.out.println(ERROR_MSG + "displayAll.");
-		}
-
+		Collections.copy(displayList, activeList);
 		return displayList;
 	}
 
-	// display by keyword
-	// search by description
-	// search by hashtag "#tagname"
-	// search by venue "@location"
 	public List<String> displayKeyword(String keyword) {
+		/*
+		 * display by keyword description, hashtag "#tagname", venue "@location"
+		 */
 
 		// initialise displayList
 		displayList.clear();
 
 		try {
-			fr = new FileReader(activeList);
+			fr = new FileReader(activeFile);
 			br = new BufferedReader(fr);
 			int lineIndex = 1;
 			while ((currentLine = br.readLine()) != null) {
@@ -137,7 +128,7 @@ class Storage {
 			}
 			br.close();
 		} catch (IOException ioe) {
-			System.out.println(ERROR_MSG + "displayKeyword");
+			System.out.println(ERROR_MSG + "displayKeyword.");
 		}
 
 		return displayList;
