@@ -133,5 +133,30 @@ class Storage {
 
 		return displayList;
 	}
+	
+	public void archiveEntry(File activeList) {
+		/*
+		 * Method to transfer completed task to archive list. possibly limit to
+		 * the last month/year?
+		 */
+
+		try {
+			fr = new FileReader(activeList);
+			br = new BufferedReader(fr);
+			fw = new FileWriter(archiveFile, true);
+			bw = new BufferedWriter(fw);
+			while ((currentLine = br.readLine()) != null) {
+
+				// not yet completed
+				// basic idea
+				// if (entry.getCompletedStatus == 1) remove and write to
+				// archiveList
+				// else do nothing
+			}
+
+		} catch (IOException ioe) {
+			System.out.println(ERROR_MSG + "archiveEntry.");
+		}
+	}
 
 }
