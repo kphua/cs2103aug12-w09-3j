@@ -16,16 +16,11 @@ class Storage {
 	// - load function
 	//
 
-	public static String ERROR_MSG = "IOException error in ";
 	public File activeFile = new File("activeFile.txt");
 	public File archiveFile = new File("archiveFile.txt");
 	public ArrayList<Entry> activeEntries = new ArrayList<Entry>();
 	public ArrayList<Entry> archiveEntries = new ArrayList<Entry>();
-	public FileReader fr;
-	public BufferedReader br;
-	public FileWriter fw;
-	public BufferedWriter bw;
-	public String currentLine;
+	public ArrayList<Entry> displayEntries = new ArrayList<Entry>();
 
 	/*
 	 * Load activeFile and archiveFile into activeEntries and archiveEntries
@@ -139,7 +134,7 @@ class Storage {
 	}
 
 	/*
-	 * Setters and getters methods for printing activeEntries & archiveEntries
+	 * Setters and getters methods for printing active/archive/displayEntries
 	 * for (Entry entry : storage.getActiveEntries()) {
 	 * System.out.println("activeList: " + entry); }
 	 */
@@ -159,50 +154,64 @@ class Storage {
 		this.archiveEntries = entries;
 	}
 
+	public ArrayList<Entry> getDisplayEntries() {
+		return displayEntries;
+	}
+
+	public void setDisplayEntries(ArrayList<Entry> entries) {
+		this.displayEntries = entries;
+	}
+
 	/*
 	 * Different methods for different display commands. Have to decide on the
 	 * return type after that 1. displayAll 2. displayKeyword 3. displayDate (to
 	 * be implemented)
 	 */
 
-	public List<String> displayAll() {
-		/*
-		 * Display all - just copy into displayList for all the task.
-		 * displayList will be initialized each time this method is called
-		 */
-
-		displayList.clear();
-		Collections.copy(displayList, activeList);
-		return displayList;
-	}
-
-	public List<String> displayKeyword(String keyword) {
-		/*
-		 * display by keyword description, hashtag "#tagname", venue "@location"
-		 */
-
-		// initialise displayList
-		displayList.clear();
-
-		try {
-			fr = new FileReader(activeFile);
-			br = new BufferedReader(fr);
-			int lineIndex = 1;
-			while ((currentLine = br.readLine()) != null) {
-				String[] compareLine = currentLine.split("\\s+");
-				for (String str : compareLine) {
-					if (str.equalsIgnoreCase(keyword)) {
-						displayList.add(lineIndex + ". " + currentLine);
-						lineIndex++;
-					}
-				}
-			}
-			br.close();
-		} catch (IOException ioe) {
-			System.out.println(ERROR_MSG + "displayKeyword.");
+	/*
+	 * Method to display all entries. Entries will be copied over to
+	 * displayEntries for printing. displayEntries will be initialized each time
+	 * this method is called. ~storage.displayAll()
+	 */
+	public void displayAll() {
+		displayEntries.clear();
+		for (Entry entry : activeEntries) {
+			displayEntries.add(entry);
 		}
 
-		return displayList;
+		// CODE FOR PRINTING OF DISPLAY ENTRIES
+		// for (Entry entry : storage.getDisplayEntries()) {
+		// System.out.println(entry); }
+	}
+
+	/*
+	 * Method to display entries by specified keyword. Entries will be copied
+	 * over to displayEntries for printing. displayEntries will be initialized
+	 * each time this method is called. Keyword can be description, hashtag
+	 * "#tagname", venue "@location". ~storage.displayKeyword(KEYWORD_TO_FIND)
+	 */
+	public void displayKeyword(String keyword) {
+		displayEntries.clear();
+		for (Entry entry : activeEntries) {
+			if (entry.getDesc().contains(keyword)) {
+				displayEntries.add(entry);
+			}
+		}
+	}
+
+	/*
+	 * Method to display entries by specified date. Entries will be copied over
+	 * to displayEntries for printing. displayEntries will be initialized each
+	 * time this method is called. Current implementation of date format will be
+	 * in the form ddmmyyyy. ~storage.displayDate(ddmmyyyy)
+	 */
+	public void displayDate(int date) {
+		displayEntries.clear();
+		for (Entry entry : activeEntries) {
+			if (entry.getDate() == date) {
+				displayEntries.add(entry);
+			}
+		}
 	}
 
 }
