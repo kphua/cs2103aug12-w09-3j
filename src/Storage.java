@@ -17,30 +17,84 @@ class Storage {
 	//
 
 	public static String ERROR_MSG = "IOException error in ";
-	public File activeFile = new File("active.txt");
-	public File archiveFile = new File("archive.txt");
+	public File activeFile = new File("activeFile.txt");
+	public File archiveFile = new File("archiveFile.txt");
+	public ArrayList<Entry> activeEntries = new ArrayList<Entry>();
+	public ArrayList<Entry> archiveEntries = new ArrayList<Entry>();
 	public FileReader fr;
 	public BufferedReader br;
 	public FileWriter fw;
 	public BufferedWriter bw;
 	public String currentLine;
-	public List<String> activeList = new ArrayList<String>();
-	public List<String> displayList = new ArrayList<String>();
 
-	public Storage() {
-		/*
-		 * copy the file onto an ArrayList to access it
-		 */
-		try {
-			fr = new FileReader(activeFile);
-			br = new BufferedReader(fr);
-			while ((currentLine = br.readLine()) != null) {
-				activeList.add(currentLine);
-			}
-			br.close();
-		} catch (IOException ioe) {
-			System.out.println(ERROR_MSG + "Storage.");
+	/*
+	 * Load activeFile and archiveFile into activeEntries and archiveEntries
+	 */
+	public Storage() throws ClassNotFoundException {
+		if (activeFile.exists()) {
+			loadFromStorage(activeFile, activeEntries);
 		}
+		if (archiveFile.exists()) {
+			loadFromStorage(archiveFile, archiveEntries);
+		}
+	}
+
+	public void loadFromStorage(File source, ArrayList<Entry> entries)
+			throws ClassNotFoundException {
+		// read from file
+		try {
+			FileInputStream newFile = new FileInputStream(source);
+			ObjectInputStream restore = new ObjectInputStream(newFile);
+			Entry entry;
+			while ((entry = (Entry) restore.readObject()) != null) {
+				entries.add(entry);
+			}
+			restore.close();
+		} catch (EOFException eofe) {
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+			System.out.println("Error loading from file");
+		}
+
+	}
+
+	/*
+	 * Save activeEntries and archiveEntries into activeFile and archiveFile
+	 * (RMB TO CALL THIS METHOD BEFORE EXITING PROGRAM!)
+	 */
+	public void saveToStorage() {
+
+		// clear both existing file first
+		if (activeFile.exists()) {
+			activeFile.delete();
+		}
+		if (archiveFile.exists()) {
+			archiveFile.delete();
+		}
+
+		// copy entries from ArrayList back to the respective files
+		try {
+			FileOutputStream saveFile = new FileOutputStream(activeFile);
+			ObjectOutputStream save = new ObjectOutputStream(saveFile);
+			for (Entry entry : activeEntries) {
+				save.writeObject(entry);
+			}
+			save.close();
+		} catch (IOException ioe) {
+			System.out.println("Error writing to file");
+		}
+
+		try {
+			FileOutputStream saveFile = new FileOutputStream(archiveFile);
+			ObjectOutputStream save = new ObjectOutputStream(saveFile);
+			for (Entry entry : archiveEntries) {
+				save.writeObject(entry);
+			}
+			save.close();
+		} catch (IOException ioe) {
+			System.out.println("Error writing to file");
+		}
+
 	}
 
 	public void addEntry(String newEntry) {
@@ -96,8 +150,8 @@ class Storage {
 
 	public List<String> displayAll() {
 		/*
-		 * Display all - just copy into displayList for all the task. displayList
-		 * will be initialized each time this method is called
+		 * Display all - just copy into displayList for all the task.
+		 * displayList will be initialized each time this method is called
 		 */
 
 		displayList.clear();
@@ -133,7 +187,7 @@ class Storage {
 
 		return displayList;
 	}
-	
+
 	public void archiveEntry(File activeList) {
 		/*
 		 * Method to transfer completed task to archive list. possibly limit to
