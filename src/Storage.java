@@ -60,7 +60,8 @@ class Storage {
 
 	/*
 	 * Save activeEntries and archiveEntries into activeFile and archiveFile
-	 * (RMB TO CALL THIS METHOD BEFORE EXITING PROGRAM!)
+	 * (RMB TO CALL THIS METHOD BEFORE EXITING PROGRAM!
+	 * ~storage.saveToStorage())
 	 */
 	public void saveToStorage() {
 
@@ -97,49 +98,65 @@ class Storage {
 
 	}
 
-	public void addEntry(String newEntry) {
-		/*
-		 * For now, assume first time adding new entry into program. New entry
-		 * is added to ArrayList of Entry (entries). Precond: entry passed is in
-		 * the form "Go to the beach--null--Sentosa". cannot have missing fields
-		 * for now, else will have exception.
-		 */
+	/*
+	 * Adds new entry into the activeEntries list. Entry passed must be in the
+	 * form "homework--12--13--14121998--hello--bye--me". All fields must be
+	 * present for now to prevent exception. ~storage.addEntry(ENTRY_NAME)
+	 */
+	public void addEntry(String entry) {
+		Entry e = new Entry();
+		String[] arr = entry.split("--"); // token can change accordingly
 
-		String[] entrytest = new String[10];
-		entrytest[0] = "birthday--12--13--14121998--hello--bye--me";
-		entrytest[1] = "birthday--12--13--14121998--hello--bye--you";
-
-		for (int i = 0; i < 2; i++) {
-			String[] arr = entrytest[i].split("--");
-
-			Entry e = new Entry();
-			e.setDesc(arr[0]);
-			int start = Integer.parseInt(arr[1]);
-			e.setStart(start);
-			int end = Integer.parseInt(arr[2]);
-			e.setEnd(end);
-			int date = Integer.parseInt(arr[3]);
-			e.setDate(date);
-			e.setVenue(arr[4]);
-			e.setPriority(arr[5]);
-			e.setTagDesc(arr[6]);
-			e.setCompleteStatus(0); // for all new entry, default to 0
-									// (incomplete)
-
-			// add new entry to activeList
-			activeList.add(printNewEntry(e));
-		}
-
+		e.setDesc(arr[0]);
+		int start = Integer.parseInt(arr[1]);
+		e.setStart(start);
+		int end = Integer.parseInt(arr[2]);
+		e.setEnd(end);
+		int date = Integer.parseInt(arr[3]);
+		e.setDate(date);
+		e.setVenue(arr[4]);
+		e.setPriority(arr[5]);
+		e.setTagDesc(arr[6]);
+		e.setCompleteStatus(0); // for all new entry, default to 0
+								// (incomplete)
+		activeEntries.add(e);
 	}
 
-	public String printNewEntry(Entry entry) {
-		/*
-		 * method to link all attributes to a single string of line
-		 */
+	/*
+	 * Removes an entry from the activeEntries, and stores in archiveEntries.
+	 * Assumes that removed event is a completed event/user specified to remove.
+	 * Current implementation of this function is remove by event description.
+	 * ~storage.removeEntry(WORD_TO_DELETE)
+	 */
+	public void removeEntry(String del) {
 
-		return entry.getDesc() + " " + entry.getStart() + " " + entry.getEnd()
-				+ " " + entry.getDate() + " " + entry.getVenue() + " "
-				+ entry.getPriority() + " " + entry.getTagDesc();
+		for (Entry entry : activeEntries) {
+			if (entry.getDesc().equalsIgnoreCase(del)) {
+				archiveEntries.add(entry);
+			}
+		}
+		activeEntries.removeAll(archiveEntries);
+	}
+
+	/*
+	 * Setters and getters methods for printing activeEntries & archiveEntries
+	 * for (Entry entry : storage.getActiveEntries()) {
+	 * System.out.println("activeList: " + entry); }
+	 */
+	public ArrayList<Entry> getActiveEntries() {
+		return activeEntries;
+	}
+
+	public void setActiveEntries(ArrayList<Entry> entries) {
+		this.activeEntries = entries;
+	}
+
+	public ArrayList<Entry> getArchiveEntries() {
+		return archiveEntries;
+	}
+
+	public void setArchiveEntries(ArrayList<Entry> entries) {
+		this.archiveEntries = entries;
 	}
 
 	/*
@@ -186,31 +203,6 @@ class Storage {
 		}
 
 		return displayList;
-	}
-
-	public void archiveEntry(File activeList) {
-		/*
-		 * Method to transfer completed task to archive list. possibly limit to
-		 * the last month/year?
-		 */
-
-		try {
-			fr = new FileReader(activeList);
-			br = new BufferedReader(fr);
-			fw = new FileWriter(archiveFile, true);
-			bw = new BufferedWriter(fw);
-			while ((currentLine = br.readLine()) != null) {
-
-				// not yet completed
-				// basic idea
-				// if (entry.getCompletedStatus == 1) remove and write to
-				// archiveList
-				// else do nothing
-			}
-
-		} catch (IOException ioe) {
-			System.out.println(ERROR_MSG + "archiveEntry.");
-		}
 	}
 
 }
