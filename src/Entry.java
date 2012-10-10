@@ -1,10 +1,17 @@
+import java.io.Serializable;
+
 // Events to be printed in the following order
 // desc | start time | end time | date | venue | priority | tagDesc
 // completeStatus will not be shown to the user, only for internal tracking
 
 // not yet added: option to add notes to entry
 
-class Entry {
+class Entry implements Serializable {
+	/**
+	 * Entry class implements serializable for input/output stream in Storage
+	 * class so as to preserve the object properties of Entry
+	 */
+	private static final long serialVersionUID = 1L;
 	String desc;
 	String priority;
 	String tagDesc;
@@ -13,17 +20,17 @@ class Entry {
 	int startTime, endTime;
 	int completeStatus;
 	String newEntry;
-	
+
 	// constructor
 	public Entry() {
-		
+
 	}
-	
+
 	public String getDesc() {
 		return desc;
 	}
-	
-	// description of event/task 
+
+	// description of event/task
 	public void setDesc(String desc) {
 		this.desc = desc;
 	}
@@ -31,8 +38,8 @@ class Entry {
 	public int getStart() {
 		return startTime;
 	}
-	
-	//start time (displayed in 24h format)
+
+	// start time (displayed in 24h format)
 	public void setStart(int start) {
 		this.startTime = start;
 	}
@@ -40,8 +47,8 @@ class Entry {
 	public int getEnd() {
 		return endTime;
 	}
-	
-	//end time (displayed in 24h format)
+
+	// end time (displayed in 24h format)
 	public void setEnd(int end) {
 		this.endTime = end;
 	}
@@ -49,16 +56,16 @@ class Entry {
 	public int getDate() {
 		return date;
 	}
-	
+
 	// date displayed as ddmmyyyy
 	public void setDate(int date) {
 		this.date = date;
 	}
-	
+
 	public String getVenue() {
 		return venue;
 	}
-	
+
 	// venue of the event, identified by @location
 	public void setVenue(String venue) {
 		this.venue = venue;
@@ -76,7 +83,7 @@ class Entry {
 	public String getTagDesc() {
 		return tagDesc;
 	}
-	
+
 	// hashtag desc, identified by #tagname
 	public void setTagDesc(String tagDesc) {
 		this.tagDesc = tagDesc;
@@ -85,10 +92,17 @@ class Entry {
 	public int getCompleteStatus() {
 		return completeStatus;
 	}
-	
-	//completed (1 is completed, 0 is uncompleted)
+
+	// completed (1 is completed, 0 is uncompleted)
 	public void setCompleteStatus(int completeStatus) {
 		this.completeStatus = completeStatus;
+	}
+	
+	// for printing of entries
+	public String toString() {
+		return this.getDesc() + " " + this.getStart() + " " + this.getEnd()
+				+ " " + this.getDate() + " " + this.getVenue() + " "
+				+ this.getPriority() + " " + this.getTagDesc();
 	}
 
 }
