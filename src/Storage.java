@@ -23,6 +23,7 @@ class Storage {
 	public ArrayList<Entry> activeEntries = new ArrayList<Entry>();
 	public ArrayList<Entry> archiveEntries = new ArrayList<Entry>();
 	public ArrayList<Entry> displayEntries = new ArrayList<Entry>();
+	public ArrayList<Entry> tempEntries = new ArrayList<Entry>();
 	public FileWriter fw;
 	public BufferedWriter bw;
 	public String currentLine;
@@ -165,19 +166,16 @@ class Storage {
 	}
 
 	/*
-	 * Removes an entry from the activeEntries, and stores in archiveEntries.
-	 * Assumes that removed event is a completed event/user specified to remove.
-	 * Current implementation of this function is remove by event description.
-	 * ~storage.removeEntry(WORD_TO_DELETE)
+	 * This method should only be called after the display function is called.
+	 * The entry in the displayEntries that match the index specified by the
+	 * user will be removed from the displayEntries list. Subsequently, update
+	 * activeEntries list to remove the specific entry from storage.
+	 * ~storage.removeEntry(INDEX_OF_ENTRY)
 	 */
-	public void removeEntry(String del) {
-
-		for (Entry entry : activeEntries) {
-			if (entry.getDesc().equalsIgnoreCase(del)) {
-				archiveEntries.add(entry);
-			}
-		}
-		activeEntries.removeAll(archiveEntries);
+	public void removeEntry(int index) {
+		tempEntries.clear();
+		tempEntries.add(displayEntries.get(index - 1));
+		activeEntries.removeAll(tempEntries); // update activeEntries list
 	}
 
 	/*
