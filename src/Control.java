@@ -1,9 +1,12 @@
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Collections;
 
 class Control {
 	private Processor processor;
 	private Storage storage;
 	private boolean edit, newList; // modes
+	private ArrayList<Entry> tempList;
 
 	private String MSG_ERROR = "Invalid input!";
 
@@ -11,11 +14,12 @@ class Control {
 		// initialise.
 		// load entries
 		processor = new Processor();
-		storage = new Storage();
+//		storage = new Storage();
+//		tempList = storage.getActiveEntries();
+//		Collections.sort(tempList);
 	}
 
-	public String performAction(String userInput) {
-		// TODO Auto-generated method stub
+	public CMD performAction(String userInput) {
 
 		CMD command = processor.translateToCMD(userInput);
 
@@ -44,12 +48,11 @@ class Control {
 //		case EDIT:
 //			return processor.edit(command.getData());
 		case QUIT:
-			return "exit";
+			return command;
 		case HELP:
-			return "help";
-			
+			return command;
 		default:
-			return MSG_ERROR;
+			return command;
 		}
 		
 	}
