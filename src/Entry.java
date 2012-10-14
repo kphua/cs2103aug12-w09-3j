@@ -12,7 +12,7 @@ class Entry implements Serializable {
 	 * class so as to preserve the object properties of Entry
 	 */
 	private static final long serialVersionUID = 1L;
-	String desc;
+	String description;
 	String priority;
 	String tagDesc;
 	String venue;
@@ -23,16 +23,18 @@ class Entry implements Serializable {
 
 	// constructor
 	public Entry(String[] data) {
-
+		
 	}
+	
+	public Entry(){}
 
 	public String getDesc() {
-		return desc;
+		return description;
 	}
 
 	// description of event/task
 	public void setDesc(String desc) {
-		this.desc = desc;
+		this.description = desc;
 	}
 
 	public int getStart() {
