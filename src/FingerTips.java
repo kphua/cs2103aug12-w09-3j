@@ -83,8 +83,14 @@ class FingerTips {
 					System.out.println("Type \"end\" to exit edit mode.");
 					System.out.println("Type \"help\" for further assistance.");
 					
-					break;		
+					
+					
 					//call processor
+					
+					
+					
+					break;		
+
 				}
 				
 				control.setTempHold(null);

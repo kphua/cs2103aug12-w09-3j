@@ -1,5 +1,6 @@
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -9,7 +10,7 @@ import java.util.Date;
 
 // not yet added: option to add notes to entry
 
-class Entry implements Serializable {
+class Entry implements Serializable, Comparable<Entry> {
 	/**
 	 * Entry class implements serializable for input/output stream in Storage
 	 * class so as to preserve the object properties of Entry
@@ -17,24 +18,27 @@ class Entry implements Serializable {
 	private static final long serialVersionUID = 1L;
 	String description;
 	String priority;
-	String tagDesc;
+	ArrayList <String> hashTags;
 	String venue;
 	String date;
+	String tagDesc;
 	int startTime, endTime;
 	int completeStatus;
+	Calendar dueDate;
+	
 
 
 	// constructor
 	public Entry(String[] data) {
-
+		
 	}
 	
 	public Entry(Entry copy){
 		description = copy.description;
 		priority = copy.priority;
-		tagDesc = copy.tagDesc;
+		hashTags = copy.hashTags;
 		venue = copy.venue;
-		date = copy.date;
+		dueDate = copy.dueDate;
 		startTime = copy.startTime;
 		endTime = copy.endTime;
 		completeStatus = copy.completeStatus;
@@ -70,8 +74,8 @@ class Entry implements Serializable {
 		this.endTime = end;
 	}
 
-	public String getDate() {
-		return date;
+	public Calendar getDate() {
+		return dueDate;
 	}
 
 	// date displayed as e.g. Mon, Dec 14, 2012
@@ -108,15 +112,6 @@ class Entry implements Serializable {
 		this.priority = priority;
 	}
 
-	public String getTagDesc() {
-		return tagDesc;
-	}
-
-	// hashtag desc, identified by #tagname
-	public void setTagDesc(String tagDesc) {
-		this.tagDesc = tagDesc;
-	}
-
 	public int getCompleteStatus() {
 		return completeStatus;
 	}
@@ -133,4 +128,29 @@ class Entry implements Serializable {
 				+ this.getPriority() + " " + this.getTagDesc();
 	}
 
+	@Override
+	public int compareTo(Entry arg0) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public void setDate(Date date) {
+		dueDate.setTime(date);
+	}
+	
+	public ArrayList<String> getHashTags() {
+		return hashTags;
+	}
+
+	public void setHashTags(ArrayList<String> hashTags) {
+		this.hashTags = hashTags;
+	}
+	
+	public String getTagDesc() {
+		return tagDesc;
+	}
+
+	public void setTagDesc(String tagDesc) {
+		this.tagDesc = tagDesc;
+	}
 }
