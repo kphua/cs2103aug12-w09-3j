@@ -9,7 +9,7 @@ public class Processor {
 	private File reservedWords, reservedWordsEditMode;
 
 	private static final String ERROR_MSG_INVALID_INPUT = "Invalid Input.";
-
+	
 
 	//loads reserved words into hashTables
 	public Processor() throws FileNotFoundException{
@@ -54,7 +54,8 @@ public class Processor {
 		COMMAND_TYPE userCMD = determineCommandType(cmd);
 
 		switch(userCMD){
-
+		
+		//ADD is incomplete
 		case ADD:
 			if(temp.length == 1) return new CMD(userCMD, null);			//add <nothing>
 			else {
@@ -114,6 +115,7 @@ public class Processor {
 			}
 		case UNDO: return new CMD(userCMD, null);
 		case QUIT: return new CMD(userCMD, null);	
+		case HELP: return new CMD(userCMD, null);
 		default:
 			return new CMD(userCMD, ERROR_MSG_INVALID_INPUT);
 		}

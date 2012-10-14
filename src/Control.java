@@ -47,6 +47,8 @@ class Control {
 //			return storage.display(command.getData());
 //		case EDIT:
 //			return processor.edit(command.getData());
+		case DONE:
+			return command;
 		case QUIT:
 			return command;
 		case HELP:
