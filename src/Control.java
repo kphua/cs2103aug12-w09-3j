@@ -48,8 +48,22 @@ class Control {
 //			return processor.remove(command.getData());
 //		case UNDO:
 //			return storage.undo(command.getData());
-//		case DISPLAY:
-//			return storage.display(command.getData());
+		case DISPLAY:
+			if (command.getData() == null) {
+				tempList.addAll(storage.displayAll());
+			}
+			else {
+				// if the data is integer to specify index
+				if(isInteger(command.getData())){						
+					int index = Integer.parseInt((String) command.getData());
+					tempList.addAll(storage.displayIndex(index));
+				}
+				// if the data is string to be searched
+				else {
+					String keyword = command.getData().toString();
+					tempList.addAll(storage.displayKeyword(keyword));
+				}
+			}
 		case EDIT:
 			//check if number given by edit <number> is valid
 			//if it is valid, load the entry into tempHold, then convert to add's edit
@@ -79,6 +93,17 @@ class Control {
 			return command;
 		}
 		
+	}
+
+	//checks if a string can be converted into an integer
+	private boolean isInteger(Object object) {
+		try{
+			Integer i = Integer.parseInt((String) object);
+			return true;
+		}
+		catch(NumberFormatException e){
+			return false;
+		}
 	}
 
 	public boolean isEdit() {
