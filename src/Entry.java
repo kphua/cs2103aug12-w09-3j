@@ -22,7 +22,7 @@ class Entry implements Serializable {
 	String newEntry;
 
 	// constructor
-	public Entry() {
+	public Entry(String[] data) {
 
 	}
 
