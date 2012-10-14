@@ -4,7 +4,8 @@ import java.util.*;
 class FingerTips {
 
 	public static void main(String args[]) throws FileNotFoundException {
-		String actionMSG, userInput;
+		String userInput;
+		CMD actionMSG;
 		Scanner sc = new Scanner(System.in);
 		boolean cont = true;
 		Control control = null;
@@ -24,14 +25,25 @@ class FingerTips {
 		System.out.println("Welcome To FingerTips!");
 		System.out.println("Enter .help for further usage instructions.");
 		
+		//print current items
+		
+		
 		while (cont) {
 			System.out.print("Command: ");
 			userInput = sc.nextLine();
 			actionMSG = control.performAction(userInput);
-			if(actionMSG.equals("exit")) break;
-			else if(actionMSG.equals("help")) help();
-			else
-				System.out.println(actionMSG);
+			switch(actionMSG.getCommandType()){
+				//other cases
+			
+				case HELP:
+					help();
+					break;
+				case QUIT: 
+					cont = false;
+					System.out.println("Goodbye.");
+					break;
+				default: System.out.println(actionMSG.getData());
+			}
 
 		}
 		
