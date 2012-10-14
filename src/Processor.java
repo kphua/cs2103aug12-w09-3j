@@ -54,13 +54,13 @@ public class Processor {
 		COMMAND_TYPE userCMD = determineCommandType(cmd);
 
 		switch(userCMD){
-		// Add a command to end edit mode			
-		/*				
-					case ADD:
-					create entry
-					return newCMD(userCMD, entry);
-		 *note case when user only enters .add alone
-		 */
+
+		case ADD:
+			if(temp.length == 1) return new CMD(userCMD, null);			//add <nothing>
+			else {
+				Entry newTask = new Entry(temp);
+				return new CMD(userCMD, newTask);
+			}
 		
 		case DONE:
 			if(temp.length > 1 && isInteger(temp[2])){
