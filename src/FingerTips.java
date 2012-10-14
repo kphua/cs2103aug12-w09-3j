@@ -34,7 +34,33 @@ class FingerTips {
 			actionMSG = control.performAction(userInput);
 			switch(actionMSG.getCommandType()){
 				//other cases
-			
+			case ADD: 
+				if(actionMSG.getData()==null){
+					System.out.println("Please enter a description for your task:");
+					String description = sc.nextLine();
+					description = "add".concat(description);
+					actionMSG = control.performAction(description);
+				}
+				
+				System.out.println("Add further information? y/n");
+				String answer = sc.nextLine();
+				while(!(answer.equals("y") || answer.equals("n"))){
+					System.out.println("Invalid answer.");
+					System.out.println("Add further information? y/n");
+					answer = sc.nextLine();
+				}
+				
+				if(answer.equals("y")){
+					//edit
+					
+				}
+				break;
+			case REMOVE: break;
+			case UNDO: break;
+			case DISPLAY: break;
+			case EDIT: break;
+			case DONE: break;
+				
 				case HELP:
 					help();
 					break;
