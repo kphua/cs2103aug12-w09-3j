@@ -220,11 +220,12 @@ class Storage {
 	 * displayEntries for printing. displayEntries will be initialized each time
 	 * this method is called. ~storage.displayAll()
 	 */
-	public void displayAll() {
+	public ArrayList<Entry> displayAll() {
 		displayEntries.clear();
 		for (Entry entry : activeEntries) {
 			displayEntries.add(entry);
 		}
+		return displayEntries;
 
 		// CODE FOR PRINTING OF DISPLAY ENTRIES
 		// for (Entry entry : storage.getDisplayEntries()) {
@@ -237,13 +238,28 @@ class Storage {
 	 * each time this method is called. Keyword can be description, hashtag
 	 * "#tagname", venue "@location". ~storage.displayKeyword(KEYWORD_TO_FIND)
 	 */
-	public void displayKeyword(String keyword) {
+	public ArrayList<Entry> displayKeyword(String keyword) {
 		displayEntries.clear();
 		for (Entry entry : activeEntries) {
 			if (entry.getDesc().contains(keyword)) {
 				displayEntries.add(entry);
 			}
-		}
+		}	
+		return displayEntries;
+	}
+	
+	/*
+	 * Method to display entries by specified keyword. Entries will be copied
+	 * over to displayEntries for printing. displayEntries will be initialized
+	 * each time this method is called. Keyword can be description, hashtag
+	 * "#tagname", venue "@location". ~storage.displayKeyword(KEYWORD_TO_FIND)
+	 */
+	public ArrayList<Entry> displayIndex(int index) {
+		displayEntries.clear();
+		
+		/* not completed*/
+		
+		return displayEntries;
 	}
 
 	/*
@@ -252,7 +268,7 @@ class Storage {
 	 * time this method is called. User to enter date in the form ddmmyyyy.
 	 * ~storage.displayDate(ddmmyyyy)
 	 */
-	public void displayDate(int date) {
+	public ArrayList<Entry> displayDate(int date) {
 		displayEntries.clear();
 		Entry newEntry = new Entry();
 		newEntry.setDate(date);
@@ -261,6 +277,7 @@ class Storage {
 				displayEntries.add(entry);
 			}
 		}
+		return displayEntries;
 	}
 
 }
