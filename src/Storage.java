@@ -30,7 +30,7 @@ class Storage {
 	/*
 	 * Load activeFile and archiveFile into activeEntries and archiveEntries
 	 */
-	public Storage() throws ClassNotFoundException {
+	public Storage() {
 		if (activeFile.exists()) {
 			loadFromStorage(activeFile, activeEntries);
 		}
@@ -39,8 +39,7 @@ class Storage {
 		}
 	}
 
-	public void loadFromStorage(File source, ArrayList<Entry> entries)
-			throws ClassNotFoundException {
+	public void loadFromStorage(File source, ArrayList<Entry> entries) {
 		// read from file
 		try {
 			FileInputStream newFile = new FileInputStream(source);
@@ -51,10 +50,11 @@ class Storage {
 			}
 			restore.close();
 		} catch (EOFException eofe) {
+		} catch (ClassNotFoundException cnfe) {
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 			System.out.println("Error loading from file");
-		}
+		} 
 
 	}
 
