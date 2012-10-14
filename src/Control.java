@@ -7,6 +7,8 @@ class Control {
 	private Storage storage;
 	private boolean edit, newList; // modes
 	private ArrayList<Entry> tempList;
+	private CMD undo;
+	private Entry tempHold;
 
 	private String MSG_ERROR = "Invalid input!";
 
@@ -22,12 +24,19 @@ class Control {
 	public CMD performAction(String userInput) {
 
 		CMD command = processor.translateToCMD(userInput);
-
+		
+		undo = command;
 		// CMD will be a Pair of enumeration, data
 
 		switch (command.getCommandType()) {
 		// need to store previous version everytime in case of undo action
-//		case ADD:
+		case ADD:
+			if(command.getData()==null){
+				return command;
+			}
+			else {
+				setTempHold((Entry) command.getData());
+			}
 //			storage.addEntry(command.getData());
 			//modify undo
 			//activate edit mode.
@@ -46,6 +55,13 @@ class Control {
 //		case DISPLAY:
 //			return storage.display(command.getData());
 //		case EDIT:
+			if(tempHold==null){
+				command.setData("Which entry do you want to edit?");
+				return command;
+			}
+			else{
+				return command;
+			}
 //			return processor.edit(command.getData());
 		case DONE:
 			return command;
@@ -57,5 +73,21 @@ class Control {
 			return command;
 		}
 		
+	}
+
+	public boolean isEdit() {
+		return edit;
+	}
+
+	public void setEdit(boolean edit) {
+		this.edit = edit;
+	}
+
+	public Entry getTempHold() {
+		return tempHold;
+	}
+
+	public void setTempHold(Entry tempHold) {
+		this.tempHold = tempHold;
 	}
 }

@@ -60,7 +60,7 @@ public class Processor {
 			if(temp.length == 1) return new CMD(userCMD, null);			//add <nothing>
 			else {
 				Entry newTask = new Entry(temp);
-				return new CMD(userCMD, newTask);
+				return new CMD(userCMD, newTask);						//add <long string of data>
 			}
 		
 		case DONE:
