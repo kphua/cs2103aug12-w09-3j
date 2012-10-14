@@ -1,4 +1,10 @@
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Hashtable;
+import java.util.LinkedList;
+import java.util.Locale;
 import java.util.Scanner;
 import java.io.*;
 
@@ -6,7 +12,8 @@ public class Processor {
 
 	private Hashtable <String, String> reservedWordsConverter;
 	private Hashtable <String, String> reservedWordsConverterEditMode;
-	private File reservedWords, reservedWordsEditMode;
+	private Hashtable <String, Integer> indicativeWordsIdentifier;
+	private File reservedWords, reservedWordsEditMode, indicativeWords;
 
 	private static final String ERROR_MSG_INVALID_INPUT = "Invalid Input.";
 	
@@ -15,11 +22,13 @@ public class Processor {
 	public Processor() throws FileNotFoundException{
 		reservedWords = new File("reservedWords.txt");
 		reservedWordsEditMode = new File("reservedWordsEditMode.txt");
+		indicativeWords = new File("indicativeWOrds.txt");
 
 		BufferedReader reader = new BufferedReader(new FileReader(reservedWords));
 		Scanner sc = new Scanner(reader);
 		reservedWordsConverter = new Hashtable<String, String>();
 		reservedWordsConverterEditMode = new Hashtable<String, String>();
+		indicativeWordsIdentifier = new Hashtable<String, Integer>();
 
 		while(sc.hasNext()){
 			reservedWordsConverter.put(sc.next(), sc.next());
@@ -29,6 +38,12 @@ public class Processor {
 
 		while(sc.hasNext()){
 			reservedWordsConverterEditMode.put(sc.next(), sc.next());
+		}
+		
+		reader = new BufferedReader(new FileReader(indicativeWords));
+		
+		while(sc.hasNext()){
+			indicativeWordsIdentifier.put(sc.next(), sc.nextInt());
 		}
 
 		sc.close();
@@ -55,11 +70,11 @@ public class Processor {
 
 		switch(userCMD){
 		
-		//ADD is incomplete
 		case ADD:
 			if(temp.length == 1) return new CMD(userCMD, null);			//add <nothing>
 			else {
-				Entry newTask = new Entry(temp);
+				Entry newTask = new Entry();
+				buildEntry(newTask, temp);
 				return new CMD(userCMD, newTask);						//add <long string of data>
 			}
 		
@@ -122,6 +137,53 @@ public class Processor {
 
 	}
 
+	
+	//INCOMPLETE
+	private void buildEntry(Entry newTask, String[] data) {
+		LinkedList<String> dataList = new LinkedList<String>();
+		String description;
+		int rep;
+		for(int i=1; i<data.length; i++){
+			if(indicativeWordsIdentifier.contains(data[i].toLowerCase()))
+				rep = indicativeWordsIdentifier.get(data[i]);
+			else rep = 8;
+			
+			switch (rep){
+			case 9: 
+				if(i+1<data.length){
+					if(isDate(data[i+1])){
+						try {
+							newTask.setDate(new SimpleDateFormat("dd/MM/yyyy", Locale.US).parse(data[i+1]));
+						} catch (ParseException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					} else if(indicativeWordsIdentifier.get(i+1)<8){
+						Calendar cal = Calendar.getInstance();
+						int target = indicativeWordsIdentifier.get(i+1);
+						if(cal.get(cal.DAY_OF_WEEK) < target){
+							cal.add(cal.DAY_OF_MONTH, target - cal.get(cal.DAY_OF_WEEK));
+						}
+						else{
+							cal.add(cal.DAY_OF_MONTH, 7 - cal.DAY_OF_WEEK + target);
+						}
+					}
+					else if(indicativeWordsIdentifier.get(i+1) == 10 && i+2 < data.length){
+						/***********************************/
+					}
+				}
+				break;
+			case 10: break;
+			case 11: break;
+			case 8: 
+				if(data[i].startsWith("#")) newTask.getHashTags().add(data[i]);
+				if(data[i].startsWith("@")) newTask.setVenue(data[i].substring(1));
+				break;
+			}
+		}
+	}
+
+
 	//checks if a string can be converted into an integer
 	private boolean isInteger(String string) {
 		try{
@@ -131,6 +193,18 @@ public class Processor {
 		catch(NumberFormatException e){
 			return false;
 		}
+	}
+	
+	private boolean isDate(String s){
+		Date date = null;
+		try {
+			date = new SimpleDateFormat("dd/MM/yyyy", Locale.US).parse(s);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if(date==null) return false;
+		else return true;
 	}
 	
 	
