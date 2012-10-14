@@ -3,12 +3,14 @@ import java.util.*;
 
 class FingerTips {
 
-	public static void main(String args[]) throws FileNotFoundException {
-		String userInput;
-		CMD actionMSG;
-		Scanner sc = new Scanner(System.in);
-		boolean cont = true;
-		Control control = null;
+	Control control;
+	Scanner sc;
+	boolean cont;
+	
+	public FingerTips(){
+		sc = new Scanner(System.in);
+		cont = true;
+		
 		try{
 			control = new Control();
 		}
@@ -20,60 +22,88 @@ class FingerTips {
 			sc.nextLine();
 			System.exit(0);
 		}
+	}
+	
+	public static void main(String args[]) throws FileNotFoundException {
+		FingerTips ft = new FingerTips();
+		ft.run();
+	}
+
+	private void run() {
 		
-		// print welcome/help msg etc.
-		System.out.println("Welcome To FingerTips!");
-		System.out.println("Enter .help for further usage instructions.");
+		printWelcomeMSG();
 		
-		//print current items
-		
+		String userInput;
 		
 		while (cont) {
 			System.out.print("Command: ");
 			userInput = sc.nextLine();
-			actionMSG = control.performAction(userInput);
-			switch(actionMSG.getCommandType()){
-				//other cases
-			case ADD: 
-				if(actionMSG.getData()==null){
-					System.out.println("Please enter a description for your task:");
-					String description = sc.nextLine();
-					description = "add".concat(description);
-					actionMSG = control.performAction(description);
-				}
-				
+			runUserInput(userInput);
+		}
+	}
+
+	private void printWelcomeMSG() {
+		System.out.println("Welcome To FingerTips!");
+		System.out.println("Enter \"help\" for further usage instructions.");
+	}
+
+	private void runUserInput(String userInput) {
+		CMD actionMSG = control.performAction(userInput);
+		switch(actionMSG.getCommandType()){
+		case ADD: 
+			if(actionMSG.getData()==null){
+				System.out.println("Please enter a description for your task:");
+				String description = sc.nextLine().trim();
+				description = "add".concat(" " + description);
+				actionMSG = control.performAction(description);
+			}
+			
+			System.out.println("Add further information? y/n");
+			String answer = sc.nextLine();
+			answer = answer.toLowerCase();
+			while(!(answer.equals("y") || answer.equals("n"))){
+				System.out.println("Invalid answer.");
 				System.out.println("Add further information? y/n");
-				String answer = sc.nextLine();
-				while(!(answer.equals("y") || answer.equals("n"))){
-					System.out.println("Invalid answer.");
-					System.out.println("Add further information? y/n");
-					answer = sc.nextLine();
-				}
+				answer = sc.nextLine();
+			}
+			
+			if(answer.equals("y")){
+				runUserInput("edit");
+			} else {
 				
-				if(answer.equals("y")){
-					//edit
+			}
+			break;
+		case REMOVE: break;
+		case UNDO: break;
+		case DISPLAY: break;
+		case EDIT: 										//incomplete
+			if(actionMSG.getData()==null){
+				while(true){
+					System.out.println("Enter the field you wish to modify, and the new data to replace with.");
 					
 				}
-				break;
-			case REMOVE: break;
-			case UNDO: break;
-			case DISPLAY: break;
-			case EDIT: break;
-			case DONE: break;
-				
-				case HELP:
-					help();
-					break;
-				case QUIT: 
-					cont = false;
-					System.out.println("Goodbye.");
-					break;
-				default: System.out.println(actionMSG.getData());
 			}
-
+			else {
+				System.out.println(actionMSG.getData());
+				while(sc.hasNextInt()){
+					//check input is a number, and is not larger than the size of tempList/activeList
+				}
+				//take the integer and load the specified entry it into tempHold
+				
+			}
+			
+			break;
+		case DONE: break;
+			
+			case HELP:
+				help();
+				break;
+			case QUIT: 
+				cont = false;
+				System.out.println("Goodbye.");
+				break;
+			default: System.out.println(actionMSG.getData());
 		}
-		
-		sc.close();
 	}
 	
 	private static void help() {
