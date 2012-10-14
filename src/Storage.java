@@ -18,9 +18,14 @@ class Storage {
 
 	public File activeFile = new File("activeFile.txt");
 	public File archiveFile = new File("archiveFile.txt");
+	public File activeTextFile = new File("activeTextFile.txt");
+	public File archiveTextFile = new File("archiveTextFile.txt");
 	public ArrayList<Entry> activeEntries = new ArrayList<Entry>();
 	public ArrayList<Entry> archiveEntries = new ArrayList<Entry>();
 	public ArrayList<Entry> displayEntries = new ArrayList<Entry>();
+	public FileWriter fw;
+	public BufferedWriter bw;
+	public String currentLine;
 
 	/*
 	 * Load activeFile and archiveFile into activeEntries and archiveEntries
@@ -91,6 +96,48 @@ class Storage {
 			System.out.println("Error writing to file");
 		}
 
+		// for file reader and writer, update the corresponding
+		// .txt files
+
+		try {
+			fw = new FileWriter(activeTextFile);
+			bw = new BufferedWriter(fw);
+			bw.write("");
+			bw.close();
+		} catch (IOException ioe) {
+			System.out.println("Error saving to text file");
+		}
+
+		try {
+			fw = new FileWriter(archiveTextFile);
+			bw = new BufferedWriter(fw);
+			bw.write("");
+			bw.close();
+		} catch (IOException ioe) {
+			System.out.println("Error saving to text file");
+		}
+
+		try {
+			fw = new FileWriter(activeTextFile);
+			bw = new BufferedWriter(fw);
+			for (Entry entry : activeEntries) {
+				bw.write(entry + "\n");
+			}
+			bw.close();
+		} catch (IOException ioe) {
+			System.out.println("Error saving to text file");
+		}
+
+		try {
+			fw = new FileWriter(archiveTextFile);
+			bw = new BufferedWriter(fw);
+			for (Entry entry : archiveEntries) {
+				bw.write(entry + "\n");
+			}
+			bw.close();
+		} catch (IOException ioe) {
+			System.out.println("Error saving to text file");
+		}
 	}
 
 	/*
