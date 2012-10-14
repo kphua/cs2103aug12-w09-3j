@@ -22,11 +22,22 @@ class Entry implements Serializable {
 	String date;
 	int startTime, endTime;
 	int completeStatus;
-	String newEntry;
+
 
 	// constructor
 	public Entry(String[] data) {
 
+	}
+	
+	public Entry(Entry copy){
+		description = copy.description;
+		priority = copy.priority;
+		tagDesc = copy.tagDesc;
+		venue = copy.venue;
+		date = copy.date;
+		startTime = copy.startTime;
+		endTime = copy.endTime;
+		completeStatus = copy.completeStatus;
 	}
 
 	public Entry() {

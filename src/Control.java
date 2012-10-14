@@ -16,7 +16,7 @@ class Control {
 		// initialise.
 		// load entries
 		processor = new Processor();
-//		storage = new Storage();
+		storage = new Storage();
 //		tempList = storage.getActiveEntries();
 //		Collections.sort(tempList);
 	}
@@ -24,24 +24,20 @@ class Control {
 	public CMD performAction(String userInput) {
 
 		CMD command = processor.translateToCMD(userInput);
-		
-		undo = command;
-		// CMD will be a Pair of enumeration, data
 
 		switch (command.getCommandType()) {
 		// need to store previous version everytime in case of undo action
 		case ADD:
-			if(command.getData()==null){
-				return command;
+			if(command.getData()!=null){
+				tempHold = (Entry) command.getData();
+				storage.addEntry(tempHold);
+				storage.saveToStorage();
+				undo = command;
+				undo.setData(new Entry(tempHold));
 			}
-			else {
-				setTempHold((Entry) command.getData());
-			}
-//			storage.addEntry(command.getData());
-			//modify undo
-			//activate edit mode.
-			//ensure save
-//			return processor.add(command.getData());
+						
+			return command;
+			
 //		case REMOVE:
 			//if there is nothing in command.getData, get active list over to tempList, 
 						//then ask user what he want to remove
@@ -54,15 +50,25 @@ class Control {
 //			return storage.undo(command.getData());
 //		case DISPLAY:
 //			return storage.display(command.getData());
-//		case EDIT:
-			if(tempHold==null){
-				command.setData("Which entry do you want to edit?");
-				return command;
+		case EDIT:
+			//check if number given by edit <number> is valid
+			//if it is valid, load the entry into tempHold, then convert to add's edit
+			//if not convert to edit <nothing>
+			if((int)command.getData() >= storage.getActiveEntries().size()) {	
+				System.out.println("Invalid input. Enter a valid index.");
 			}
 			else{
-				return command;
+				tempHold = storage.getActiveEntries().get((int)command.getData()-1);
 			}
-//			return processor.edit(command.getData());
+			
+			command.setData(null);
+			
+			if(command.getData()==null && tempHold == null){ 	//edit <nothing>						
+				command.setData("Which entry do you want to edit?");
+			}
+			
+			return command;
+			
 		case DONE:
 			return command;
 		case QUIT:
@@ -89,5 +95,21 @@ class Control {
 
 	public void setTempHold(Entry tempHold) {
 		this.tempHold = tempHold;
+	}
+
+	public Storage getStorage() {
+		return storage;
+	}
+
+	public void setStorage(Storage storage) {
+		this.storage = storage;
+	}
+	
+	public Processor getProcessor() {
+		return processor;
+	}
+
+	public void setProcessor(Processor processor) {
+		this.processor = processor;
 	}
 }
