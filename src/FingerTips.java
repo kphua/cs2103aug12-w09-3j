@@ -70,26 +70,41 @@ class FingerTips {
 			if(answer.equals("y")){
 				runUserInput("edit");
 			} else {
-				
+				control.setTempHold(null);
 			}
 			break;
 		case REMOVE: break;
 		case UNDO: break;
 		case DISPLAY: break;
-		case EDIT: 										//incomplete
+		case EDIT: 										
 			if(actionMSG.getData()==null){
 				while(true){
 					System.out.println("Enter the field you wish to modify, and the new data to replace with.");
+					System.out.println("Type \"end\" to exit edit mode.");
+					System.out.println("Type \"help\" for further assistance.");
 					
+					break;		
+					//call processor
 				}
+				
+				control.setTempHold(null);
 			}
 			else {
 				System.out.println(actionMSG.getData());
-				while(sc.hasNextInt()){
-					//check input is a number, and is not larger than the size of tempList/activeList
+				int a;
+				while(true){
+					try{
+						a = sc.nextInt();
+						if(control.getStorage().getActiveEntries().size() > a) 
+							break;
+					}
+					catch(InputMismatchException e){
+						System.out.println("Invalid input. Enter a valid index.");
+					}
+					
 				}
-				//take the integer and load the specified entry it into tempHold
 				
+				runUserInput("edit "+ a);
 			}
 			
 			break;
