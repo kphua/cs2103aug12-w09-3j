@@ -249,13 +249,15 @@ class Storage {
 	/*
 	 * Method to display entries by specified date. Entries will be copied over
 	 * to displayEntries for printing. displayEntries will be initialized each
-	 * time this method is called. Current implementation of date format will be
-	 * in the form ddmmyyyy. ~storage.displayDate(ddmmyyyy)
+	 * time this method is called. User to enter date in the form ddmmyyyy.
+	 * ~storage.displayDate(ddmmyyyy)
 	 */
 	public void displayDate(int date) {
 		displayEntries.clear();
+		Entry newEntry = new Entry();
+		newEntry.setDate(date);
 		for (Entry entry : activeEntries) {
-			if (entry.getDate() == date) {
+			if (entry.getDate().equals(newEntry.getDate())) {
 				displayEntries.add(entry);
 			}
 		}

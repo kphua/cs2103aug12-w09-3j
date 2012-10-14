@@ -1,4 +1,7 @@
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 // Events to be printed in the following order
 // desc | start time | end time | date | venue | priority | tagDesc
@@ -16,17 +19,18 @@ class Entry implements Serializable {
 	String priority;
 	String tagDesc;
 	String venue;
-	int date;
+	String date;
 	int startTime, endTime;
 	int completeStatus;
 	String newEntry;
 
 	// constructor
 	public Entry(String[] data) {
-		
+
 	}
-	
-	public Entry(){}
+
+	public Entry() {
+	}
 
 	public String getDesc() {
 		return description;
@@ -55,13 +59,24 @@ class Entry implements Serializable {
 		this.endTime = end;
 	}
 
-	public int getDate() {
+	public String getDate() {
 		return date;
 	}
 
-	// date displayed as ddmmyyyy
-	public void setDate(int date) {
-		this.date = date;
+	// date displayed as e.g. Mon, Dec 14, 2012
+	public void setDate(int _date) {
+
+		int month = (_date / 10000) % 100;
+		int day = _date / 1000000;
+		int year = _date % 10000;
+
+		Calendar cal = Calendar.getInstance();
+		cal.set(year, month - 1, day);
+		Date date = cal.getTime();
+		// Transformation of the date
+		SimpleDateFormat sdf = new SimpleDateFormat("EEE, MMM dd, yyyy");
+		this.date = sdf.format(date);
+
 	}
 
 	public String getVenue() {
@@ -99,7 +114,7 @@ class Entry implements Serializable {
 	public void setCompleteStatus(int completeStatus) {
 		this.completeStatus = completeStatus;
 	}
-	
+
 	// for printing of entries
 	public String toString() {
 		return this.getDesc() + " " + this.getStart() + " " + this.getEnd()
