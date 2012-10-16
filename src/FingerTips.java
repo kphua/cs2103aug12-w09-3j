@@ -93,11 +93,15 @@ class FingerTips {
 			break;
 		case EDIT: 					
 			if(actionMSG.getData()==null){
-				System.out.println("Enter the field you wish to modify, and the new data to replace with.");
-				System.out.println("Type \"end\" to exit edit mode.");
-				System.out.println("Type \"help\" for further assistance.");
+				
 				while(true){
-					System.out.println("Command: ");
+					System.out.println("Entry: ");
+					System.out.println(control.processEditMode("display")[1]);
+					
+					System.out.println("Enter the field you wish to modify, and the new data to replace with.");
+					System.out.println("Type \"end\" to exit edit mode.");
+					System.out.println("Type \"help\" for further assistance.");
+					System.out.println("Command (Edit Mode): ");
 					
 					userInput = sc.nextLine();
 					userInput = userInput.trim();
@@ -106,7 +110,7 @@ class FingerTips {
 					if(response[0].equals("display")) System.out.println(response[1]);
 					else if(response[0].equals("help")) helpEditMode();
 					else if(response[0].equals("end")) break;
-					
+					else if(response[0].equals("Error")) System.out.println(response[1]);
 				}
 				
 				control.setTempHold(null);
@@ -116,6 +120,7 @@ class FingerTips {
 				int a;
 				while(true){
 					try{
+						System.out.println("Index: ");
 						a = sc.nextInt();
 						if(control.getStorage().getActiveEntries().size() < a)
 							System.out.println("Invalid input. Enter a valid index number.");
@@ -150,6 +155,8 @@ class FingerTips {
 	}
 	
 	private void helpEditMode() {
+		System.out.println("Stated below are the available fields.");
+		System.out.println("Enter a field followed by the new data it should be replaced with.");
 		System.out.println("desc: edit description.");
 		System.out.println("ddate: edit due date.");
 		System.out.println("display: shows data in the current node.");

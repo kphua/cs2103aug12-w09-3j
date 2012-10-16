@@ -97,7 +97,7 @@ class Control {
 			//if it is valid, load the entry into tempHold, then convert to add's edit
 			//if not convert to edit <nothing>
 			if(command.getData()!=null){
-				if((int)command.getData() >= storage.getActiveEntries().size()) {	
+				if((int)command.getData() > storage.getActiveEntries().size()) {	
 					System.out.println("Invalid input. Enter a valid index.");
 				}
 				else{
@@ -184,7 +184,7 @@ class Control {
 
 	public String[] processEditMode(String userInput) {
 		String[] cmd = processor.determineCmdEditMode(userInput);
-		if(cmd[1] != null) cmd[1] = cmd[1].trim();
+		if(cmd.length > 1 && cmd[1] != null) cmd[1] = cmd[1].trim();
 		if(cmd[0].equals("description")){	
 			if(cmd[1]!=null && cmd[1].length()!=0)
 				tempHold.setDesc(cmd[1]);
@@ -206,6 +206,7 @@ class Control {
 				tempHold.setTagDesc(cmd[1]);
 			else cmd = new String[] {"Error", "Not a hashtag"};
 		} else if(cmd[0].equals("display")){
+			cmd = new String[]{cmd[0], null};
 			cmd[1] = printEntry(tempHold);
 		} else if(cmd[0].equals("priority")){
 			boolean restrictedWords = cmd[1].equalsIgnoreCase("high") || 
