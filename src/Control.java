@@ -24,6 +24,8 @@ class Control {
 	public CMD performAction(String userInput) {
 
 		CMD command = processor.translateToCMD(userInput);
+		ArrayList<String> toPrint = new ArrayList<String>();
+		tempList = new ArrayList<Entry>();
 
 		switch (command.getCommandType()) {
 		// need to store previous version everytime in case of undo action
@@ -38,20 +40,23 @@ class Control {
 						
 			return command;
 			
-//		case REMOVE:
+		case REMOVE:
 			//if there is nothing in command.getData, get active list over to tempList, 
 						//then ask user what he want to remove
 			//if command.data contains hashtag, do a search for the hashtag, port to tempList, 
 						//then ask user what he want to remove
 			//if there is something in the Storage's tempList 
-//			storage.display();
-//			return processor.remove(command.getData());
+			if( isInteger(command.getData())) {
+				Integer i = Integer.parseInt((String) command.getData()); 
+				storage.removeEntry(i);
+				}
+
+			return command;
 //		case UNDO:
 //			return storage.undo(command.getData());
 		case DISPLAY:
-			ArrayList<String> toPrint = new ArrayList<String>();
-			tempList = new ArrayList<Entry>();
 			tempList.clear();
+			toPrint.clear();
 			
 			if (command.getData() == null) {	
 				tempList.addAll(storage.displayAll());

@@ -73,7 +73,9 @@ class FingerTips {
 				control.setTempHold(null);
 			}
 			break;
-		case REMOVE: break;
+		case REMOVE: 
+			System.out.println("removal done.");
+			break;
 		case UNDO: break;
 		case DISPLAY: 
 			ArrayList<String> print = new ArrayList<String>();
