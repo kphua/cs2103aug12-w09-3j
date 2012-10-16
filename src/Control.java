@@ -68,19 +68,20 @@ class Control {
 			//check if number given by edit <number> is valid
 			//if it is valid, load the entry into tempHold, then convert to add's edit
 			//if not convert to edit <nothing>
-			if((int)command.getData() >= storage.getActiveEntries().size()) {	
-				System.out.println("Invalid input. Enter a valid index.");
+			if(command.getData()!=null){
+				if((int)command.getData() >= storage.getActiveEntries().size()) {	
+					System.out.println("Invalid input. Enter a valid index.");
+				}
+				else{
+					tempHold = storage.getActiveEntries().get((int)command.getData()-1);
+				}
+				
+				command.setData(null);
+			} else {	
+				if(tempHold == null){ 	//edit <nothing>						
+					command.setData("Which entry do you want to edit?");
+				}
 			}
-			else{
-				tempHold = storage.getActiveEntries().get((int)command.getData()-1);
-			}
-			
-			command.setData(null);
-			
-			if(command.getData()==null && tempHold == null){ 	//edit <nothing>						
-				command.setData("Which entry do you want to edit?");
-			}
-			
 			return command;
 			
 		case DONE:
