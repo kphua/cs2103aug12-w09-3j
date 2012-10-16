@@ -49,21 +49,39 @@ class Control {
 //		case UNDO:
 //			return storage.undo(command.getData());
 		case DISPLAY:
-			if (command.getData() == null) {
+			ArrayList<String> toPrint = new ArrayList<String>();
+			tempList = new ArrayList<Entry>();
+			tempList.clear();
+			
+			if (command.getData() == null) {	
 				tempList.addAll(storage.displayAll());
+				for (Entry entry : tempList) { 
+					getPrintEntry(toPrint, entry);
+				}
+				command.setData(toPrint);
 			}
 			else {
 				// if the data is integer to specify index
 				if(isInteger(command.getData())){						
 					int index = Integer.parseInt((String) command.getData());
 					tempList.addAll(storage.displayIndex(index));
+					for (Entry entry : tempList) { 
+						getPrintEntry(toPrint, entry);
+					}
+					command.setData(toPrint);
 				}
 				// if the data is string to be searched
 				else {
 					String keyword = command.getData().toString();
 					tempList.addAll(storage.displayKeyword(keyword));
+					for (Entry entry : tempList) { 
+						getPrintEntry(toPrint, entry);
+					}
+					command.setData(toPrint);
 				}
 			}
+			
+			return command;
 		case EDIT:
 			//check if number given by edit <number> is valid
 			//if it is valid, load the entry into tempHold, then convert to add's edit
@@ -96,6 +114,24 @@ class Control {
 			return command;
 		}
 		
+	}
+
+	private void getPrintEntry(ArrayList<String> toPrint, Entry entry) {
+		String lineToPrint = null;
+		lineToPrint = entry.getDesc();
+		if (entry.getStart() != null) 
+			lineToPrint = lineToPrint.concat(" at " + entry.getStart());
+		if (entry.getEnd() != null) 
+			lineToPrint = lineToPrint.concat(" to " + entry.getEnd());
+		if (entry.getDate1() != null) 
+			lineToPrint = lineToPrint.concat(" on " + entry.getDate1());
+		if (entry.getVenue() != null) 
+			lineToPrint = lineToPrint.concat(" " + entry.getVenue());
+		if (entry.getPriority() != null) 
+			lineToPrint = lineToPrint.concat(" " + entry.getPriority());
+		if (entry.getTagDesc() != null) 
+			lineToPrint = lineToPrint.concat(" " + entry.getTagDesc());
+		toPrint.add(lineToPrint);
 	}
 
 	//checks if a string can be converted into an integer
