@@ -75,7 +75,15 @@ class FingerTips {
 			break;
 		case REMOVE: break;
 		case UNDO: break;
-		case DISPLAY: break;
+		case DISPLAY: 
+			ArrayList<String> print = new ArrayList<String>();
+			print.addAll((ArrayList<String>) actionMSG.getData());
+			int j=1;
+			for (int i=0; i<print.size(); i++) {
+				System.out.println(j + ". " + print.get(i));
+				j++;
+			}
+			break;
 		case EDIT: 										
 			if(actionMSG.getData()==null){
 				while(true){
