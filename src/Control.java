@@ -55,10 +55,9 @@ class Control {
 //		case UNDO:
 //			return storage.undo(command.getData());
 		case DISPLAY:
-			ArrayList<String> toPrint = new ArrayList<String>();
+			toPrint.clear();
 //			tempList = new ArrayList<Entry>();
 //			tempList.clear();
-			toPrint.clear();
 			
 			if (command.getData() == null) {
 				tempList.clear();
