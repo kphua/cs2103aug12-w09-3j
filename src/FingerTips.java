@@ -74,7 +74,20 @@ class FingerTips {
 			}
 			break;
 		case REMOVE: 
-			System.out.println("removal done.");
+			if(actionMSG.getData() == null){
+				System.out.println("Which entry do you want to remove?");
+				int rmvIndex;
+				try{
+					System.out.println("Index: ");
+					rmvIndex = sc.nextInt();
+				} catch(InputMismatchException e){
+					System.out.println("Invalid input. Action aborted.");
+				}
+			}
+			else{
+				System.out.println("Removed");
+			}
+			
 			break;
 		case UNDO: break;
 		case DISPLAY: 

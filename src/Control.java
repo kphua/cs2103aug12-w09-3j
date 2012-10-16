@@ -46,11 +46,16 @@ class Control {
 			//if command.data contains hashtag, do a search for the hashtag, port to tempList, 
 						//then ask user what he want to remove
 			//if there is something in the Storage's tempList 
-			if( isInteger(command.getData())) {
-				Integer i = Integer.parseInt((String) command.getData()); 
-				storage.removeEntry(i);
+			if(command.getData()!=null){
+				if(isInteger(command.getData())) {
+					Integer i = (Integer) command.getData(); 
+//					command.setData(storage.displayEntries.get(i-1));
+					storage.removeEntry(i);
 				}
-
+				else{
+					//if commandData was a String
+				}
+			}
 			return command;
 //		case UNDO:
 //			return storage.undo(command.getData());
