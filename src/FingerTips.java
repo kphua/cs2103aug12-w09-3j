@@ -76,12 +76,17 @@ class FingerTips {
 		case REMOVE: break;
 		case UNDO: break;
 		case DISPLAY: 
-			ArrayList<String> print = new ArrayList<String>();
-			print.addAll((ArrayList<String>) actionMSG.getData());
-			int j=1;
-			for (int i=0; i<print.size(); i++) {
-				System.out.println(j + ". " + print.get(i));
-				j++;
+			ArrayList<String> print = (ArrayList<String>) actionMSG.getData();
+			if(print.isEmpty()){
+				System.out.println("There is nothing to print.");
+			}
+			else{
+				int j=1;
+			
+				for (int i=0; i<print.size(); i++) {
+					System.out.println(j + ". " + print.get(i));
+					j++;
+				}
 			}
 			break;
 		case EDIT: 					

@@ -17,8 +17,8 @@ class Control {
 		// load entries
 		processor = new Processor();
 		storage = new Storage();
-//		tempList = storage.getActiveEntries();
-//		Collections.sort(tempList);
+		tempList = new ArrayList<Entry>();
+		Collections.sort(tempList);
 	}
 
 	public CMD performAction(String userInput) {
@@ -50,29 +50,33 @@ class Control {
 //			return storage.undo(command.getData());
 		case DISPLAY:
 			ArrayList<String> toPrint = new ArrayList<String>();
-			tempList = new ArrayList<Entry>();
-			tempList.clear();
+//			tempList = new ArrayList<Entry>();
+//			tempList.clear();
 			
-			if (command.getData() == null) {	
+			if (command.getData() == null) {
+				tempList.clear();
 				tempList.addAll(storage.displayAll());
 				for (Entry entry : tempList) { 
-					getPrintEntry(toPrint, entry);
+//					getPrintEntry(toPrint, entry);
+					toPrint.add(printEntry(entry));
 				}
 				command.setData(toPrint);
 			}
 			else {
+				if(tempList.isEmpty()){
+					tempList.addAll(storage.displayAll());
+				}
+					
 				// if the data is integer to specify index
 				if(isInteger(command.getData())){						
-					int index = Integer.parseInt((String) command.getData());
-					tempList.addAll(storage.displayIndex(index));
-					for (Entry entry : tempList) { 
-						getPrintEntry(toPrint, entry);
-					}
+					Integer index = (Integer) command.getData();
+					toPrint.add(printEntry(tempList.get(index-1)));
 					command.setData(toPrint);
 				}
 				// if the data is string to be searched
 				else {
-					String keyword = command.getData().toString();
+					tempList.clear();
+					String keyword = (String) command.getData();
 					tempList.addAll(storage.displayKeyword(keyword));
 					for (Entry entry : tempList) { 
 						getPrintEntry(toPrint, entry);
@@ -137,11 +141,14 @@ class Control {
 	//checks if a string can be converted into an integer
 	private boolean isInteger(Object object) {
 		try{
-			Integer i = Integer.parseInt((String) object);
+			Integer.parseInt((String) object);
 			return true;
 		}
 		catch(NumberFormatException e){
 			return false;
+		}
+		catch(ClassCastException c){
+			return true;
 		}
 	}
 
