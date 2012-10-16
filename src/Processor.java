@@ -146,6 +146,7 @@ public class Processor {
 		newTask.setDesc(desc[1]);  // get the exp in "..."
 		String[] temp2 = null;
 		if (desc.length > 2) {
+			desc[2] = desc[2].trim();
 			temp2 = desc[2].split(" ");
 			for (int i=0; i<temp2.length; i++) {
 				if (temp2[i].contains("am") || temp2[i].contains("pm")) {
@@ -155,7 +156,7 @@ public class Processor {
 					else
 						newTask.setEnd(temp2[i]);
 				}
-				else if (temp2[i].contains("/") && temp2[i].split("/").length == 3) {
+				else if (temp2[i].split("/").length == 3) {
 						newTask.setDate(temp2[i]);
 				}
 				else if (temp2[i].startsWith("@")) {
