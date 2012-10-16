@@ -1,22 +1,21 @@
-.description
-.des
-.d
-.startdate
-.sd
-.enddate
-.ed
-.priority
-.pri
-.p
-.hash
-.h
-.duedate
-.due
-.dd
-.starttime
-.st
-.endtime
-.et
-.venue
-.ven
-.v
+description description
+des description
+duedate duedate
+ddate duedate
+dd duedate
+display display
+disp display
+d display
+show display
+priority priority
+pri priority
+p priority
+hash hash
+h hash
+starttime starttime
+st starttime
+endtime endtime
+et endtime
+venue venue
+v venue
+help help

@@ -82,6 +82,8 @@ class Control {
 					command.setData("Which entry do you want to edit?");
 				}
 			}
+			//sort
+			
 			return command;
 			
 		case DONE:
@@ -107,14 +109,6 @@ class Control {
 		}
 	}
 
-	public boolean isEdit() {
-		return edit;
-	}
-
-	public void setEdit(boolean edit) {
-		this.edit = edit;
-	}
-
 	public Entry getTempHold() {
 		return tempHold;
 	}
@@ -137,5 +131,69 @@ class Control {
 
 	public void setProcessor(Processor processor) {
 		this.processor = processor;
+	}
+
+	public String[] processEditMode(String userInput) {
+		String[] cmd = processor.determineCmdEditMode(userInput);
+		if(cmd[1] != null) cmd[1] = cmd[1].trim();
+		if(cmd[0].equals("description")){	
+			if(cmd[1]!=null && cmd[1].length()!=0)
+				tempHold.setDesc(cmd[1]);
+		} else if(cmd[0].equals("duedate")){
+			if(cmd[1].split("/").length == 3){			//to be amended
+				tempHold.setDate(cmd[1]);
+			}
+			else cmd = new String[] {"Error", "Invalid entry for date."};
+		} else if(cmd[0].equals("starttime")){
+			if(cmd[1].endsWith("am") || cmd[1].endsWith("pm"))
+				tempHold.setStart(cmd[1]);
+			else cmd = new String[] {"Error", "Invalid time entry."};
+		} else if(cmd[0].equals("endtime")){
+			if(cmd[1].endsWith("am") || cmd[1].endsWith("pm"))
+				tempHold.setStart(cmd[1]);
+			else cmd = new String[] {"Error", "Invalid time entry."};
+		} else if(cmd[0].equals("hash")){
+			if(cmd[1].startsWith("#"))
+				tempHold.setTagDesc(cmd[1]);
+			else cmd = new String[] {"Error", "Not a hashtag"};
+		} else if(cmd[0].equals("display")){
+			cmd[1] = printEntry(tempHold);
+		} else if(cmd[0].equals("priority")){
+			boolean restrictedWords = cmd[1].equalsIgnoreCase("high") || 
+					cmd[1].equalsIgnoreCase("medium") || cmd[1].equalsIgnoreCase("low");
+			if(restrictedWords){
+				tempHold.setPriority(cmd[1]);
+				//sort
+			}
+			else cmd = new String[] {"Error", "Not a priority"};
+		} else if(cmd[0].equals("venue")){
+			if(cmd[1].startsWith("@"))
+				tempHold.setVenue(cmd[1]);
+			else cmd = new String[] {"Error", "Invalid format for location."};
+		} else if(cmd[0].equals("help")){
+			
+		} else if(cmd[0].equals("end")){
+		} else {
+			cmd = new String[] {"Error", "Invalid edit field."};
+		}
+		
+		return cmd;
+	}
+	
+	private String printEntry(Entry entry) {
+		String lineToPrint = entry.getDesc();
+		if (entry.getStart() != null) 
+			lineToPrint = lineToPrint.concat(" at " + entry.getStart());
+		if (entry.getEnd() != null) 
+			lineToPrint = lineToPrint.concat(" to " + entry.getEnd());
+		if (entry.getDate1() != null) 
+			lineToPrint = lineToPrint.concat(" on " + entry.getDate1());
+		if (entry.getVenue() != null) 
+			lineToPrint = lineToPrint.concat(" " + entry.getVenue());
+		if (entry.getPriority() != null) 
+			lineToPrint = lineToPrint.concat(" " + entry.getPriority());
+		if (entry.getTagDesc() != null) 
+			lineToPrint = lineToPrint.concat(" " + entry.getTagDesc());
+		return lineToPrint;
 	}
 }
