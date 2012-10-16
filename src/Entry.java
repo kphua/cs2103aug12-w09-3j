@@ -82,9 +82,11 @@ class Entry implements Serializable, Comparable<Entry> {
 	// date displayed as e.g. Mon, Dec 14, 2012
 	public void setDate(String _date) {
 
-		int month = Integer.parseInt(_date.substring(0,2));
-	    int day = Integer.parseInt(_date.substring(3,5));
-	    int year = Integer.parseInt(_date.substring(6));
+		String[] dateArr = _date.split("/");
+		
+		int month = Integer.parseInt(dateArr[1]);
+	    int day = Integer.parseInt(dateArr[0]);
+	    int year = Integer.parseInt(dateArr[2]);
 
 		Calendar cal = Calendar.getInstance();
 		cal.set(year, month - 1, day);
