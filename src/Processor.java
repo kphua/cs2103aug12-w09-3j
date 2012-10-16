@@ -61,7 +61,7 @@ public class Processor {
 
 		//check if first word is a command
 		temp[0] = temp[0].toLowerCase();
-		if(!reservedWordsConverter.contains(temp[0])) {
+		if(!reservedWordsConverter.containsKey(temp[0])) {
 			return (new CMD(COMMAND_TYPE.ERROR, ERROR_MSG_INVALID_INPUT));
 		}
 
