@@ -17,8 +17,8 @@ class Control {
 		// load entries
 		processor = new Processor();
 		storage = new Storage();
-//		tempList = storage.getActiveEntries();
-//		Collections.sort(tempList);
+		tempList = new ArrayList<Entry>();
+		Collections.sort(tempList);
 	}
 
 	public CMD performAction(String userInput) {
@@ -55,29 +55,35 @@ class Control {
 //		case UNDO:
 //			return storage.undo(command.getData());
 		case DISPLAY:
-			tempList.clear();
+			ArrayList<String> toPrint = new ArrayList<String>();
+//			tempList = new ArrayList<Entry>();
+//			tempList.clear();
 			toPrint.clear();
 			
-			if (command.getData() == null) {	
+			if (command.getData() == null) {
+				tempList.clear();
 				tempList.addAll(storage.displayAll());
 				for (Entry entry : tempList) { 
-					getPrintEntry(toPrint, entry);
+//					getPrintEntry(toPrint, entry);
+					toPrint.add(printEntry(entry));
 				}
 				command.setData(toPrint);
 			}
 			else {
+				if(tempList.isEmpty()){
+					tempList.addAll(storage.displayAll());
+				}
+					
 				// if the data is integer to specify index
 				if(isInteger(command.getData())){						
-					int index = Integer.parseInt((String) command.getData());
-					tempList.addAll(storage.displayIndex(index));
-					for (Entry entry : tempList) { 
-						getPrintEntry(toPrint, entry);
-					}
+					Integer index = (Integer) command.getData();
+					toPrint.add(printEntry(tempList.get(index-1)));
 					command.setData(toPrint);
 				}
 				// if the data is string to be searched
 				else {
-					String keyword = command.getData().toString();
+					tempList.clear();
+					String keyword = (String) command.getData();
 					tempList.addAll(storage.displayKeyword(keyword));
 					for (Entry entry : tempList) { 
 						getPrintEntry(toPrint, entry);
@@ -105,6 +111,8 @@ class Control {
 					command.setData("Which entry do you want to edit?");
 				}
 			}
+			//sort
+			
 			return command;
 			
 		case DONE:
@@ -140,20 +148,15 @@ class Control {
 	//checks if a string can be converted into an integer
 	private boolean isInteger(Object object) {
 		try{
-			Integer i = Integer.parseInt((String) object);
+			Integer.parseInt((String) object);
 			return true;
 		}
 		catch(NumberFormatException e){
 			return false;
 		}
-	}
-
-	public boolean isEdit() {
-		return edit;
-	}
-
-	public void setEdit(boolean edit) {
-		this.edit = edit;
+		catch(ClassCastException c){
+			return true;
+		}
 	}
 
 	public Entry getTempHold() {
@@ -178,5 +181,69 @@ class Control {
 
 	public void setProcessor(Processor processor) {
 		this.processor = processor;
+	}
+
+	public String[] processEditMode(String userInput) {
+		String[] cmd = processor.determineCmdEditMode(userInput);
+		if(cmd[1] != null) cmd[1] = cmd[1].trim();
+		if(cmd[0].equals("description")){	
+			if(cmd[1]!=null && cmd[1].length()!=0)
+				tempHold.setDesc(cmd[1]);
+		} else if(cmd[0].equals("duedate")){
+			if(cmd[1].split("/").length == 3){			//to be amended
+				tempHold.setDate(cmd[1]);
+			}
+			else cmd = new String[] {"Error", "Invalid entry for date."};
+		} else if(cmd[0].equals("starttime")){
+			if(cmd[1].endsWith("am") || cmd[1].endsWith("pm"))
+				tempHold.setStart(cmd[1]);
+			else cmd = new String[] {"Error", "Invalid time entry."};
+		} else if(cmd[0].equals("endtime")){
+			if(cmd[1].endsWith("am") || cmd[1].endsWith("pm"))
+				tempHold.setStart(cmd[1]);
+			else cmd = new String[] {"Error", "Invalid time entry."};
+		} else if(cmd[0].equals("hash")){
+			if(cmd[1].startsWith("#"))
+				tempHold.setTagDesc(cmd[1]);
+			else cmd = new String[] {"Error", "Not a hashtag"};
+		} else if(cmd[0].equals("display")){
+			cmd[1] = printEntry(tempHold);
+		} else if(cmd[0].equals("priority")){
+			boolean restrictedWords = cmd[1].equalsIgnoreCase("high") || 
+					cmd[1].equalsIgnoreCase("medium") || cmd[1].equalsIgnoreCase("low");
+			if(restrictedWords){
+				tempHold.setPriority(cmd[1]);
+				//sort
+			}
+			else cmd = new String[] {"Error", "Not a priority"};
+		} else if(cmd[0].equals("venue")){
+			if(cmd[1].startsWith("@"))
+				tempHold.setVenue(cmd[1]);
+			else cmd = new String[] {"Error", "Invalid format for location."};
+		} else if(cmd[0].equals("help")){
+			
+		} else if(cmd[0].equals("end")){
+		} else {
+			cmd = new String[] {"Error", "Invalid edit field."};
+		}
+		
+		return cmd;
+	}
+	
+	private String printEntry(Entry entry) {
+		String lineToPrint = entry.getDesc();
+		if (entry.getStart() != null) 
+			lineToPrint = lineToPrint.concat(" at " + entry.getStart());
+		if (entry.getEnd() != null) 
+			lineToPrint = lineToPrint.concat(" to " + entry.getEnd());
+		if (entry.getDate1() != null) 
+			lineToPrint = lineToPrint.concat(" on " + entry.getDate1());
+		if (entry.getVenue() != null) 
+			lineToPrint = lineToPrint.concat(" " + entry.getVenue());
+		if (entry.getPriority() != null) 
+			lineToPrint = lineToPrint.concat(" " + entry.getPriority());
+		if (entry.getTagDesc() != null) 
+			lineToPrint = lineToPrint.concat(" " + entry.getTagDesc());
+		return lineToPrint;
 	}
 }
