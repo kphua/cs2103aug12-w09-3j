@@ -246,7 +246,22 @@ public class Processor {
 		}
 		return mergedString;
 	}
-
+	
+	
+	public String[] determineCmdEditMode(String userInput){
+		String[] data = userInput.split(" ", 2); 
+		data[0] = data[0].toLowerCase();
+		if(!reservedWordsConverterEditMode.containsKey(data[0])){
+			data = new String[]{"error", "Invalid input."};
+		}
+		else{
+			data[0] = reservedWordsConverterEditMode.get(data[0]);
+		}
+		
+		return data;
+		
+	}
+	
 	enum COMMAND_TYPE {
 		ADD, REMOVE, UNDO, DISPLAY, EDIT, QUIT, ERROR, HELP, DONE
 	};

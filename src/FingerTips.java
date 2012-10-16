@@ -78,29 +78,35 @@ class FingerTips {
 			break;
 		case UNDO: break;
 		case DISPLAY: 
-			ArrayList<String> print = new ArrayList<String>();
-			print.addAll((ArrayList<String>) actionMSG.getData());
-			int j=1;
-			for (int i=0; i<print.size(); i++) {
-				System.out.println(j + ". " + print.get(i));
-				j++;
+			ArrayList<String> print = (ArrayList<String>) actionMSG.getData();
+			if(print.isEmpty()){
+				System.out.println("There is nothing to print.");
+			}
+			else{
+				int j=1;
+			
+				for (int i=0; i<print.size(); i++) {
+					System.out.println(j + ". " + print.get(i));
+					j++;
+				}
 			}
 			break;
-		case EDIT: 										
+		case EDIT: 					
 			if(actionMSG.getData()==null){
+				System.out.println("Enter the field you wish to modify, and the new data to replace with.");
+				System.out.println("Type \"end\" to exit edit mode.");
+				System.out.println("Type \"help\" for further assistance.");
 				while(true){
-					System.out.println("Enter the field you wish to modify, and the new data to replace with.");
-					System.out.println("Type \"end\" to exit edit mode.");
-					System.out.println("Type \"help\" for further assistance.");
+					System.out.println("Command: ");
 					
-					
-					
+					userInput = sc.nextLine();
+					userInput = userInput.trim();
 					//call processor
+					String[] response = control.processEditMode(userInput);
+					if(response[0].equals("display")) System.out.println(response[1]);
+					else if(response[0].equals("help")) helpEditMode();
+					else if(response[0].equals("end")) break;
 					
-					
-					
-					break;		
-
 				}
 				
 				control.setTempHold(null);
@@ -143,10 +149,27 @@ class FingerTips {
 		}
 	}
 	
+	private void helpEditMode() {
+		System.out.println("desc: edit description.");
+		System.out.println("ddate: edit due date.");
+		System.out.println("display: shows data in the current node.");
+		System.out.println("priority: edit priority");
+		System.out.println("hash: edit hash tages");
+		System.out.println("st: edit start time");
+		System.out.println("et: edit end time");
+		System.out.println("venue: edit venue");
+		
+	}
+
 	private static void help() {
-		System.out.println(".a/.add to add, .r/.remove to remove, .e/.edit to edit");
-		System.out.println(".u/.undo to undo, .d/.display to display, .q/.quit to quit");
-		System.out.println(".h/.help to display help for FingerTips");
+		System.out.println("add <data>: add an entry with related dates, description, priority etc.");
+		System.out.println("\tprefix @ indicates venue, prefix # indicates a hashtag");
+		System.out.println("remove <number>: remove the selected entry for the active list.");
+		System.out.println("edit <number>: enters edit mode for selected entry.");
+		System.out.println("undo: reverses the previous action.");
+		System.out.println("display: shows the activelist.");
+		System.out.println("display <search criteria>: generates a list of entries fulfilling the search criteria.");
+		System.out.println("quit: terminates the program.");
 	}
 
 	public static void showToUser(String text) {

@@ -26,12 +26,9 @@ class Entry implements Serializable, Comparable<Entry> {
 	int completeStatus;
 	Calendar dueDate;
 	
-
+	
 
 	// constructor
-	public Entry(String[] data) {
-		
-	}
 	
 	public Entry(Entry copy){
 		description = copy.description;
@@ -45,6 +42,10 @@ class Entry implements Serializable, Comparable<Entry> {
 	}
 
 	public Entry() {
+	}
+	
+	public void print(){
+		
 	}
 
 	public String getDesc() {
