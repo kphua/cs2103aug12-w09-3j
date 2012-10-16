@@ -101,16 +101,22 @@ class FingerTips {
 				while(true){
 					try{
 						a = sc.nextInt();
-						if(control.getStorage().getActiveEntries().size() > a) 
+						if(control.getStorage().getActiveEntries().size() < a)
+							System.out.println("Invalid input. Enter a valid index number.");
+						else{
+							runUserInput("edit "+ a);
 							break;
+						}
+							
 					}
 					catch(InputMismatchException e){
-						System.out.println("Invalid input. Enter a valid index.");
+						System.out.println("Invalid input. Action aborted.");
+						break;
 					}
 					
 				}
 				
-				runUserInput("edit "+ a);
+				
 			}
 			
 			break;
