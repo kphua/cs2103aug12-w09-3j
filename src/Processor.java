@@ -141,14 +141,11 @@ public class Processor {
 	//INCOMPLETE
 	private void buildEntry(Entry newTask, String[] data) {
 		
-		String input = (String) data[1];
+		String input = data[1];
 		String[] desc = input.split("\"");
 		newTask.setDesc(desc[1]);  // get the exp in "..."
 		String[] temp2 = null;
-		if (desc.length <= 1) {
-			System.out.println("floating task");
-		}
-		else {
+		if (desc.length > 2) {
 			temp2 = desc[2].split(" ");
 			for (int i=0; i<temp2.length; i++) {
 				if (temp2[i].contains("am") || temp2[i].contains("pm")) {
@@ -158,7 +155,7 @@ public class Processor {
 					else
 						newTask.setEnd(temp2[i]);
 				}
-				else if (temp2[i].contains("/")) {
+				else if (temp2[i].contains("/") && temp2[i].split("/").length == 3) {
 						newTask.setDate(temp2[i]);
 				}
 				else if (temp2[i].startsWith("@")) {
@@ -172,7 +169,6 @@ public class Processor {
 				}
 			}
 		}
-		System.out.println(newTask);
 		
 //		LinkedList<String> dataList = new LinkedList<String>();
 //		String description;
