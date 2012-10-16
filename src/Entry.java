@@ -22,7 +22,7 @@ class Entry implements Serializable, Comparable<Entry> {
 	String venue;
 	String date;
 	String tagDesc;
-	int startTime, endTime;
+	String startTime, endTime;
 	int completeStatus;
 	Calendar dueDate;
 	
@@ -56,21 +56,21 @@ class Entry implements Serializable, Comparable<Entry> {
 		this.description = desc;
 	}
 
-	public int getStart() {
+	public String getStart() {
 		return startTime;
 	}
 
-	// start time (displayed in 24h format)
-	public void setStart(int start) {
+	// start time (displayed in 12h format)
+	public void setStart(String start) {
 		this.startTime = start;
 	}
 
-	public int getEnd() {
+	public String getEnd() {
 		return endTime;
 	}
 
-	// end time (displayed in 24h format)
-	public void setEnd(int end) {
+	// end time (displayed in 12h format)
+	public void setEnd(String end) {
 		this.endTime = end;
 	}
 
@@ -79,11 +79,11 @@ class Entry implements Serializable, Comparable<Entry> {
 	}
 
 	// date displayed as e.g. Mon, Dec 14, 2012
-	public void setDate(int _date) {
+	public void setDate(String _date) {
 
-		int month = (_date / 10000) % 100;
-		int day = _date / 1000000;
-		int year = _date % 10000;
+		int month = Integer.parseInt(_date.substring(0,2));
+	    int day = Integer.parseInt(_date.substring(3,5));
+	    int year = Integer.parseInt(_date.substring(6));
 
 		Calendar cal = Calendar.getInstance();
 		cal.set(year, month - 1, day);
@@ -92,6 +92,10 @@ class Entry implements Serializable, Comparable<Entry> {
 		SimpleDateFormat sdf = new SimpleDateFormat("EEE, MMM dd, yyyy");
 		this.date = sdf.format(date);
 
+	}
+	
+	public String getDate1() {
+		return date;
 	}
 
 	public String getVenue() {
@@ -107,7 +111,7 @@ class Entry implements Serializable, Comparable<Entry> {
 		return priority;
 	}
 
-	// priority, identified by !H/M/L for high/medium/low
+	// priority, identified by HIGH/MED/LOW
 	public void setPriority(String priority) {
 		this.priority = priority;
 	}
@@ -124,7 +128,7 @@ class Entry implements Serializable, Comparable<Entry> {
 	// for printing of entries
 	public String toString() {
 		return this.getDesc() + " " + this.getStart() + " " + this.getEnd()
-				+ " " + this.getDate() + " " + this.getVenue() + " "
+				+ " " + this.getDate1() + " " + this.getVenue() + " "
 				+ this.getPriority() + " " + this.getTagDesc();
 	}
 
