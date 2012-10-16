@@ -142,27 +142,10 @@ class Storage {
 	}
 
 	/*
-	 * Adds new entry into the activeEntries list. Entry passed must be in the
-	 * form "homework--12--13--14121998--hello--bye--me". All fields must be
-	 * present for now to prevent exception. ~storage.addEntry(ENTRY_NAME)
+	 * Adds new entry into the activeEntries list. ~storage.addEntry(ENTRY_NAME)
 	 */
-	public void addEntry(String entry) {
-		Entry e = new Entry();
-		String[] arr = entry.split("--"); // token can change accordingly
-
-		e.setDesc(arr[0]);
-		int start = Integer.parseInt(arr[1]);
-		e.setStart(start);
-		int end = Integer.parseInt(arr[2]);
-		e.setEnd(end);
-		int date = Integer.parseInt(arr[3]);
-		e.setDate(date);
-		e.setVenue(arr[4]);
-		e.setPriority(arr[5]);
-		e.setTagDesc(arr[6]);
-		e.setCompleteStatus(0); // for all new entry, default to 0
-								// (incomplete)
-		activeEntries.add(e);
+	public void addEntry(Entry entry) {
+		activeEntries.add(entry);
 	}
 
 	/*
@@ -263,10 +246,10 @@ class Storage {
 	/*
 	 * Method to display entries by specified date. Entries will be copied over
 	 * to displayEntries for printing. displayEntries will be initialized each
-	 * time this method is called. User to enter date in the form ddmmyyyy.
-	 * ~storage.displayDate(ddmmyyyy)
+	 * time this method is called. User to enter date in the form dd/mm/yyyy.
+	 * ~storage.displayDate(dd/mm/yyyy)
 	 */
-	public ArrayList<Entry> displayDate(int date) {
+	public ArrayList<Entry> displayDate(String date) {
 		displayEntries.clear();
 		Entry newEntry = new Entry();
 		newEntry.setDate(date);
