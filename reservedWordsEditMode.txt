@@ -19,3 +19,7 @@ et endtime
 venue venue
 v venue
 help help
+end end
+quit end
+q end
+exit end

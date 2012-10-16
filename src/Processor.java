@@ -34,13 +34,19 @@ public class Processor {
 			reservedWordsConverter.put(sc.next(), sc.next());
 		}
 
+		sc.close();
+		
 		reader = new BufferedReader(new FileReader(reservedWordsEditMode));
+		sc = new Scanner(reader);
 
 		while(sc.hasNext()){
 			reservedWordsConverterEditMode.put(sc.next(), sc.next());
 		}
 		
+		sc.close();
+		
 		reader = new BufferedReader(new FileReader(indicativeWords));
+		sc = new Scanner(reader);
 		
 		while(sc.hasNext()){
 			indicativeWordsIdentifier.put(sc.next(), sc.nextInt());
