@@ -171,6 +171,7 @@ public class Processor {
 	//INCOMPLETE
 	private void buildEntry(Entry newTask, String[] data) {
 		
+		
 		String input = data[1];
 		String[] desc = input.split("\"");
 		newTask.setDesc(desc[1]);  // get the exp in "..."
@@ -187,7 +188,8 @@ public class Processor {
 						newTask.setEnd(temp2[i]);
 				}
 				else if (isDate(temp2[i])) {
-						newTask.setDateCal(temp2[i]);
+					newTask.iniDDate();
+					newTask.setDateCal(temp2[i]);
 				}
 				else if (temp2[i].startsWith("@")) {
 					newTask.setVenue(temp2[i]);
@@ -261,8 +263,8 @@ public class Processor {
 		String[] strArr = s.split("/");
 		if(strArr.length != 3) return false;
 		boolean dayFalse = Integer.parseInt(strArr[0]) > 31 || Integer.parseInt(strArr[0]) < 1;
-		boolean monthFalse = Integer.parseInt(strArr[0]) > 11 || Integer.parseInt(strArr[0]) < 1;
-		boolean yearFalse = Integer.parseInt(strArr[0]) > 2100 || Integer.parseInt(strArr[0]) < 1900;
+		boolean monthFalse = Integer.parseInt(strArr[1]) > 11 || Integer.parseInt(strArr[1]) < 1;
+		boolean yearFalse = Integer.parseInt(strArr[2]) > 2100 || Integer.parseInt(strArr[2]) < 1900;
 		
 		if(dayFalse || monthFalse || yearFalse) return false;
 		
