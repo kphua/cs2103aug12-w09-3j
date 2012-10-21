@@ -127,7 +127,10 @@ class Control {
 				command.setCommandType(Processor.COMMAND_TYPE.ERROR);
 				command.setData("Invalid index.");
 			} else {
-				
+				tempList.addAll(storage.displayAll()); // need to initialise tempList and remove this line
+				Entry e = tempList.get(i-1);
+				storage.updateCompletedEntry(e);
+				storage.saveToStorage();
 			}
 			
 			return command;

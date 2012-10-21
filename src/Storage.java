@@ -160,6 +160,18 @@ class Storage {
 		tempEntries.add(displayEntries.get(index - 1));
 		activeEntries.removeAll(tempEntries); // update activeEntries list
 	}
+	
+	/*
+	 * This method should only be called after the display function is called.
+	 * From control, the entry to be marked done will be passed to this method
+	 * to be added to the archiveEntries list. Subsequently, update activeEntries
+	 * list to remove the specific entry from storage.
+	 * ~storage.updateCompletedEntry(ENTRY_OBJECT)
+	 */
+	public void updateCompletedEntry(Entry e) {
+		archiveEntries.add(e);
+		activeEntries.removeAll(archiveEntries);
+	}
 
 	/*
 	 * Setters and getters methods for printing active/archive/displayEntries

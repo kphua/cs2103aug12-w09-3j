@@ -85,8 +85,8 @@ public class Processor {
 			}
 		
 		case DONE:
-			if(temp.length > 1 && isInteger(temp[2])){
-				Integer i = Integer.parseInt(temp[2]);
+			if(temp.length > 1 && isInteger(temp[1])){
+				Integer i = Integer.parseInt(temp[1]);
 				return new CMD(userCMD, i);
 			}
 			else return new CMD(COMMAND_TYPE.ERROR, ERROR_MSG_INVALID_INPUT);
