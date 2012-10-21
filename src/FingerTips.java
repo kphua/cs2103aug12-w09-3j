@@ -55,9 +55,8 @@ class FingerTips {
 			if(actionMSG.getData()==null){
 				System.out.println("Please enter a description for your task:");
 				String description = sc.nextLine().trim();
-				sc.nextLine();
-				description = "add ".concat(description);
-				runUserInput(description);
+				description = "add \"".concat(description);
+				control.performAction(description);
 			}
 			
 //			System.out.println("Add further information? y/n");
@@ -73,6 +72,7 @@ class FingerTips {
 //				runUserInput("edit");
 //			} else {
 				control.setTempHold(null);
+				System.out.println("Added.");
 //			}
 			break;
 			
@@ -84,7 +84,7 @@ class FingerTips {
 					System.out.print("Index: ");
 					rmvIndex = sc.nextInt();
 					String newInstruction = "remove ".concat(Integer.toString(rmvIndex));
-					runUserInput(newInstruction);
+					control.performAction(newInstruction);
 							 
 				} catch(InputMismatchException e){
 					System.out.println("Invalid input. Action aborted.");
