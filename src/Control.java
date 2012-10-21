@@ -51,6 +51,7 @@ class Control {
 					Integer i = (Integer) command.getData(); 
 //					command.setData(storage.displayEntries.get(i-1));
 					storage.removeEntry(i);
+					storage.saveToStorage();
 				}
 				else{
 					//if commandData was a String
@@ -120,6 +121,15 @@ class Control {
 			return command;
 			
 		case DONE:
+			Integer i = (Integer) command.getData();
+			if(i > storage.getActiveEntries().size() ||
+					i < 1) {
+				command.setCommandType(Processor.COMMAND_TYPE.ERROR);
+				command.setData("Invalid index.");
+			} else {
+				
+			}
+			
 			return command;
 		case QUIT:
 			return command;

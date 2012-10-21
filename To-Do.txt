@@ -16,6 +16,10 @@ Entry
 	- Implement Calendar
 	- tagDesc to hashtags list
 	- simple print format (?)
+		Due date		Description
+		1/1/1111		blah
+		
+		detailed print
 	** print function should be placed under here instead 
 	
 FingerTips
@@ -32,6 +36,12 @@ Storage
 	
 GUI
 	- To be implemented
+	
+	
+	
+	Implement input check
+	Optimise to one-step commands
+	Remove "Add additional info?"
 
 Overall functionalities (?):
 	- Reminders (remaining time tracker?)
