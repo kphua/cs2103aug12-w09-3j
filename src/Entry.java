@@ -29,7 +29,11 @@ class Entry implements Serializable, Comparable<Entry> {
 	
 
 	// constructor
+	public Entry() {
+		dueDate = Calendar.getInstance();
+	}
 	
+	//clone constructor
 	public Entry(Entry copy){
 		description = copy.description;
 		priority = copy.priority;
@@ -39,9 +43,6 @@ class Entry implements Serializable, Comparable<Entry> {
 		startTime = copy.startTime;
 		endTime = copy.endTime;
 		completeStatus = copy.completeStatus;
-	}
-
-	public Entry() {
 	}
 	
 	public void print(){
@@ -97,6 +98,17 @@ class Entry implements Serializable, Comparable<Entry> {
 
 	}
 	
+	//setDate for calendar
+	public void setDateCal(String newdate){
+		String[] dateArr = newdate.split("/");
+		
+		int day = Integer.parseInt(dateArr[0]);
+		int month = Integer.parseInt(dateArr[1]);
+	    int year = Integer.parseInt(dateArr[2]);
+	    
+	    //
+	}
+	
 	public String getDate1() {
 		return date;
 	}
@@ -137,7 +149,7 @@ class Entry implements Serializable, Comparable<Entry> {
 
 	@Override
 	public int compareTo(Entry arg0) {
-		// TODO Auto-generated method stub
+
 		return 0;
 	}
 
