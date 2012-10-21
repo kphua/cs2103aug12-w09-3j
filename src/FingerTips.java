@@ -117,7 +117,6 @@ class FingerTips {
 					userInput = userInput.trim();
 					//call processor
 					String[] response = control.processEditMode(userInput);
-					sc.nextLine();
 					if(response[0].equals("display")) System.out.println(response[1]);
 					else if(response[0].equals("help")) helpEditMode();
 					else if(response[0].equals("end")) break;
@@ -133,6 +132,7 @@ class FingerTips {
 					try{
 						System.out.print("Index: ");
 						a = sc.nextInt();
+						sc.nextLine();
 						if(control.getStorage().getActiveEntries().size() < a)
 							System.out.println("Invalid input. Enter a valid index number.");
 						else{
