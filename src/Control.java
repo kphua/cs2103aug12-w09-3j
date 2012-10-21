@@ -12,7 +12,7 @@ class Control {
 
 	private String MSG_ERROR = "Invalid input!";
 
-	public Control() throws FileNotFoundException {
+	public Control() {
 		// initialise.
 		// load entries
 		processor = new Processor();

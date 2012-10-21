@@ -10,18 +10,19 @@ class FingerTips {
 	public FingerTips(){
 		sc = new Scanner(System.in);
 		cont = true;
+		control = new Control();
 		
-		try{
-			control = new Control();
-		}
-		catch(FileNotFoundException e){
-			System.out.println("Fatal Error. Critical files are missing.");
-			System.out.println("Re-install Program or contact your service provider.");
-			System.out.println("Program will now terminate.");
-			System.out.println("Press Enter to continue.");
-			sc.nextLine();
-			System.exit(0);
-		}
+//		try{
+//			control = new Control();
+//		}
+//		catch(FileNotFoundException e){
+//			System.out.println("Fatal Error. Critical files are missing.");
+//			System.out.println("Re-install Program or contact your service provider.");
+//			System.out.println("Program will now terminate.");
+//			System.out.println("Press Enter to continue.");
+//			sc.nextLine();
+//			System.exit(0);
+//		}
 	}
 	
 	public static void main(String args[]) throws FileNotFoundException {

@@ -14,45 +14,69 @@ public class Processor {
 	private Hashtable <String, String> reservedWordsConverterEditMode;
 	private Hashtable <String, Integer> indicativeWordsIdentifier;
 	private File reservedWords, reservedWordsEditMode, indicativeWords;
+	private Scanner scanner = new Scanner(System.in);
 
 	private static final String ERROR_MSG_INVALID_INPUT = "Invalid Input.";
-	
+	private static final String ERROR_MSG_FATAL_ERROR = "Fatal Error. Critical files are missing.\n" +
+			"Re-install Program or contact your service provider.\n" +
+			"Program will now terminate.\n" +
+			"Press Enter to continue.";
 
 	//loads reserved words into hashTables
-	public Processor() throws FileNotFoundException{
+	public Processor() {
 		reservedWords = new File("reservedWords.txt");
 		reservedWordsEditMode = new File("reservedWordsEditMode.txt");
 		indicativeWords = new File("indicativeWOrds.txt");
+		BufferedReader reader;
+		Scanner sc;
 
-		BufferedReader reader = new BufferedReader(new FileReader(reservedWords));
-		Scanner sc = new Scanner(reader);
-		reservedWordsConverter = new Hashtable<String, String>();
-		reservedWordsConverterEditMode = new Hashtable<String, String>();
-		indicativeWordsIdentifier = new Hashtable<String, Integer>();
+		try {
+			reader = new BufferedReader(new FileReader(reservedWords));
+			sc = new Scanner(reader);
+			reservedWordsConverter = new Hashtable<String, String>();
+			reservedWordsConverterEditMode = new Hashtable<String, String>();
+			indicativeWordsIdentifier = new Hashtable<String, Integer>();
 
-		while(sc.hasNext()){
-			reservedWordsConverter.put(sc.next(), sc.next());
+			while(sc.hasNext()){
+				reservedWordsConverter.put(sc.next(), sc.next());
+			}
+
+			sc.close();
+		} catch (FileNotFoundException fnfe) {
+			System.out.println(ERROR_MSG_FATAL_ERROR);
+			scanner.nextLine();
+			System.exit(0);
 		}
 
-		sc.close();
-		
-		reader = new BufferedReader(new FileReader(reservedWordsEditMode));
-		sc = new Scanner(reader);
+		try {
+			reader = new BufferedReader(new FileReader(reservedWordsEditMode));
+			sc = new Scanner(reader);
 
-		while(sc.hasNext()){
-			reservedWordsConverterEditMode.put(sc.next(), sc.next());
+			while(sc.hasNext()){
+				reservedWordsConverterEditMode.put(sc.next(), sc.next());
+			}
+			
+			sc.close();
+		} catch (FileNotFoundException fnfe) {
+			System.out.println(ERROR_MSG_FATAL_ERROR);
+			scanner.nextLine();
+			System.exit(0);
 		}
 		
-		sc.close();
-		
-		reader = new BufferedReader(new FileReader(indicativeWords));
-		sc = new Scanner(reader);
-		
-		while(sc.hasNext()){
-			indicativeWordsIdentifier.put(sc.next(), sc.nextInt());
-		}
+		try {
+			reader = new BufferedReader(new FileReader(indicativeWords));
+			sc = new Scanner(reader);
+			
+			while(sc.hasNext()){
+				indicativeWordsIdentifier.put(sc.next(), sc.nextInt());
+			}
 
-		sc.close();
+			sc.close();
+		} catch (FileNotFoundException fnfe) {
+			System.out.println(ERROR_MSG_FATAL_ERROR);
+			scanner.nextLine();
+			System.exit(0);
+		}
 	}
 
 
