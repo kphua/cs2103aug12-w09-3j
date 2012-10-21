@@ -237,12 +237,10 @@ public class Processor {
 		Date date = null;
 		try {
 			date = new SimpleDateFormat("dd/MM/yyyy", Locale.US).parse(s);
+			return true;
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return false;
 		}
-		if(date==null) return false;
-		else return true;
 	}
 	
 	
