@@ -117,6 +117,7 @@ class FingerTips {
 					userInput = userInput.trim();
 					//call processor
 					String[] response = control.processEditMode(userInput);
+					sc.nextLine();
 					if(response[0].equals("display")) System.out.println(response[1]);
 					else if(response[0].equals("help")) helpEditMode();
 					else if(response[0].equals("end")) break;
