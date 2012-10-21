@@ -216,6 +216,7 @@ class Control {
 				tempHold.setDesc(cmd[1]);
 		} else if(cmd[0].equals("duedate")){
 			if(processor.isDate(cmd[1])){			//to be amended
+				tempHold.iniDDate();
 				tempHold.setDateCal(cmd[1]);
 			}
 			else cmd = new String[] {"Error", "Invalid entry for date."};
