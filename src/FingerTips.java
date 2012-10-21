@@ -61,6 +61,7 @@ class FingerTips {
 //				runUserInput("edit");
 //			} else {
 				control.setTempHold(null);
+				Collections.sort(control.getStorage().getActiveEntries());
 				System.out.println("Added.");
 //			}
 			break;

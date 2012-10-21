@@ -12,8 +12,7 @@ Control
 	- ClearAll function (?)	
 	
 Entry
-	- compareTo
-	- Implement Calendar
+	- compareTo (implement time comparison when time comparison can be implemented)
 	- tagDesc to hashtags list
 	- simple print format (?)
 		Due date		Description
