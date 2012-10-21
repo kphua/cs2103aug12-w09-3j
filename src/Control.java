@@ -19,7 +19,7 @@ class Control {
 		processor = new Processor();
 		storage = Storage.getInstance();
 		tempList = new ArrayList<Entry>();
-		Collections.sort(tempList);
+//		Collections.sort(tempList);
 	}
 	
 	public static Control getInstance() {
