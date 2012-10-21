@@ -234,9 +234,16 @@ public class Processor {
 	}
 	
 	private boolean isDate(String s){
-		Date date = null;
+		String[] strArr = s.split("/");
+		if(strArr.length != 3) return false;
+		boolean dayFalse = Integer.parseInt(strArr[0]) > 31 || Integer.parseInt(strArr[0]) < 1;
+		boolean monthFalse = Integer.parseInt(strArr[0]) > 11 || Integer.parseInt(strArr[0]) < 1;
+		boolean yearFalse = Integer.parseInt(strArr[0]) > 2100 || Integer.parseInt(strArr[0]) < 1900;
+		
+		if(dayFalse || monthFalse || yearFalse) return false;
+		
 		try {
-			date = new SimpleDateFormat("dd/MM/yyyy", Locale.US).parse(s);
+			Date date = new SimpleDateFormat("dd/MM/yyyy", Locale.US).parse(s);
 			return true;
 		} catch (ParseException e) {
 			return false;
