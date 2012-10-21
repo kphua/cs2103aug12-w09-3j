@@ -162,8 +162,14 @@ class FingerTips {
 			}
 			
 			break;
-		case DONE: break;
-			
+		case DONE: 
+			if(actionMSG.getData() == null){
+				System.out.println("Invalid input. Action aborted.");
+			}
+			else{
+				System.out.println("Entry marked as done.");
+			}
+			break;
 			case HELP:
 				help();
 				break;
