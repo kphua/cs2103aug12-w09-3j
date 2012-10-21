@@ -1,0 +1,60 @@
+CMD
+
+Control
+	- EDIT Function
+		- Sort after editing
+	- UNDO Function
+		- To be implemented
+	- DONE Function
+		- To be implemented
+	- Priority Function
+		- To be implemented
+	- ClearAll function (?)	
+	
+Entry
+	- compareTo
+	- Implement Calendar
+	- tagDesc to hashtags list
+	- simple print format (?)
+		Due date		Description
+		1/1/1111		blah
+		
+		detailed print
+	** print function should be placed under here instead 
+	
+FingerTips
+	- REMOVE Function
+		- double check before remove
+
+Processor
+	- Sorting function
+	- UNDO Function
+	- buildEntry -> Dates etc.
+
+Storage 
+	- function to deal with Remove<String>
+	
+GUI
+	- To be implemented
+	
+	
+	
+	Implement input check
+	Optimise to one-step commands
+	Remove "Add additional info?"
+
+Overall functionalities (?):
+	- Reminders (remaining time tracker?)
+	- Rescheduling
+	- Different sorting types -> additional field "estimated completion timing"
+	- adding and removing hashtags freely
+	- Print current time and date
+	
+	
+Phases:	
+	Formating
+	Error messages, Completion Messages
+	Clean up/ Refactor/ Optimise
+	Stress Test
+	Edge Test
+	
