@@ -57,7 +57,8 @@ class Control {
 			if(command.getData()!=null){
 				if(isInteger(command.getData())) {
 					Integer i = (Integer) command.getData(); 
-//					command.setData(storage.displayEntries.get(i-1));
+					undo.setCommandType(command.getCommandType());
+					undo.setData(storage.getDisplayEntries().get(i-1));
 					storage.removeEntry(i);
 					storage.saveToStorage();
 				}
@@ -68,11 +69,14 @@ class Control {
 			return command;
 			
 		case CLEAR:
+			undo.setCommandType(command.getCommandType());
+			undo.setData(storage.getActiveEntries());
 			storage.clear();
 			storage.saveToStorage();
 			return command;
-//		case UNDO:
-//			return storage.undo(command.getData());
+		case UNDO:
+			command.setData(undo());
+			return command;
 		case DISPLAY:
 			toPrint.clear();
 //			tempList = new ArrayList<Entry>();
@@ -142,6 +146,8 @@ class Control {
 			} else {
 				tempList.addAll(storage.displayAll()); // need to initialise tempList and remove this line
 				Entry e = tempList.get(i-1);
+				undo.setCommandType(command.getCommandType());
+				undo.setData(e);
 				storage.updateCompletedEntry(e);
 				storage.saveToStorage();
 			}
@@ -154,6 +160,24 @@ class Control {
 		default:
 			return command;
 		}
+		
+	}
+
+	private String undo() {
+		switch(undo.getCommandType()){
+		case ADD: break;		//amend storage remove function to search for objects and not indexes before implement
+		case REMOVE: 
+			storage.addEntry((Entry)undo.getData());
+			break;
+		case CLEAR: 
+			storage.setActiveEntries((ArrayList<Entry>) undo.getData());
+			break;
+		case EDIT: break;		//each entry needs a unique identity for this to work...
+		case DONE: break;		//storage function to move it back...Entry is given undeer data of Undo
+			default: 
+				return "There are no further undo-s.";
+		}
+		return "Undo completed.";
 		
 	}
 

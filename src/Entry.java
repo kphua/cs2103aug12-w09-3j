@@ -22,7 +22,7 @@ class Entry implements Serializable, Comparable<Entry> {
 	private String priority;
 	private ArrayList <String> hashTags;
 	private String venue;
-//	String date;
+//	String date;w
 	private String tagDesc;
 	private String startTime, endTime;
 	private int completeStatus;

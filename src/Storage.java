@@ -60,7 +60,7 @@ class Storage {
 	}
 	
 	public void clear(){
-		activeEntries.clear();
+		activeEntries = new ArrayList<Entry>();
 	}
 
 	private void loadFromStorage(File source, ArrayList<Entry> entries) {

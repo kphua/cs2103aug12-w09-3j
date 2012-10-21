@@ -88,7 +88,9 @@ class FingerTips {
 			}
 
 			break;
-		case UNDO: break;
+		case UNDO: 
+			System.out.println(actionMSG.getData());
+			break;
 		case DISPLAY: 
 			ArrayList<String> print = (ArrayList<String>) actionMSG.getData();
 			if(print.isEmpty()){
