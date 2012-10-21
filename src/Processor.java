@@ -263,7 +263,7 @@ public class Processor {
 		String[] strArr = s.split("/");
 		if(strArr.length != 3) return false;
 		boolean dayFalse = Integer.parseInt(strArr[0]) > 31 || Integer.parseInt(strArr[0]) < 1;
-		boolean monthFalse = Integer.parseInt(strArr[1]) > 11 || Integer.parseInt(strArr[1]) < 1;
+		boolean monthFalse = Integer.parseInt(strArr[1]) > 12 || Integer.parseInt(strArr[1]) < 1;
 		boolean yearFalse = Integer.parseInt(strArr[2]) > 2100 || Integer.parseInt(strArr[2]) < 1900;
 		
 		if(dayFalse || monthFalse || yearFalse) return false;
