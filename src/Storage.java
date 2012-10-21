@@ -45,6 +45,7 @@ class Storage {
 		
 		if (activeFile.exists()) {
 			loadFromStorage(activeFile, activeEntries);
+			Collections.sort(activeEntries);
 		}
 		if (archiveFile.exists()) {
 			loadFromStorage(archiveFile, archiveEntries);

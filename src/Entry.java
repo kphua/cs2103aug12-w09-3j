@@ -18,15 +18,15 @@ class Entry implements Serializable, Comparable<Entry> {
 	 * class so as to preserve the object properties of Entry
 	 */
 	private static final long serialVersionUID = 1L;
-	String description;
-	String priority;
-	ArrayList <String> hashTags;
-	String venue;
+	private String description;
+	private String priority;
+	private ArrayList <String> hashTags;
+	private String venue;
 //	String date;
-	String tagDesc;
-	String startTime, endTime;
-	int completeStatus;
-	Calendar dueDate;
+	private String tagDesc;
+	private String startTime, endTime;
+	private int completeStatus;
+	private Calendar dueDate;
 
 	// constructor
 	public Entry() {
@@ -165,9 +165,37 @@ class Entry implements Serializable, Comparable<Entry> {
 	}
 
 	@Override
-	public int compareTo(Entry arg0) {
-
-		return 0;
+	public int compareTo(Entry entry) {
+		
+		int i;
+		
+		if(dueDate == null || entry.dueDate == null || dueDate.equals(entry.dueDate)){
+			
+			if(dueDate!=null && entry.dueDate == null) return 1;
+			if(dueDate==null && entry.dueDate != null) return -1;
+			
+			if(priority == null || entry.priority == null || priority.equals(entry.priority)){
+				if(priority!=null && entry.priority == null) return -1;
+				if(priority==null && entry.priority != null) return 1;
+				if(description.equals(entry.description)){
+					return 0;
+				}
+				else{
+					i = description.compareTo(entry.description);
+				}
+			}
+			else{
+				if(priority.equals("high")) return 1;
+				if(priority.equals("low")) return -1;
+				if(entry.priority.equals("high")) return -1;
+				else return 1;
+			}
+		} else i = dueDate.compareTo(entry.dueDate);
+		
+		return i;
+		
+		
+		
 	}
 
 	public void setDate(Date date) {
