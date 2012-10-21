@@ -22,7 +22,7 @@ class Entry implements Serializable, Comparable<Entry> {
 	String priority;
 	ArrayList <String> hashTags;
 	String venue;
-	String date;
+//	String date;
 	String tagDesc;
 	String startTime, endTime;
 	int completeStatus;
@@ -48,11 +48,11 @@ class Entry implements Serializable, Comparable<Entry> {
 	}
 	
 	public void print(){
-		System.out.printf("%s\t\t%d\n", getDate(), description);
+		System.out.printf("%s\t%d\n", getDate(), description);
 	}
 	
 	public void printDetailed(){
-		System.out.printf("%s %s\t%s\t%s%t\n", getDate(), )
+		System.out.printf("%s\t%s\t%s%t", getDate(), venue, description);
 	}
 
 	public String getDesc() {
@@ -84,33 +84,38 @@ class Entry implements Serializable, Comparable<Entry> {
 
 	public String getDate() {
 		int day, month, year;
-		day = dueDate.get(Calendar.DAY_OF_MONTH);
-		month = dueDate.get(Calendar.MONTH) + 1;
-		year = dueDate.get(Calendar.YEAR);
-		String date = Integer.toString(day);
-		date = date.concat("/"+Integer.toString(month));
-		date = date.concat("/"+Integer.toString(year));
+		if(dueDate != null){
+			day = dueDate.get(Calendar.DAY_OF_MONTH);
+			month = dueDate.get(Calendar.MONTH) + 1;
+			year = dueDate.get(Calendar.YEAR);
+			String date = Integer.toString(day);
+			date = date.concat("/"+Integer.toString(month));
+			date = date.concat("/"+Integer.toString(year));
 		
-		return date;
+			return date;
+		}
+		else{
+			return null;
+		}
 	}
 
 	// date displayed as e.g. Mon, Dec 14, 2012
-	public void setDate(String _date) {
-
-		String[] dateArr = _date.split("/");
-		
-		int month = Integer.parseInt(dateArr[1]);
-	    int day = Integer.parseInt(dateArr[0]);
-	    int year = Integer.parseInt(dateArr[2]);
-
-		Calendar cal = Calendar.getInstance();
-		cal.set(year, month - 1, day);
-		Date date = cal.getTime();
-		// Transformation of the date
-		SimpleDateFormat sdf = new SimpleDateFormat("EEE, MMM dd, yyyy");
-		this.date = sdf.format(date);
-
-	}
+//	public void setDate(String _date) {
+//
+//		String[] dateArr = _date.split("/");
+//		
+//		int month = Integer.parseInt(dateArr[1]);
+//	    int day = Integer.parseInt(dateArr[0]);
+//	    int year = Integer.parseInt(dateArr[2]);
+//
+//		Calendar cal = Calendar.getInstance();
+//		cal.set(year, month - 1, day);
+//		Date date = cal.getTime();
+//		// Transformation of the date
+//		SimpleDateFormat sdf = new SimpleDateFormat("EEE, MMM dd, yyyy");
+//		this.date = sdf.format(date);
+//
+//	}
 	
 	//setDate for calendar
 	public void setDateCal(String newdate){
@@ -122,10 +127,6 @@ class Entry implements Serializable, Comparable<Entry> {
 	    
 		dueDate.setTime(date);
 	   
-	}
-	
-	public String getDate1() {
-		return date;
 	}
 
 	public String getVenue() {
@@ -158,7 +159,7 @@ class Entry implements Serializable, Comparable<Entry> {
 	// for printing of entries
 	public String toString() {
 		return this.getDesc() + " " + this.getStart() + " " + this.getEnd()
-				+ " " + this.getDate1() + " " + this.getVenue() + " "
+				+ " " + this.getDate() + " " + this.getVenue() + " "
 				+ this.getPriority() + " " + this.getTagDesc();
 	}
 

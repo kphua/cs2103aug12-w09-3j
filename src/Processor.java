@@ -162,8 +162,8 @@ public class Processor {
 					else
 						newTask.setEnd(temp2[i]);
 				}
-				else if (temp2[i].split("/").length == 3) {
-						newTask.setDate(temp2[i]);
+				else if (isDate(temp2[i])) {
+						newTask.setDateCal(temp2[i]);
 				}
 				else if (temp2[i].startsWith("@")) {
 					newTask.setVenue(temp2[i]);
@@ -233,7 +233,7 @@ public class Processor {
 		}
 	}
 	
-	private boolean isDate(String s){
+	boolean isDate(String s){
 		String[] strArr = s.split("/");
 		if(strArr.length != 3) return false;
 		boolean dayFalse = Integer.parseInt(strArr[0]) > 31 || Integer.parseInt(strArr[0]) < 1;

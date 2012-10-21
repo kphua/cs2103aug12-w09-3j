@@ -151,8 +151,8 @@ class Control {
 			lineToPrint = lineToPrint.concat(" at " + entry.getStart());
 		if (entry.getEnd() != null) 
 			lineToPrint = lineToPrint.concat(" to " + entry.getEnd());
-		if (entry.getDate1() != null) 
-			lineToPrint = lineToPrint.concat(" on " + entry.getDate1());
+		if (entry.getDate() != null) 
+			lineToPrint = lineToPrint.concat(" on " + entry.getDate());
 		if (entry.getVenue() != null) 
 			lineToPrint = lineToPrint.concat(" " + entry.getVenue());
 		if (entry.getPriority() != null) 
@@ -207,8 +207,8 @@ class Control {
 			if(cmd[1]!=null && cmd[1].length()!=0)
 				tempHold.setDesc(cmd[1]);
 		} else if(cmd[0].equals("duedate")){
-			if(cmd[1].split("/").length == 3){			//to be amended
-				tempHold.setDate(cmd[1]);
+			if(processor.isDate(cmd[1])){			//to be amended
+				tempHold.setDateCal(cmd[1]);
 			}
 			else cmd = new String[] {"Error", "Invalid entry for date."};
 		} else if(cmd[0].equals("starttime")){
@@ -254,8 +254,8 @@ class Control {
 			lineToPrint = lineToPrint.concat(" at " + entry.getStart());
 		if (entry.getEnd() != null) 
 			lineToPrint = lineToPrint.concat(" to " + entry.getEnd());
-		if (entry.getDate1() != null) 
-			lineToPrint = lineToPrint.concat(" on " + entry.getDate1());
+		if (entry.getDate() != null) 
+			lineToPrint = lineToPrint.concat(" on " + entry.getDate());
 		if (entry.getVenue() != null) 
 			lineToPrint = lineToPrint.concat(" " + entry.getVenue());
 		if (entry.getPriority() != null) 

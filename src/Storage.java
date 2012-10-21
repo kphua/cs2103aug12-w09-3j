@@ -264,7 +264,7 @@ class Storage {
 	public ArrayList<Entry> displayDate(String date) {
 		displayEntries.clear();
 		Entry newEntry = new Entry();
-		newEntry.setDate(date);
+		newEntry.setDateCal(date);
 		for (Entry entry : activeEntries) {
 			if (entry.getDate().equals(newEntry.getDate())) {
 				displayEntries.add(entry);
