@@ -252,7 +252,7 @@ class Storage {
 	public ArrayList<Entry> displayKeyword(String keyword) {
 		displayEntries.clear();
 		for (Entry entry : activeEntries) {
-			if (entry.toString().contains(keyword)) {
+			if (entry.toString().toLowerCase().contains(keyword)) {
 				displayEntries.add(entry);
 			}
 		}	

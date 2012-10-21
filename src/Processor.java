@@ -197,7 +197,7 @@ public class Processor {
 				}
 				else if (temp2[i].equalsIgnoreCase("HIGH") || temp2[i].equalsIgnoreCase("MED") 
 						|| temp2[i].equalsIgnoreCase("LOW")) {
-					newTask.setPriority(temp2[i]);
+					newTask.setPriority(temp2[i].toUpperCase());
 				}
 			}
 		}

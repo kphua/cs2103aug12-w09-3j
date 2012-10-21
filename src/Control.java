@@ -97,7 +97,7 @@ class Control {
 				else {
 					tempList.clear();
 					String keyword = (String) command.getData();
-					tempList.addAll(storage.displayKeyword(keyword));
+					tempList.addAll(storage.displayKeyword(keyword.toLowerCase()));
 					for (Entry entry : tempList) { 
 						getPrintEntry(toPrint, entry);
 					}
@@ -238,7 +238,7 @@ class Control {
 			boolean restrictedWords = cmd[1].equalsIgnoreCase("high") || 
 					cmd[1].equalsIgnoreCase("medium") || cmd[1].equalsIgnoreCase("low");
 			if(restrictedWords){
-				tempHold.setPriority(cmd[1]);
+				tempHold.setPriority(cmd[1].toUpperCase());
 				//sort
 			}
 			else cmd = new String[] {"Error", "Not a priority"};
