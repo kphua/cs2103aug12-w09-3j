@@ -1,8 +1,10 @@
 import java.io.Serializable;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 // Events to be printed in the following order
 // desc | start time | end time | date | venue | priority | tagDesc
@@ -46,7 +48,11 @@ class Entry implements Serializable, Comparable<Entry> {
 	}
 	
 	public void print(){
-		
+		System.out.printf("%s\t\t%d\n", getDate(), description);
+	}
+	
+	public void printDetailed(){
+		System.out.printf("%s %s\t%s\t%s%t\n", getDate(), )
 	}
 
 	public String getDesc() {
@@ -76,8 +82,16 @@ class Entry implements Serializable, Comparable<Entry> {
 		this.endTime = end;
 	}
 
-	public Calendar getDate() {
-		return dueDate;
+	public String getDate() {
+		int day, month, year;
+		day = dueDate.get(Calendar.DAY_OF_MONTH);
+		month = dueDate.get(Calendar.MONTH) + 1;
+		year = dueDate.get(Calendar.YEAR);
+		String date = Integer.toString(day);
+		date = date.concat("/"+Integer.toString(month));
+		date = date.concat("/"+Integer.toString(year));
+		
+		return date;
 	}
 
 	// date displayed as e.g. Mon, Dec 14, 2012
@@ -100,13 +114,14 @@ class Entry implements Serializable, Comparable<Entry> {
 	
 	//setDate for calendar
 	public void setDateCal(String newdate){
-		String[] dateArr = newdate.split("/");
 		
-		int day = Integer.parseInt(dateArr[0]);
-		int month = Integer.parseInt(dateArr[1]);
-	    int year = Integer.parseInt(dateArr[2]);
+		Date date = null;
+		try {
+			date = new SimpleDateFormat("dd/MM/yyyy", Locale.US).parse(newdate);
+		} catch (ParseException e) {}
 	    
-	    //
+		dueDate.setTime(date);
+	   
 	}
 	
 	public String getDate1() {
