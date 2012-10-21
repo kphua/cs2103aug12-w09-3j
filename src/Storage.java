@@ -58,6 +58,10 @@ class Storage {
 		}
 		return storage;
 	}
+	
+	public void clear(){
+		activeEntries.clear();
+	}
 
 	private void loadFromStorage(File source, ArrayList<Entry> entries) {
 		// read from file
