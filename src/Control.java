@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 class Control {
+	private static Control control;
 	private Processor processor;
 	private Storage storage;
 	private boolean edit, newList; // modes
@@ -12,13 +13,20 @@ class Control {
 
 	private String MSG_ERROR = "Invalid input!";
 
-	public Control() {
+	private Control() {
 		// initialise.
 		// load entries
 		processor = new Processor();
-		storage = new Storage();
+		storage = Storage.getInstance();
 		tempList = new ArrayList<Entry>();
 		Collections.sort(tempList);
+	}
+	
+	public static Control getInstance() {
+		if (control == null) {
+			control = new Control();
+		}
+		return control;
 	}
 
 	public CMD performAction(String userInput) {
