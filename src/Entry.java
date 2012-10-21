@@ -27,12 +27,9 @@ class Entry implements Serializable, Comparable<Entry> {
 	String startTime, endTime;
 	int completeStatus;
 	Calendar dueDate;
-	
-	
 
 	// constructor
 	public Entry() {
-		dueDate = Calendar.getInstance();
 	}
 	
 	//clone constructor
@@ -54,7 +51,11 @@ class Entry implements Serializable, Comparable<Entry> {
 	public void printDetailed(){
 		System.out.printf("%s\t%s\t%s%t", getDate(), venue, description);
 	}
-
+	
+	public void iniDDate() {
+		dueDate = Calendar.getInstance();
+	}
+	
 	public String getDesc() {
 		return description;
 	}
