@@ -217,7 +217,7 @@ class Control {
 			else cmd = new String[] {"Error", "Invalid time entry."};
 		} else if(cmd[0].equals("endtime")){
 			if(cmd[1].endsWith("am") || cmd[1].endsWith("pm"))
-				tempHold.setStart(cmd[1]);
+				tempHold.setEnd(cmd[1]);
 			else cmd = new String[] {"Error", "Invalid time entry."};
 		} else if(cmd[0].equals("hash")){
 			if(cmd[1].startsWith("#"))

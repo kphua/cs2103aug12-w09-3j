@@ -36,14 +36,15 @@ class FingerTips {
 		String userInput;
 		
 		while (cont) {
-			System.out.print("Command: ");
+			System.out.print("\nCommand: ");
 			userInput = sc.nextLine();
+			System.out.println();
 			runUserInput(userInput);
 		}
 	}
 
 	private void printWelcomeMSG() {
-		System.out.println("Welcome To FingerTips!");
+		System.out.println("\nWelcome To FingerTips!\n");
 		System.out.println("Enter \"help\" for further usage instructions.");
 	}
 
@@ -116,15 +117,14 @@ class FingerTips {
 			if(actionMSG.getData()==null){
 				
 				while(true){
-					System.out.println("Entry: ");
+					System.out.println("\nEntry: ");
 					System.out.println(control.processEditMode("display")[1]);
 					
 					System.out.println("Enter the field you wish to modify, and the new data to replace with.");
-					System.out.println("Type \"end\" to exit edit mode.");
-					System.out.println("Type \"help\" for further assistance.");
-					System.out.println("Command (Edit Mode): ");
-					
+					System.out.println("Type \"end\" to exit edit mode and \"help\" for futher assistance.");
+					System.out.print("\nCommand (Edit Mode): ");
 					userInput = sc.nextLine();
+					
 					userInput = userInput.trim();
 					//call processor
 					String[] response = control.processEditMode(userInput);
@@ -141,7 +141,7 @@ class FingerTips {
 				int a;
 				while(true){
 					try{
-						System.out.println("Index: ");
+						System.out.print("Index: ");
 						a = sc.nextInt();
 						if(control.getStorage().getActiveEntries().size() < a)
 							System.out.println("Invalid input. Enter a valid index number.");
@@ -182,28 +182,27 @@ class FingerTips {
 	}
 	
 	private void helpEditMode() {
-		System.out.println("Stated below are the available fields.");
-		System.out.println("Enter a field followed by the new data it should be replaced with.");
-		System.out.println("desc: edit description.");
-		System.out.println("ddate: edit due date.");
-		System.out.println("display: shows data in the current node.");
+		System.out.println("\nEnter a field followed by the new data it should be replaced with.");
+		System.out.println("desc:     edit description.");
+		System.out.println("ddate:    edit due date.");
+		System.out.println("display:  shows data in the current node.");
 		System.out.println("priority: edit priority");
-		System.out.println("hash: edit hash tages");
-		System.out.println("st: edit start time");
-		System.out.println("et: edit end time");
-		System.out.println("venue: edit venue");
+		System.out.println("hash #:   edit hash tags");
+		System.out.println("st:       edit start time");
+		System.out.println("et:       edit end time");
+		System.out.println("venue @:  edit venue");
 		
 	}
 
 	private static void help() {
-		System.out.println("add <data>: add an entry with related dates, description, priority etc.");
-		System.out.println("\tprefix @ indicates venue, prefix # indicates a hashtag");
-		System.out.println("remove <number>: remove the selected entry for the active list.");
-		System.out.println("edit <number>: enters edit mode for selected entry.");
-		System.out.println("undo: reverses the previous action.");
-		System.out.println("display: shows the activelist.");
+		System.out.println("add <data>:\t\t   add an entry with related dates, description, priority etc.");
+		System.out.println("\t\t\t   prefix @ indicates venue, prefix # indicates a hashtag.");
+		System.out.println("remove <number>:\t   remove the selected entry for the active list.");
+		System.out.println("edit <number>:\t\t   enters edit mode for selected entry.");
+		System.out.println("undo:\t\t\t   reverses the previous action.");
+		System.out.println("display:\t\t   shows the activelist.");
 		System.out.println("display <search criteria>: generates a list of entries fulfilling the search criteria.");
-		System.out.println("quit: terminates the program.");
+		System.out.println("quit:\t\t\t   terminates the program.");
 	}
 
 	public static void showToUser(String text) {
