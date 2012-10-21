@@ -6,24 +6,24 @@ class FingerTips {
 	Control control;
 	Scanner sc;
 	boolean cont;
-	
+
 	public FingerTips(){
 		sc = new Scanner(System.in);
 		cont = true;
 		control = Control.getInstance();
 	}
-	
+
 	public static void main(String args[]) throws FileNotFoundException {
 		FingerTips ft = new FingerTips();
 		ft.run();
 	}
 
 	private void run() {
-		
+
 		printWelcomeMSG();
-		
+
 		String userInput;
-		
+
 		while (cont) {
 			System.out.print("\nCommand: ");
 			userInput = sc.nextLine();
@@ -47,25 +47,25 @@ class FingerTips {
 				description = "add \"".concat(description);
 				control.performAction(description);
 			}
-			
-//			System.out.println("Add further information? y/n");
-//			String answer = sc.nextLine();
-//			answer = answer.toLowerCase();
-//			while(!(answer.equals("y") || answer.equals("n"))){
-//				System.out.println("Invalid answer.");
-//				System.out.println("Add further information? y/n");
-//				answer = sc.nextLine();
-//			}
-//			
-//			if(answer.equals("y")){
-//				runUserInput("edit");
-//			} else {
-				control.setTempHold(null);
-				Collections.sort(control.getStorage().getActiveEntries());
-				System.out.println("Added.");
-//			}
+
+			//			System.out.println("Add further information? y/n");
+			//			String answer = sc.nextLine();
+			//			answer = answer.toLowerCase();
+			//			while(!(answer.equals("y") || answer.equals("n"))){
+			//				System.out.println("Invalid answer.");
+			//				System.out.println("Add further information? y/n");
+			//				answer = sc.nextLine();
+			//			}
+			//			
+			//			if(answer.equals("y")){
+			//				runUserInput("edit");
+			//			} else {
+			control.setTempHold(null);
+			Collections.sort(control.getStorage().getActiveEntries());
+			System.out.println("Added.");
+			//			}
 			break;
-			
+
 		case REMOVE: 
 			if(actionMSG.getData() == null){
 				System.out.println("Which entry do you want to remove?");
@@ -75,18 +75,18 @@ class FingerTips {
 					rmvIndex = sc.nextInt();
 					String newInstruction = "remove ".concat(Integer.toString(rmvIndex));
 					control.performAction(newInstruction);
-							 
+
 				} catch(InputMismatchException e){
 					System.out.println("Invalid input. Action aborted.");
-					
+
 				}
-				
+
 				sc.nextLine();
 			}
 			else{
 				System.out.println("Removed");
 			}
-			
+
 			break;
 		case UNDO: break;
 		case DISPLAY: 
@@ -96,7 +96,7 @@ class FingerTips {
 			}
 			else{
 				int j=1;
-			
+
 				for (int i=0; i<print.size(); i++) {
 					System.out.println(j + ". " + print.get(i));
 					j++;
@@ -105,16 +105,16 @@ class FingerTips {
 			break;
 		case EDIT: 					
 			if(actionMSG.getData()==null){
-				
+
 				while(true){
 					System.out.println("\nEntry: ");
 					System.out.println(control.processEditMode("display")[1]);
-					
+
 					System.out.println("Enter the field you wish to modify, and the new data to replace with.");
 					System.out.println("Type \"end\" to exit edit mode and \"help\" for futher assistance.");
 					System.out.print("\nCommand (Edit Mode): ");
 					userInput = sc.nextLine();
-					
+
 					userInput = userInput.trim();
 					//call processor
 					String[] response = control.processEditMode(userInput);
@@ -123,7 +123,7 @@ class FingerTips {
 					else if(response[0].equals("end")) break;
 					else if(response[0].equals("Error")) System.out.println(response[1]);
 				}
-				
+
 				control.setTempHold(null);
 			}
 			else {
@@ -140,18 +140,18 @@ class FingerTips {
 							runUserInput("edit "+ a);
 							break;
 						}
-							
+
 					}
 					catch(InputMismatchException e){
 						System.out.println("Invalid input. Action aborted.");
 						break;
 					}
-					
+
 				}
-				
-				
+
+
 			}
-			
+
 			break;
 		case DONE: 
 			if(actionMSG.getData() == null){
@@ -161,17 +161,20 @@ class FingerTips {
 				System.out.println("Entry marked as done.");
 			}
 			break;
-			case HELP:
-				help();
-				break;
-			case QUIT: 
-				cont = false;
-				System.out.println("Goodbye.");
-				break;
-			default: System.out.println(actionMSG.getData());
+		case HELP:
+			help();
+			break;
+		case QUIT: 
+			cont = false;
+			System.out.println("Goodbye.");
+			break;
+		case CLEAR:
+			System.out.println("All active entries deleted.");
+			break;
+		default: System.out.println(actionMSG.getData());
 		}
 	}
-	
+
 	private void helpEditMode() {
 		System.out.println("\nEnter a field followed by the new data it should be replaced with.");
 		System.out.println("desc:     edit description.");
@@ -182,7 +185,7 @@ class FingerTips {
 		System.out.println("st:       edit start time");
 		System.out.println("et:       edit end time");
 		System.out.println("venue @:  edit venue");
-		
+
 	}
 
 	private static void help() {

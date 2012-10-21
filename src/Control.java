@@ -66,6 +66,11 @@ class Control {
 				}
 			}
 			return command;
+			
+		case CLEAR:
+			storage.clear();
+			storage.saveToStorage();
+			return command;
 //		case UNDO:
 //			return storage.undo(command.getData());
 		case DISPLAY:

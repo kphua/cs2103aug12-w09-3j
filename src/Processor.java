@@ -107,7 +107,8 @@ public class Processor {
 				buildEntry(newTask, temp);
 				return new CMD(userCMD, newTask);						//add <long string of data>
 			}
-		
+		case CLEAR: 
+			return new CMD(userCMD, null);
 		case DONE:
 			if(temp.length > 1 && isInteger(temp[1])){
 				Integer i = Integer.parseInt(temp[1]);
@@ -301,7 +302,7 @@ public class Processor {
 	}
 	
 	enum COMMAND_TYPE {
-		ADD, REMOVE, UNDO, DISPLAY, EDIT, QUIT, ERROR, HELP, DONE
+		ADD, REMOVE, UNDO, DISPLAY, EDIT, QUIT, ERROR, HELP, DONE, CLEAR
 	};
 
 	private COMMAND_TYPE determineCommandType(String commandString) {
@@ -321,6 +322,8 @@ public class Processor {
 			return COMMAND_TYPE.HELP;	
 		} else if (commandString.equalsIgnoreCase("done")) {
 			return COMMAND_TYPE.DONE;
+		} else if (commandString.equalsIgnoreCase("clear")) {
+			return COMMAND_TYPE.CLEAR;
 		} else
 			return COMMAND_TYPE.ERROR;
 	}

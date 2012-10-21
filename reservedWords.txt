@@ -21,3 +21,5 @@ q quit
 done done
 finish done
 fin done
+clear clear
+clr clear
