@@ -54,35 +54,43 @@ class FingerTips {
 			if(actionMSG.getData()==null){
 				System.out.println("Please enter a description for your task:");
 				String description = sc.nextLine().trim();
-				description = "add".concat(" " + description);
-				actionMSG = control.performAction(description);
+				sc.nextLine();
+				description = "add ".concat(description);
+				runUserInput(description);
 			}
 			
-			System.out.println("Add further information? y/n");
-			String answer = sc.nextLine();
-			answer = answer.toLowerCase();
-			while(!(answer.equals("y") || answer.equals("n"))){
-				System.out.println("Invalid answer.");
-				System.out.println("Add further information? y/n");
-				answer = sc.nextLine();
-			}
-			
-			if(answer.equals("y")){
-				runUserInput("edit");
-			} else {
+//			System.out.println("Add further information? y/n");
+//			String answer = sc.nextLine();
+//			answer = answer.toLowerCase();
+//			while(!(answer.equals("y") || answer.equals("n"))){
+//				System.out.println("Invalid answer.");
+//				System.out.println("Add further information? y/n");
+//				answer = sc.nextLine();
+//			}
+//			
+//			if(answer.equals("y")){
+//				runUserInput("edit");
+//			} else {
 				control.setTempHold(null);
-			}
+//			}
 			break;
+			
 		case REMOVE: 
 			if(actionMSG.getData() == null){
 				System.out.println("Which entry do you want to remove?");
 				int rmvIndex;
 				try{
-					System.out.println("Index: ");
+					System.out.print("Index: ");
 					rmvIndex = sc.nextInt();
+					String newInstruction = "remove ".concat(Integer.toString(rmvIndex));
+					runUserInput(newInstruction);
+							 
 				} catch(InputMismatchException e){
 					System.out.println("Invalid input. Action aborted.");
+					
 				}
+				
+				sc.nextLine();
 			}
 			else{
 				System.out.println("Removed");
