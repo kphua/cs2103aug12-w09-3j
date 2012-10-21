@@ -13,25 +13,36 @@ class Storage {
 	// Functions
 	// - searches for items with a certain criteria, returns list
 	// - save function: writes into txt file
-	// - load function
-	//
+	// - load function: loads from txt file
+	// - add/remove function: adding or deleting entries from list
 
-	public File activeFile = new File("activeFile.txt");
-	public File archiveFile = new File("archiveFile.txt");
-	public File activeTextFile = new File("activeTextFile.txt");
-	public File archiveTextFile = new File("archiveTextFile.txt");
-	public ArrayList<Entry> activeEntries = new ArrayList<Entry>();
-	public ArrayList<Entry> archiveEntries = new ArrayList<Entry>();
-	public ArrayList<Entry> displayEntries = new ArrayList<Entry>();
-	public ArrayList<Entry> tempEntries = new ArrayList<Entry>();
-	public FileWriter fw;
-	public BufferedWriter bw;
-	public String currentLine;
+	private static Storage storage;
+	private File activeFile;
+	private File archiveFile;
+	private File activeTextFile;
+	private File archiveTextFile;
+	private ArrayList<Entry> activeEntries;
+	private ArrayList<Entry> archiveEntries;
+	private ArrayList<Entry> displayEntries;
+	private ArrayList<Entry> tempEntries;
+	private FileWriter fw;
+	private BufferedWriter bw;
 
 	/*
-	 * Load activeFile and archiveFile into activeEntries and archiveEntries
+	 * Initialise attributes. Load activeFile and archiveFile into activeEntries
+	 * and archiveEntries
 	 */
-	public Storage() {
+	private Storage() {
+		
+		activeFile = new File("activeFile.txt");
+		archiveFile = new File("archiveFile.txt");
+		activeTextFile = new File("activeTextFile.txt");
+		archiveTextFile = new File("archiveTextFile.txt");
+		activeEntries = new ArrayList<Entry>();
+		archiveEntries = new ArrayList<Entry>();
+		displayEntries = new ArrayList<Entry>();
+		tempEntries = new ArrayList<Entry>();
+		
 		if (activeFile.exists()) {
 			loadFromStorage(activeFile, activeEntries);
 		}
@@ -39,8 +50,15 @@ class Storage {
 			loadFromStorage(archiveFile, archiveEntries);
 		}
 	}
+	
+	public static Storage getInstance() {
+		if (storage == null) {
+			storage = new Storage();
+		}
+		return storage;
+	}
 
-	public void loadFromStorage(File source, ArrayList<Entry> entries) {
+	private void loadFromStorage(File source, ArrayList<Entry> entries) {
 		// read from file
 		try {
 			FileInputStream newFile = new FileInputStream(source);
