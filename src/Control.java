@@ -19,6 +19,7 @@ class Control {
 		processor = new Processor();
 		storage = Storage.getInstance();
 		tempList = new ArrayList<Entry>();
+		undo = new CMD(null, null);
 //		Collections.sort(tempList);
 	}
 	
@@ -76,6 +77,7 @@ class Control {
 			return command;
 		case UNDO:
 			command.setData(undo());
+			storage.saveToStorage();
 			return command;
 		case DISPLAY:
 			toPrint.clear();
