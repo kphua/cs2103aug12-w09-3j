@@ -166,6 +166,7 @@ class Control {
 	}
 
 	private String undo() {
+		if(undo.getCommandType()==null) return "There are no further undo-s."; 
 		switch(undo.getCommandType()){
 		case ADD: break;		//amend storage remove function to search for objects and not indexes before implement
 		case REMOVE: 
