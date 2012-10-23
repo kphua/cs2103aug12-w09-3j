@@ -75,7 +75,8 @@ class FingerTips {
 					rmvIndex = sc.nextInt();
 					String newInstruction = "remove ".concat(Integer.toString(rmvIndex));
 					control.performAction(newInstruction);
-
+					System.out.println();
+					
 				} catch(InputMismatchException e){
 					System.out.println("Invalid input. Action aborted.");
 
@@ -83,9 +84,7 @@ class FingerTips {
 
 				sc.nextLine();
 			}
-			else{
-				System.out.println("Removed");
-			}
+			System.out.println("Removed");
 
 			break;
 		case UNDO: 
@@ -109,7 +108,7 @@ class FingerTips {
 			if(actionMSG.getData()==null){
 
 				while(true){
-					System.out.println("\nEntry: ");
+					System.out.println("Entry: ");
 					System.out.println(control.processEditMode("display")[1]);
 
 					System.out.println("Enter the field you wish to modify, and the new data to replace with.");
@@ -129,20 +128,20 @@ class FingerTips {
 				control.setTempHold(null);
 			}
 			else {
-				System.out.println(actionMSG.getData());
+				//System.out.println(actionMSG.getData());
 				int a;
 				while(true){
 					try{
 						System.out.print("Index: ");
 						a = sc.nextInt();
 						sc.nextLine();
+						System.out.println();
 						if(control.getStorage().getActiveEntries().size() < a)
 							System.out.println("Invalid input. Enter a valid index number.");
 						else{
 							runUserInput("edit "+ a);
 							break;
 						}
-
 					}
 					catch(InputMismatchException e){
 						System.out.println("Invalid input. Action aborted.");
