@@ -197,6 +197,8 @@ class FingerTips {
 		System.out.println("undo:\t\t\t   reverses the previous action.");
 		System.out.println("display:\t\t   shows the activelist.");
 		System.out.println("display <search criteria>: generates a list of entries fulfilling the search criteria.");
+		System.out.println("done <number>:\t\t   marks an entry as completed");
+		System.out.println("clear:\t\t\t   deletes all entries permanently (use with caution!)");
 		System.out.println("quit:\t\t\t   terminates the program.");
 	}
 
