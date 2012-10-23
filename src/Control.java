@@ -127,9 +127,9 @@ class Control {
 				}
 				else{
 					tempHold = storage.getActiveEntries().get((int)command.getData()-1);
+					command.setData(null);
 				}
 				
-				command.setData(null);
 			} else {	
 				if(tempHold == null){ 	//edit <nothing>						
 					command.setData("Which entry do you want to edit?");
