@@ -123,7 +123,8 @@ class Control {
 			//if not convert to edit <nothing>
 			if(command.getData()!=null){
 				if((int)command.getData() > storage.getActiveEntries().size()) {	
-					System.out.println("Invalid input. Enter a valid index.");
+					System.out.print("Invalid input. Enter a valid index number.");
+					command.setData(" ");
 				}
 				else{
 					tempHold = storage.getActiveEntries().get((int)command.getData()-1);

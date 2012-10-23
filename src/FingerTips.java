@@ -128,7 +128,7 @@ class FingerTips {
 				control.setTempHold(null);
 			}
 			else {
-				//System.out.println(actionMSG.getData());
+				System.out.println(actionMSG.getData());
 				int a;
 				while(true){
 					try{
