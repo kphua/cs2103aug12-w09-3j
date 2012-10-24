@@ -1,13 +1,10 @@
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Collections;
 
 class Control {
 	private static Control control;
 	private Processor processor;
 	private Storage storage;
-	private boolean edit, newList; // modes
-	private ArrayList<Entry> tempList;
+//	private boolean edit, newList; // modes
 	private CMD undo;
 	private Entry tempHold;
 
@@ -16,11 +13,9 @@ class Control {
 	private Control() {
 		// initialise.
 		// load entries
-		processor = new Processor();
 		storage = Storage.getInstance();
-		tempList = new ArrayList<Entry>();
+		processor = new Processor();
 		undo = new CMD(null, null);
-//		Collections.sort(tempList);
 	}
 	
 	public static Control getInstance() {
@@ -33,8 +28,6 @@ class Control {
 	public CMD performAction(String userInput) {
 
 		CMD command = processor.translateToCMD(userInput);
-		ArrayList<String> toPrint = new ArrayList<String>();
-		tempList = new ArrayList<Entry>();
 
 		switch (command.getCommandType()) {
 		// need to store previous version everytime in case of undo action
@@ -42,7 +35,7 @@ class Control {
 			if(command.getData()!=null){
 				tempHold = (Entry) command.getData();
 				storage.addEntry(tempHold);
-				storage.saveToStorage();
+				storage.save(true, false);
 				undo = command;
 				undo.setData(new Entry(tempHold));
 			}
@@ -58,10 +51,15 @@ class Control {
 			if(command.getData()!=null){
 				if(isInteger(command.getData())) {
 					Integer i = (Integer) command.getData(); 
+					if(i<1 || i>storage.getDisplayEntries().size()){
+						command.setCommandType(Processor.COMMAND_TYPE.ERROR);
+						command.setData("Invalid Index.");
+						return command;
+					}
 					undo.setCommandType(command.getCommandType());
 					undo.setData(storage.getDisplayEntries().get(i-1));
 					storage.removeEntry(i);
-					storage.saveToStorage();
+					storage.save(true, false);
 				}
 				else{
 					//if commandData was a String
@@ -72,47 +70,29 @@ class Control {
 		case CLEAR:
 			undo.setCommandType(command.getCommandType());
 			undo.setData(storage.getActiveEntries());
-			storage.clear();
-			storage.saveToStorage();
+			storage.clearActive();
+			storage.save(true, false);
 			return command;
 		case UNDO:
 			command.setData(undo());
-			storage.saveToStorage();
+			if(undo.getCommandType()==Processor.COMMAND_TYPE.DONE) storage.save(true, true);
+			else storage.save(true, false);
 			return command;
 		case DISPLAY:
-			toPrint.clear();
-//			tempList = new ArrayList<Entry>();
-//			tempList.clear();
-			
 			if (command.getData() == null) {
-				tempList.clear();
-				tempList.addAll(storage.displayAll());
-				for (Entry entry : tempList) { 
-//					getPrintEntry(toPrint, entry);
-					toPrint.add(printEntry(entry));
-				}
-				command.setData(toPrint);
+				command.setData((ArrayList<Entry>)storage.display());
 			}
 			else {
-				if(tempList.isEmpty()){
-					tempList.addAll(storage.displayAll());
-				}
 					
 				// if the data is integer to specify index
 				if(isInteger(command.getData())){						
 					Integer index = (Integer) command.getData();
-					toPrint.add(printEntry(tempList.get(index-1)));
-					command.setData(toPrint);
+					command.setData(storage.displayIndex(index));
 				}
 				// if the data is string to be searched
 				else {
-					tempList.clear();
 					String keyword = (String) command.getData();
-					tempList.addAll(storage.displayKeyword(keyword.toLowerCase()));
-					for (Entry entry : tempList) { 
-						getPrintEntry(toPrint, entry);
-					}
-					command.setData(toPrint);
+					command.setData(storage.displayKeyword(keyword));
 				}
 			}
 			
@@ -142,17 +122,14 @@ class Control {
 			
 		case DONE:
 			Integer i = (Integer) command.getData();
-			if(i > storage.getActiveEntries().size() ||
-					i < 1) {
+			if(i > storage.getActiveEntries().size() || i < 1) {
 				command.setCommandType(Processor.COMMAND_TYPE.ERROR);
 				command.setData("Invalid index.");
 			} else {
-				tempList.addAll(storage.displayAll()); // need to initialise tempList and remove this line
-				Entry e = tempList.get(i-1);
+				Entry e = storage.updateCompletedEntry(i);
 				undo.setCommandType(command.getCommandType());
 				undo.setData(e);
-				storage.updateCompletedEntry(e);
-				storage.saveToStorage();
+				storage.save(true, true);
 			}
 			
 			return command;
@@ -169,15 +146,22 @@ class Control {
 	private String undo() {
 		if(undo.getCommandType()==null) return "There are no further undo-s."; 
 		switch(undo.getCommandType()){
-		case ADD: break;		//amend storage remove function to search for objects and not indexes before implement
+		case ADD: 
+			storage.removeEntry((Entry)undo.getData());
+			undo.setCommandType(Processor.COMMAND_TYPE.REMOVE);
+			break;		//amend storage remove function to search for objects and not indexes before implement
 		case REMOVE: 
 			storage.addEntry((Entry)undo.getData());
+			undo.setCommandType(Processor.COMMAND_TYPE.ADD);
 			break;
 		case CLEAR: 
 			storage.setActiveEntries((ArrayList<Entry>) undo.getData());
+			undo.setData(new ArrayList<Entry>());
 			break;
 		case EDIT: break;		//each entry needs a unique identity for this to work...
-		case DONE: break;		//storage function to move it back...Entry is given undeer data of Undo
+		case DONE:
+			storage.undoDoneAction((Entry)undo.getData());
+			break;		//storage function to move it back...Entry is given undeer data of Undo
 			default: 
 				return "There are no further undo-s.";
 		}

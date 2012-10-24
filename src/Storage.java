@@ -24,34 +24,10 @@ class Storage {
 	private ArrayList<Entry> activeEntries;
 	private ArrayList<Entry> archiveEntries;
 	private ArrayList<Entry> displayEntries;
-	private ArrayList<Entry> tempEntries;
 	private FileWriter fw;
 	private BufferedWriter bw;
 
-	/*
-	 * Initialise attributes. Load activeFile and archiveFile into activeEntries
-	 * and archiveEntries
-	 */
-	private Storage() {
-		
-		activeFile = new File("activeFile.txt");
-		archiveFile = new File("archiveFile.txt");
-		activeTextFile = new File("activeTextFile.txt");
-		archiveTextFile = new File("archiveTextFile.txt");
-		activeEntries = new ArrayList<Entry>();
-		archiveEntries = new ArrayList<Entry>();
-		displayEntries = new ArrayList<Entry>();
-		tempEntries = new ArrayList<Entry>();
-		
-		if (activeFile.exists()) {
-			loadFromStorage(activeFile, activeEntries);
-			Collections.sort(activeEntries);
-		}
-		if (archiveFile.exists()) {
-			loadFromStorage(archiveFile, archiveEntries);
-		}
-	}
-	
+	//Singleton implementation. Call this to create Storage
 	public static Storage getInstance() {
 		if (storage == null) {
 			storage = new Storage();
@@ -59,11 +35,53 @@ class Storage {
 		return storage;
 	}
 	
-	public void clear(){
+	/*
+	 * Initialise attributes. 
+	 * Checks if activeFile and archiveFile exists.
+	 * Creates them if they do not exist.
+	 * Load activeFile and archiveFile into activeEntries and archiveEntries
+	 */
+	private Storage(){
+		
+		activeFile = new File("activeFile.txt");
+		archiveFile = new File("archiveFile.txt");
+		activeTextFile = new File("activeTextFile.txt");
+		archiveTextFile = new File("archiveTextFile.txt");
 		activeEntries = new ArrayList<Entry>();
+		archiveEntries = new ArrayList<Entry>();
+		displayEntries = activeEntries;
+		
+		if (activeFile.exists()) {
+			loadFromFile(activeFile, activeEntries);
+			Collections.sort(activeEntries);
+		}
+		else{
+			try {
+				activeFile.createNewFile();
+				System.out.println("No active list found. New list created.");
+			} catch (IOException e) {
+				System.out.println("IOException for activeFile.");
+				System.exit(-1);
+			}
+		}
+
+		if (archiveFile.exists()) {
+			loadFromFile(archiveFile, archiveEntries);
+		}
+		else{
+			try {
+				archiveFile.createNewFile();
+				System.out.println("No archive found. New archive created.");
+			} catch (IOException e) {
+				System.out.println("IOException for archiveFile.");
+				System.exit(-1);
+			}
+		}
+		
+		
 	}
 
-	private void loadFromStorage(File source, ArrayList<Entry> entries) {
+	private void loadFromFile(File source, ArrayList<Entry> entries) {
 		// read from file
 		try {
 			FileInputStream newFile = new FileInputStream(source);
@@ -81,86 +99,33 @@ class Storage {
 		} 
 
 	}
-
+	
 	/*
 	 * Save activeEntries and archiveEntries into activeFile and archiveFile
 	 * (RMB TO CALL THIS METHOD BEFORE EXITING PROGRAM!
 	 * ~storage.saveToStorage())
 	 */
-	public void saveToStorage() {
-
-		// clear both existing file first
-		if (activeFile.exists()) {
-			activeFile.delete();
-		}
-		if (archiveFile.exists()) {
-			archiveFile.delete();
-		}
+	
+	public void save(boolean activeChanged, boolean archiveChanged){
+		if(activeChanged) saveToFile(activeFile, activeEntries, activeTextFile);
+		if(archiveChanged) saveToFile(archiveFile, archiveEntries, archiveTextFile);
+	}
+	
+	public void saveToFile(File objDest, ArrayList<Entry> list, File txtDest) {
 
 		// copy entries from ArrayList back to the respective files
 		try {
-			FileOutputStream saveFile = new FileOutputStream(activeFile);
-			ObjectOutputStream save = new ObjectOutputStream(saveFile);
-			for (Entry entry : activeEntries) {
-				save.writeObject(entry);
-			}
-			save.close();
-		} catch (IOException ioe) {
-			System.out.println("Error writing to file");
-		}
-
-		try {
-			FileOutputStream saveFile = new FileOutputStream(archiveFile);
-			ObjectOutputStream save = new ObjectOutputStream(saveFile);
-			for (Entry entry : archiveEntries) {
-				save.writeObject(entry);
-			}
-			save.close();
-		} catch (IOException ioe) {
-			System.out.println("Error writing to file");
-		}
-
-		// for file reader and writer, update the corresponding
-		// .txt files
-
-		try {
-			fw = new FileWriter(activeTextFile);
+			FileOutputStream saveFile = new FileOutputStream(objDest);
+			ObjectOutputStream objWriter = new ObjectOutputStream(saveFile);
+			fw = new FileWriter(txtDest);
 			bw = new BufferedWriter(fw);
-			bw.write("");
-			bw.close();
-		} catch (IOException ioe) {
-			System.out.println("Error saving to text file");
-		}
-
-		try {
-			fw = new FileWriter(archiveTextFile);
-			bw = new BufferedWriter(fw);
-			bw.write("");
-			bw.close();
-		} catch (IOException ioe) {
-			System.out.println("Error saving to text file");
-		}
-
-		try {
-			fw = new FileWriter(activeTextFile);
-			bw = new BufferedWriter(fw);
-			for (Entry entry : activeEntries) {
+			for (Entry entry : list) {
+				objWriter.writeObject(entry);
 				bw.write(entry + "\n");
 			}
-			bw.close();
+			objWriter.close();
 		} catch (IOException ioe) {
-			System.out.println("Error saving to text file");
-		}
-
-		try {
-			fw = new FileWriter(archiveTextFile);
-			bw = new BufferedWriter(fw);
-			for (Entry entry : archiveEntries) {
-				bw.write(entry + "\n");
-			}
-			bw.close();
-		} catch (IOException ioe) {
-			System.out.println("Error saving to text file");
+			System.out.println("Error writing to file");
 		}
 	}
 
@@ -178,10 +143,16 @@ class Storage {
 	 * activeEntries list to remove the specific entry from storage.
 	 * ~storage.removeEntry(INDEX_OF_ENTRY)
 	 */
-	public void removeEntry(int index) {
-		tempEntries.clear();
-		tempEntries.add(displayEntries.get(index - 1));
-		activeEntries.removeAll(tempEntries); // update activeEntries list
+	public Entry removeEntry(int index) {
+		Entry e = displayEntries.get(index-1);
+		displayEntries.remove(index-1);
+		activeEntries.remove(e);
+		return e;
+	}
+	
+	public void removeEntry(Entry entry){
+		displayEntries.remove(entry);
+		activeEntries.remove(entry);
 	}
 	
 	/*
@@ -191,9 +162,15 @@ class Storage {
 	 * list to remove the specific entry from storage.
 	 * ~storage.updateCompletedEntry(ENTRY_OBJECT)
 	 */
-	public void updateCompletedEntry(Entry e) {
+	public Entry updateCompletedEntry(int index) {		
+		Entry e = removeEntry(index);
 		archiveEntries.add(e);
-		activeEntries.removeAll(archiveEntries);
+		return e;
+	}
+	
+	public void undoDoneAction(Entry entry){
+		archiveEntries.remove(entry);
+		activeEntries.add(entry);
 	}
 
 	/*
@@ -236,31 +213,20 @@ class Storage {
 	 * displayEntries for printing. displayEntries will be initialized each time
 	 * this method is called. ~storage.displayAll()
 	 */
-	public ArrayList<Entry> displayAll() {
-		displayEntries.clear();
-		for (Entry entry : activeEntries) {
-			displayEntries.add(entry);
-		}
-		return displayEntries;
+//	public ArrayList<Entry> displayAll() {
+//		displayEntries.clear();
+//		for (Entry entry : activeEntries) {
+//			displayEntries.add(entry);
+//		}
+//		return displayEntries;
 
 		// CODE FOR PRINTING OF DISPLAY ENTRIES
 		// for (Entry entry : storage.getDisplayEntries()) {
 		// System.out.println(entry); }
-	}
-
-	/*
-	 * Method to display entries by specified keyword. Entries will be copied
-	 * over to displayEntries for printing. displayEntries will be initialized
-	 * each time this method is called. Keyword can be description, hashtag
-	 * "#tagname", venue "@location". ~storage.displayKeyword(KEYWORD_TO_FIND)
-	 */
-	public ArrayList<Entry> displayKeyword(String keyword) {
-		displayEntries.clear();
-		for (Entry entry : activeEntries) {
-			if (entry.toString().toLowerCase().contains(keyword)) {
-				displayEntries.add(entry);
-			}
-		}	
+//	}
+	
+	public ArrayList<Entry> display(){
+		displayEntries = activeEntries;
 		return displayEntries;
 	}
 	
@@ -270,12 +236,31 @@ class Storage {
 	 * each time this method is called. Keyword can be description, hashtag
 	 * "#tagname", venue "@location". ~storage.displayKeyword(KEYWORD_TO_FIND)
 	 */
+	public ArrayList<Entry> displayKeyword(String keyword) {
+		
+		keyword = keyword.toLowerCase();
+		
+		displayEntries = new ArrayList<Entry>();
+		for (Entry entry : activeEntries) {
+			if (entry.toString().toLowerCase().contains(keyword)) {
+				displayEntries.add(entry);
+			}
+		}	
+		return displayEntries;	
+		
+	}
+	
+	/*
+	 * Method to display entries by specified keyword. Entries will be copied
+	 * over to displayEntries for printing. displayEntries will be initialized
+	 * each time this method is called. Keyword can be description, hashtag
+	 * "#tagname", venue "@location". ~storage.displayKeyword(KEYWORD_TO_FIND)
+	 */
 	public ArrayList<Entry> displayIndex(int index) {
-		displayEntries.clear();
-		
-		/* not completed*/
-		
-		return displayEntries;
+		ArrayList<Entry> temp = new ArrayList <Entry>();
+		Entry e = displayEntries.get(index); 
+		temp.add(e);
+		return temp;
 	}
 
 	/*
@@ -296,4 +281,9 @@ class Storage {
 		return displayEntries;
 	}
 
+	//CLEAR function
+	//removes all entries from activeEntries
+	public void clearActive(){
+		activeEntries = new ArrayList<Entry>();
+	}
 }
