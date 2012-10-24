@@ -91,7 +91,7 @@ class FingerTips {
 			System.out.println(actionMSG.getData());
 			break;
 		case DISPLAY: 
-			ArrayList<String> print = (ArrayList<String>) actionMSG.getData();
+			ArrayList<Entry> print = (ArrayList<Entry>) actionMSG.getData();
 			if(print.isEmpty()){
 				System.out.println("There is nothing to print.");
 			}
@@ -99,7 +99,7 @@ class FingerTips {
 				int j=1;
 
 				for (int i=0; i<print.size(); i++) {
-					System.out.println(j + ". " + print.get(i));
+					System.out.println(j + ". " + print.get(i).toString());
 					j++;
 				}
 			}

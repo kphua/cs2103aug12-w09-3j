@@ -22,7 +22,7 @@ class Entry implements Serializable, Comparable<Entry> {
 	private String priority;
 	private ArrayList <String> hashTags;
 	private String venue;
-//	String date;w
+	//	String date;w
 	private String tagDesc;
 	private String startTime, endTime;
 	private int completeStatus;
@@ -31,7 +31,7 @@ class Entry implements Serializable, Comparable<Entry> {
 	// constructor
 	public Entry() {
 	}
-	
+
 	//clone constructor
 	public Entry(Entry copy){
 		description = copy.description;
@@ -43,19 +43,19 @@ class Entry implements Serializable, Comparable<Entry> {
 		endTime = copy.endTime;
 		completeStatus = copy.completeStatus;
 	}
-	
+
 	public void print(){
 		System.out.printf("%s\t%d\n", getDate(), description);
 	}
-	
+
 	public void printDetailed(){
 		System.out.printf("%s\t%s\t%s%t", getDate(), venue, description);
 	}
-	
+
 	public void iniDDate() {
 		dueDate = Calendar.getInstance();
 	}
-	
+
 	public String getDesc() {
 		return description;
 	}
@@ -92,7 +92,7 @@ class Entry implements Serializable, Comparable<Entry> {
 			String date = Integer.toString(day);
 			date = date.concat("/"+Integer.toString(month));
 			date = date.concat("/"+Integer.toString(year));
-		
+
 			return date;
 		}
 		else{
@@ -101,33 +101,33 @@ class Entry implements Serializable, Comparable<Entry> {
 	}
 
 	// date displayed as e.g. Mon, Dec 14, 2012
-//	public void setDate(String _date) {
-//
-//		String[] dateArr = _date.split("/");
-//		
-//		int month = Integer.parseInt(dateArr[1]);
-//	    int day = Integer.parseInt(dateArr[0]);
-//	    int year = Integer.parseInt(dateArr[2]);
-//
-//		Calendar cal = Calendar.getInstance();
-//		cal.set(year, month - 1, day);
-//		Date date = cal.getTime();
-//		// Transformation of the date
-//		SimpleDateFormat sdf = new SimpleDateFormat("EEE, MMM dd, yyyy");
-//		this.date = sdf.format(date);
-//
-//	}
-	
+	//	public void setDate(String _date) {
+	//
+	//		String[] dateArr = _date.split("/");
+	//		
+	//		int month = Integer.parseInt(dateArr[1]);
+	//	    int day = Integer.parseInt(dateArr[0]);
+	//	    int year = Integer.parseInt(dateArr[2]);
+	//
+	//		Calendar cal = Calendar.getInstance();
+	//		cal.set(year, month - 1, day);
+	//		Date date = cal.getTime();
+	//		// Transformation of the date
+	//		SimpleDateFormat sdf = new SimpleDateFormat("EEE, MMM dd, yyyy");
+	//		this.date = sdf.format(date);
+	//
+	//	}
+
 	//setDate for calendar
 	public void setDateCal(String newdate){
-		
+
 		Date date = null;
 		try {
 			date = new SimpleDateFormat("dd/MM/yyyy", Locale.US).parse(newdate);
 		} catch (ParseException e) {}
-	    
+
 		dueDate.setTime(date);
-	   
+
 	}
 
 	public String getVenue() {
@@ -159,21 +159,29 @@ class Entry implements Serializable, Comparable<Entry> {
 
 	// for printing of entries
 	public String toString() {
-		return this.getDesc() + " " + this.getStart() + " " + this.getEnd()
-				+ " " + this.getDate() + " " + this.getVenue() + " "
-				+ this.getPriority() + " " + this.getTagDesc();
+		String converted;
+
+		converted = description + " "; 
+		if(startTime!=null) converted = converted.concat("from " + startTime + " ");
+		if(endTime != null) converted = converted.concat("to " + endTime + " ");
+		if(dueDate != null) converted = converted.concat("on " + getDate() + " ");
+		if(venue != null) converted = converted.concat(venue + " ");
+		if(priority != null) converted = converted.concat(priority + " "); 
+		if(tagDesc != null) converted = converted.concat(tagDesc);
+
+		return converted;
 	}
 
 	@Override
 	public int compareTo(Entry entry) {
-		
+
 		int i;
-		
+
 		if(dueDate == null || entry.dueDate == null || dueDate.equals(entry.dueDate)){
-			
+
 			if(dueDate!=null && entry.dueDate == null) return 1;
 			if(dueDate==null && entry.dueDate != null) return -1;
-			
+
 			if(priority == null || entry.priority == null || priority.equals(entry.priority)){
 				if(priority!=null && entry.priority == null) return -1;
 				if(priority==null && entry.priority != null) return 1;
@@ -191,17 +199,17 @@ class Entry implements Serializable, Comparable<Entry> {
 				else return 1;
 			}
 		} else i = dueDate.compareTo(entry.dueDate);
-		
+
 		return i;
-		
-		
-		
+
+
+
 	}
 
 	public void setDate(Date date) {
 		dueDate.setTime(date);
 	}
-	
+
 	public ArrayList<String> getHashTags() {
 		return hashTags;
 	}
@@ -209,7 +217,7 @@ class Entry implements Serializable, Comparable<Entry> {
 	public void setHashTags(ArrayList<String> hashTags) {
 		this.hashTags = hashTags;
 	}
-	
+
 	public String getTagDesc() {
 		return tagDesc;
 	}
