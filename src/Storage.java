@@ -1,0 +1,289 @@
+// import all classes for now
+import java.util.*;
+import java.io.*;
+
+class Storage {
+	// uses Entries class.
+
+	// Variables
+	// Readers, Writers
+	// ArrayList/lists etc for quick access
+	// File for link to doc.
+
+	// Functions
+	// - searches for items with a certain criteria, returns list
+	// - save function: writes into txt file
+	// - load function: loads from txt file
+	// - add/remove function: adding or deleting entries from list
+
+	private static Storage storage;
+	private File activeFile;
+	private File archiveFile;
+	private File activeTextFile;
+	private File archiveTextFile;
+	private ArrayList<Entry> activeEntries;
+	private ArrayList<Entry> archiveEntries;
+	private ArrayList<Entry> displayEntries;
+	private FileWriter fw;
+	private BufferedWriter bw;
+
+	//Singleton implementation. Call this to create Storage
+	public static Storage getInstance() {
+		if (storage == null) {
+			storage = new Storage();
+		}
+		return storage;
+	}
+	
+	/*
+	 * Initialise attributes. 
+	 * Checks if activeFile and archiveFile exists.
+	 * Creates them if they do not exist.
+	 * Load activeFile and archiveFile into activeEntries and archiveEntries
+	 */
+	private Storage(){
+		
+		activeFile = new File("activeFile.txt");
+		archiveFile = new File("archiveFile.txt");
+		activeTextFile = new File("activeTextFile.txt");
+		archiveTextFile = new File("archiveTextFile.txt");
+		activeEntries = new ArrayList<Entry>();
+		archiveEntries = new ArrayList<Entry>();
+		displayEntries = activeEntries;
+		
+		if (activeFile.exists()) {
+			loadFromFile(activeFile, activeEntries);
+			Collections.sort(activeEntries);
+		}
+		else{
+			try {
+				activeFile.createNewFile();
+				System.out.println("No active list found. New list created.");
+			} catch (IOException e) {
+				System.out.println("IOException for activeFile.");
+				System.exit(-1);
+			}
+		}
+
+		if (archiveFile.exists()) {
+			loadFromFile(archiveFile, archiveEntries);
+		}
+		else{
+			try {
+				archiveFile.createNewFile();
+				System.out.println("No archive found. New archive created.");
+			} catch (IOException e) {
+				System.out.println("IOException for archiveFile.");
+				System.exit(-1);
+			}
+		}
+		
+		
+	}
+
+	private void loadFromFile(File source, ArrayList<Entry> entries) {
+		// read from file
+		try {
+			FileInputStream newFile = new FileInputStream(source);
+			ObjectInputStream restore = new ObjectInputStream(newFile);
+			Entry entry;
+			while ((entry = (Entry) restore.readObject()) != null) {
+				entries.add(entry);
+			}
+			restore.close();
+		} catch (EOFException eofe) {
+		} catch (ClassNotFoundException cnfe) {
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+			System.out.println("Error loading from file");
+		} 
+
+	}
+	
+	/*
+	 * Save activeEntries and archiveEntries into activeFile and archiveFile
+	 * (RMB TO CALL THIS METHOD BEFORE EXITING PROGRAM!
+	 * ~storage.saveToStorage())
+	 */
+	
+	public void save(boolean activeChanged, boolean archiveChanged){
+		if(activeChanged) saveToFile(activeFile, activeEntries, activeTextFile);
+		if(archiveChanged) saveToFile(archiveFile, archiveEntries, archiveTextFile);
+	}
+	
+	public void saveToFile(File objDest, ArrayList<Entry> list, File txtDest) {
+
+		// copy entries from ArrayList back to the respective files
+		try {
+			FileOutputStream saveFile = new FileOutputStream(objDest);
+			ObjectOutputStream objWriter = new ObjectOutputStream(saveFile);
+			fw = new FileWriter(txtDest);
+			bw = new BufferedWriter(fw);
+			for (Entry entry : list) {
+				objWriter.writeObject(entry);
+				bw.write(entry + "\n");
+			}
+			objWriter.close();
+		} catch (IOException ioe) {
+			System.out.println("Error writing to file");
+		}
+	}
+
+	/*
+	 * Adds new entry into the activeEntries list. ~storage.addEntry(ENTRY_NAME)
+	 */
+	public void addEntry(Entry entry) {
+		activeEntries.add(entry);
+	}
+
+	/*
+	 * This method should only be called after the display function is called.
+	 * The entry in the displayEntries that match the index specified by the
+	 * user will be removed from the displayEntries list. Subsequently, update
+	 * activeEntries list to remove the specific entry from storage.
+	 * ~storage.removeEntry(INDEX_OF_ENTRY)
+	 */
+	public Entry removeEntry(int index) {
+		Entry e = displayEntries.get(index-1);
+		displayEntries.remove(index-1);
+		activeEntries.remove(e);
+		return e;
+	}
+	
+	public void removeEntry(Entry entry){
+		displayEntries.remove(entry);
+		activeEntries.remove(entry);
+	}
+	
+	/*
+	 * This method should only be called after the display function is called.
+	 * From control, the entry to be marked done will be passed to this method
+	 * to be added to the archiveEntries list. Subsequently, update activeEntries
+	 * list to remove the specific entry from storage.
+	 * ~storage.updateCompletedEntry(ENTRY_OBJECT)
+	 */
+	public Entry updateCompletedEntry(int index) {		
+		Entry e = removeEntry(index);
+		archiveEntries.add(e);
+		return e;
+	}
+	
+	public void undoDoneAction(Entry entry){
+		archiveEntries.remove(entry);
+		activeEntries.add(entry);
+	}
+
+	/*
+	 * Setters and getters methods for printing active/archive/displayEntries
+	 * for (Entry entry : storage.getActiveEntries()) {
+	 * System.out.println("activeList: " + entry); }
+	 */
+	public ArrayList<Entry> getActiveEntries() {
+		return activeEntries;
+	}
+
+	public void setActiveEntries(ArrayList<Entry> entries) {
+		this.activeEntries = entries;
+	}
+
+	public ArrayList<Entry> getArchiveEntries() {
+		return archiveEntries;
+	}
+
+	public void setArchiveEntries(ArrayList<Entry> entries) {
+		this.archiveEntries = entries;
+	}
+
+	public ArrayList<Entry> getDisplayEntries() {
+		return displayEntries;
+	}
+
+	public void setDisplayEntries(ArrayList<Entry> entries) {
+		this.displayEntries = entries;
+	}
+
+	/*
+	 * Different methods for different display commands. Have to decide on the
+	 * return type after that 1. displayAll 2. displayKeyword 3. displayDate (to
+	 * be implemented)
+	 */
+
+	/*
+	 * Method to display all entries. Entries will be copied over to
+	 * displayEntries for printing. displayEntries will be initialized each time
+	 * this method is called. ~storage.displayAll()
+	 */
+//	public ArrayList<Entry> displayAll() {
+//		displayEntries.clear();
+//		for (Entry entry : activeEntries) {
+//			displayEntries.add(entry);
+//		}
+//		return displayEntries;
+
+		// CODE FOR PRINTING OF DISPLAY ENTRIES
+		// for (Entry entry : storage.getDisplayEntries()) {
+		// System.out.println(entry); }
+//	}
+	
+	public ArrayList<Entry> display(){
+		displayEntries = activeEntries;
+		return displayEntries;
+	}
+	
+	/*
+	 * Method to display entries by specified keyword. Entries will be copied
+	 * over to displayEntries for printing. displayEntries will be initialized
+	 * each time this method is called. Keyword can be description, hashtag
+	 * "#tagname", venue "@location". ~storage.displayKeyword(KEYWORD_TO_FIND)
+	 */
+	public ArrayList<Entry> displayKeyword(String keyword) {
+		
+		keyword = keyword.toLowerCase();
+		
+		displayEntries = new ArrayList<Entry>();
+		for (Entry entry : activeEntries) {
+			if (entry.toString().toLowerCase().contains(keyword)) {
+				displayEntries.add(entry);
+			}
+		}	
+		return displayEntries;	
+		
+	}
+	
+	/*
+	 * Method to display entries by specified keyword. Entries will be copied
+	 * over to displayEntries for printing. displayEntries will be initialized
+	 * each time this method is called. Keyword can be description, hashtag
+	 * "#tagname", venue "@location". ~storage.displayKeyword(KEYWORD_TO_FIND)
+	 */
+	public ArrayList<Entry> displayIndex(int index) {
+		ArrayList<Entry> temp = new ArrayList <Entry>();
+		Entry e = displayEntries.get(index); 
+		temp.add(e);
+		return temp;
+	}
+
+	/*
+	 * Method to display entries by specified date. Entries will be copied over
+	 * to displayEntries for printing. displayEntries will be initialized each
+	 * time this method is called. User to enter date in the form dd/mm/yyyy.
+	 * ~storage.displayDate(dd/mm/yyyy)
+	 */
+	public ArrayList<Entry> displayDate(String date) {
+		displayEntries.clear();
+		Entry newEntry = new Entry();
+		newEntry.setDateCal(date);
+		for (Entry entry : activeEntries) {
+			if (entry.getDate().equals(newEntry.getDate())) {
+				displayEntries.add(entry);
+			}
+		}
+		return displayEntries;
+	}
+
+	//CLEAR function
+	//removes all entries from activeEntries
+	public void clearActive(){
+		activeEntries = new ArrayList<Entry>();
+	}
+}
