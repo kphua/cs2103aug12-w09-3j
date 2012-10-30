@@ -9,20 +9,28 @@ import java.util.logging.SimpleFormatter;
 
 class FingerTips {
 
-	private Control control;
-	private Scanner sc;
-	private boolean cont;
 
+	private static final String MSG_WELCOME = "\nWelcome To FingerTips!\n";
+	private static final String MSG_DEFAULT_ASSISTANCE = "Enter \"help\" for further usage instructions.";
+	
+	private static final String SUCCESS_MSG_ADD = "Added.";
+	private static final String SUCCESS_MSG_REMOVE = "Removed";
+	private static final String SUCCESS_MSG_DONE = "Entry marked as done and shifted to archive.";
+	private static final String SUCCESS_MSG_CLEAR = "All active entries deleted.";
+	private static final String SUCCESS_MSG_EXIT = "Goodbye.";
 	
 	private static final Logger logger = Logger.getLogger(FingerTips.class.getName());
 	private static final String logFile = "runLog.log";
 	private static final Level handlerLevel = Level.FINE;
 	private static final Level loggerLevel = Level.FINE;
+	
+	private Control control;
+	private Scanner sc;
+	private boolean cont;
+	
 
 	public FingerTips(){
 		initialiseLogger();
-			
-		logger.info("Logger initialization complete.");
 		
 		sc = new Scanner(System.in);
 		cont = true;
@@ -38,196 +46,231 @@ class FingerTips {
 			h.setLevel(handlerLevel);
 			logger.addHandler(h);
 		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		logger.setLevel(loggerLevel);
+		logger.info("Logger initialization complete.");
 	}
 
-//	public static void main(String args[]) throws FileNotFoundException {
-//		FingerTips ft = new FingerTips();
-//		ft.run();
-//	}
+	public static void main(String args[]) throws FileNotFoundException {
+		FingerTips ft = new FingerTips();
+		ft.run();
+	}
 
-	public void run() {
+	private void run() {
 
-//		printWelcomeMSG();
+	//	printWelcomeMSG();
 
 		String userInput;
 
 		while (cont) {
 			System.out.print("\nCommand: ");
 			userInput = sc.nextLine();
+			userInput = userInput.trim();
 			System.out.println();
 			runUserInput(userInput);
 		}
 	}
 
-	private void printWelcomeMSG() {
-		System.out.println("\nWelcome To FingerTips!\n");
-		System.out.println("Enter \"help\" for further usage instructions.");
-	}
-
-	public String runUserInput(String userInput) {
+//	private void runUserInput(String userInput) {
+	private String runUserInput(String userInput) {
 		CMD actionMSG = control.performAction(userInput);
+		
 		logger.info(actionMSG.toString());
 		
+		//followUpAction(actionMSG);
+		String output = followUpAction(actionMSG);
+		return output;
+	}
+
+	
+//	private void followUpAction(CMD actionMSG) {
+//		switch(actionMSG.getCommandType()){
+//		case ADD: 		add(actionMSG); 		break;
+//		case REMOVE: 	remove(actionMSG);		break;
+//		case UNDO: 		undo(actionMSG);		break;
+//		case DISPLAY:	display(actionMSG);		break;
+//		case EDIT:		edit(actionMSG);		break;
+//		case DONE: 		done(actionMSG);		break;
+//		case HELP: 		help();					break;
+//		case QUIT: 		quit();					break;
+//		case CLEAR:		clear();				break;
+//		case ERROR:		error(actionMSG);		break;
+//		default: undo(actionMSG);
+//		}
+//	}
+	
+	private String followUpAction(CMD actionMSG) {
 		switch(actionMSG.getCommandType()){
-		case ADD: 
-			if(actionMSG.getData()==null){
-				System.out.println("Please enter a description for your task:");
-				String description = sc.nextLine().trim();
-				description = "add \"".concat(description);
-				control.performAction(description);
-			}
-
-			//			System.out.println("Add further information? y/n");
-			//			String answer = sc.nextLine();
-			//			answer = answer.toLowerCase();
-			//			while(!(answer.equals("y") || answer.equals("n"))){
-			//				System.out.println("Invalid answer.");
-			//				System.out.println("Add further information? y/n");
-			//				answer = sc.nextLine();
-			//			}
-			//			
-			//			if(answer.equals("y")){
-			//				runUserInput("edit");
-			//			} else {
-			
-			control.setTempHold(null);
-			Collections.sort(control.getStorage().getActiveEntries());
-//			System.out.println("Added.");
-			//			}
-			break;
-
-		case REMOVE: 
-			if(actionMSG.getData() == null){
-				System.out.println("Which entry do you want to remove?");
-				int rmvIndex;
-				try{
-					System.out.print("Index: ");
-					rmvIndex = sc.nextInt();
-					String newInstruction = "remove ".concat(Integer.toString(rmvIndex));
-					control.performAction(newInstruction);
-					System.out.println();
-					
-				} catch(InputMismatchException e){
-					System.out.println("Invalid input. Action aborted.");
-
-				}
-
-				sc.nextLine();
-			}
-			System.out.println("Removed");
-
-			break;
-		case UNDO: 
-			System.out.println(actionMSG.getData());
-			break;
-		case DISPLAY: 
-			ArrayList<Entry> print = (ArrayList<Entry>) actionMSG.getData();
-			if(print.isEmpty()){
-				System.out.println("There is nothing to print.");
-			}
-			else{
-				int j=1;
-
-				for (int i=0; i<print.size(); i++) {
-					System.out.println(j + ". " + print.get(i).toString());
-					j++;
-				}
-			}
-			break;
-		case EDIT: 					
-			if(actionMSG.getData()==null){
-
-				while(true){
-					System.out.println("Entry: ");
-					System.out.println(control.processEditMode("display")[1]);
-
-					System.out.println("Enter the field you wish to modify, and the new data to replace with.");
-					System.out.println("Type \"end\" to exit edit mode and \"help\" for futher assistance.");
-					System.out.print("\nCommand (Edit Mode): ");
-					userInput = sc.nextLine();
-
-					userInput = userInput.trim();
-					//call processor
-					String[] response = control.processEditMode(userInput);
-					if(response[0].equals("display")) System.out.println(response[1]);
-					else if(response[0].equals("help")) helpEditMode();
-					else if(response[0].equals("end")) break;
-					else if(response[0].equals("Error")) System.out.println(response[1]);
-				}
-
-				control.setTempHold(null);
-			}
-			else {
-				System.out.println(actionMSG.getData());
-				int a;
-				while(true){
-					try{
-						System.out.print("Index: ");
-						a = sc.nextInt();
-						sc.nextLine();
-						System.out.println();
-						if(control.getStorage().getActiveEntries().size() < a)
-							System.out.println("Invalid input. Enter a valid index number.");
-						else{
-							runUserInput("edit "+ a);
-							break;
-						}
-					}
-					catch(InputMismatchException e){
-						System.out.println("Invalid input. Action aborted.");
-						break;
-					}
-
-				}
-
-
-			}
-
-			break;
-		case DONE: 
-			if(actionMSG.getData() == null){
-				System.out.println("Invalid input. Action aborted.");
-			}
-			else{
-				System.out.println("Entry marked as done.");
-			}
-			break;
-		case HELP:
-			help();
-			break;
-		case QUIT: 
-			cont = false;
-			System.out.println("Goodbye.");
-			break;
-		case CLEAR:
-			return "All active entries deleted.";
-
-		default: System.out.println(actionMSG.getData());
-		}
+		case ADD: 		add(actionMSG); 		break;
+		case REMOVE: 	remove(actionMSG);		break;
+		case UNDO: 		undo(actionMSG);		break;
+		case DISPLAY:	display(actionMSG);		break;
+		case EDIT:		edit(actionMSG);		break;
+		case DONE: 		done(actionMSG);		break;
+		case HELP: 		help();					break;
+		case QUIT: 		quit();					break;
+		case CLEAR:		return SUCCESS_MSG_CLEAR;
+		case ERROR:		error(actionMSG);		break;
+		default: undo(actionMSG);
+		
+		}	
 		return "incomplete";
 	}
+	
+	//Add action
+	private void add(CMD actionMSG) {
+		if(actionMSG.getData()==null){
+			System.out.println("Please enter a description for your task:");
+			String description = sc.nextLine().trim();
+			description = "add \"".concat(description);
+			control.performAction(description);
+		}
 
-	private void helpEditMode() {
-		System.out.println("\nEnter a field followed by the new data it should be replaced with.");
-		System.out.println("desc:     edit description.");
-		System.out.println("ddate:    edit due date.");
-		System.out.println("display:  shows data in the current node.");
-		System.out.println("priority: edit priority");
-		System.out.println("hash #:   edit hash tags");
-		System.out.println("st:       edit start time");
-		System.out.println("et:       edit end time");
-		System.out.println("venue @:  edit venue");
+		//			System.out.println("Add further information? y/n");
+		//			String answer = sc.nextLine();
+		//			answer = answer.toLowerCase();
+		//			while(!(answer.equals("y") || answer.equals("n"))){
+		//				System.out.println("Invalid answer.");
+		//				System.out.println("Add further information? y/n");
+		//				answer = sc.nextLine();
+		//			}
+		//			
+		//			if(answer.equals("y")){
+		//				runUserInput("edit");
+		//			} else {
+		
+		control.setTempHold(null);
+		Collections.sort(control.getStorage().getActiveEntries());
+		System.out.println(SUCCESS_MSG_ADD);
+		
+		//			}
+	}
+	
+	//Edit Mode
+	private void edit(CMD actionMSG) {
+		String userInput;
+		if(actionMSG.getData()==null){
 
+			while(true){
+				System.out.println("Entry: ");
+				System.out.println(control.processEditMode("display")[1]);
+
+				System.out.println("Enter the field you wish to modify, and the new data to replace with.");
+				System.out.println("Type \"end\" to exit edit mode and \"help\" for futher assistance.");
+				System.out.print("\nCommand (Edit Mode): ");
+				userInput = sc.nextLine();
+
+				userInput = userInput.trim();
+				//call processor
+				String[] response = control.processEditMode(userInput);
+				if(response[0].equals("display")) System.out.println(response[1]);
+				else if(response[0].equals("help")) helpEditMode();
+				else if(response[0].equals("end")) break;
+				else if(response[0].equals("Error")) System.out.println(response[1]);
+			}
+
+			control.setTempHold(null);
+		}
+		else {
+			undo(actionMSG);
+			int a;
+			while(true){
+				try{
+					System.out.print("Index: ");
+					a = sc.nextInt();
+					sc.nextLine();
+					System.out.println();
+					if(control.getStorage().getActiveEntries().size() < a)
+						System.out.println("Invalid input. Enter a valid index number.");
+					else{
+						runUserInput("edit "+ a);
+						break;
+					}
+				}
+				catch(InputMismatchException e){
+					System.out.println("Invalid input. Action aborted.");
+					break;
+				}
+			}
+		}
 	}
 
+	private void display(CMD actionMSG) {
+		ArrayList<Entry> print = (ArrayList<Entry>) actionMSG.getData();
+		if(print.isEmpty()){
+			System.out.println("There is nothing to print.");
+		}
+		else{
+			int j=1;
+
+			for (int i=0; i<print.size(); i++) {
+				System.out.println(j + ". " + print.get(i).toString());
+				j++;
+			}
+		}
+	}
+
+	private void remove(CMD actionMSG) {
+		if(actionMSG.getData() == null){
+			System.out.println("Which entry do you want to remove?");
+			int rmvIndex;
+			try{
+				System.out.print("Index: ");
+				rmvIndex = sc.nextInt();
+				String newInstruction = "remove ".concat(Integer.toString(rmvIndex));
+				control.performAction(newInstruction);
+				System.out.println();
+				
+			} catch(InputMismatchException e){
+				System.out.println("Invalid input. Action aborted.");
+
+			}
+
+			sc.nextLine();
+		}
+		System.out.println(SUCCESS_MSG_REMOVE);
+	}
+
+	//Follow up for DONE
+		private void done(CMD actionMSG) {
+			System.out.println(SUCCESS_MSG_DONE);
+		}
+	
+	//Prints action taken.
+	private void undo(CMD actionMSG) {
+		
+		System.out.println(actionMSG.getData());
+	}
+	
+	//Prints SUCCESS MSG for Clear
+	private void clear() {
+		System.out.println(SUCCESS_MSG_CLEAR);
+	}
+
+	//Ending MSG
+	private void quit() {
+		cont = false;
+		System.out.println(SUCCESS_MSG_EXIT);
+	}
+	
+	
+	//Print ERROR msg
+	//Assumes:	CMD.data is a String
+	private void error(CMD actionMSG) {
+		System.out.println(actionMSG.getData());
+	}
+	
+	//Welcome Message
+	private void printWelcomeMSG() {
+		System.out.println(MSG_WELCOME);
+		System.out.println(MSG_DEFAULT_ASSISTANCE);
+	}
+	
+	//normalMode help
 	private static void help() {
 		System.out.println("add <data>:\t\t   add an entry with related dates, description, priority etc.");
 		System.out.println("\t\t\t   prefix @ indicates venue, prefix # indicates a hashtag.");
@@ -241,11 +284,27 @@ class FingerTips {
 		System.out.println("quit:\t\t\t   terminates the program.");
 	}
 
+	//editMode help
+	private void helpEditMode() {
+		System.out.println("\nEnter a field followed by the new data it should be replaced with.");
+		System.out.println("desc:     edit description.");
+		System.out.println("ddate:    edit due date.");
+		System.out.println("display:  shows data in the current node.");
+		System.out.println("priority: edit priority");
+		System.out.println("hash #:   edit hash tags");
+		System.out.println("st:       edit start time");
+		System.out.println("et:       edit end time");
+		System.out.println("venue @:  edit venue");
+	}
+	
+	//Public Methods
+
 	public static void showToUser(String text) {
 		System.out.println(text);
 	}
 	
-	public static Logger setLoggingParent(){
+	//for logger initialization use
+	public static Logger getLoggingParent(){
 		return logger;
 	}
 }
