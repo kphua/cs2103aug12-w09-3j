@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Scanner;
+import java.util.logging.Logger;
 import java.io.*;
 
 public class Processor {
@@ -13,6 +14,7 @@ public class Processor {
 	private Hashtable <String, Integer> indicativeWordsIdentifier;
 	private File reservedWords, reservedWordsEditMode, indicativeWords;
 	private Scanner scanner = new Scanner(System.in);
+	private static final Logger logger = Logger.getLogger(Control.class.getName());
 
 	private static final String ERROR_MSG_INVALID_INPUT = "Invalid Input.";
 	private static final String ERROR_MSG_FATAL_ERROR = "Fatal Error. Critical files are missing.\n" +
@@ -22,12 +24,17 @@ public class Processor {
 
 	//loads reserved words into hashTables
 	public Processor() {
+		logger.setParent(FingerTips.setLoggingParent());
+		logger.info("Initialising Processor");
+		
 		reservedWords = new File("reservedWords.txt");
 		reservedWordsEditMode = new File("reservedWordsEditMode.txt");
 		indicativeWords = new File("indicativeWOrds.txt");
 		BufferedReader reader;
 		Scanner sc;
 
+		logger.fine("Loading reservedWords for normal commands.");
+		
 		try {
 			reader = new BufferedReader(new FileReader(reservedWords));
 			sc = new Scanner(reader);
@@ -45,7 +52,10 @@ public class Processor {
 			scanner.nextLine();
 			System.exit(0);
 		}
-
+		
+		logger.fine("Done.");
+		logger.fine("Loading reservedWords for edit commands.");
+		
 		try {
 			reader = new BufferedReader(new FileReader(reservedWordsEditMode));
 			sc = new Scanner(reader);
@@ -61,6 +71,9 @@ public class Processor {
 			System.exit(0);
 		}
 		
+		logger.fine("Done.");
+		logger.fine("Loading indicative words.");
+		
 		try {
 			reader = new BufferedReader(new FileReader(indicativeWords));
 			sc = new Scanner(reader);
@@ -75,6 +88,9 @@ public class Processor {
 			scanner.nextLine();
 			System.exit(0);
 		}
+		
+		logger.fine("Done.");
+		logger.info("Processor Initialised.");
 	}
 
 

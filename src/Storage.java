@@ -1,5 +1,6 @@
 // import all classes for now
 import java.util.*;
+import java.util.logging.Logger;
 import java.io.*;
 
 class Storage {
@@ -26,9 +27,12 @@ class Storage {
 	private ArrayList<Entry> displayEntries;
 	private FileWriter fw;
 	private BufferedWriter bw;
+	private static final Logger logger = Logger.getLogger(Control.class.getName());
 
 	//Singleton implementation. Call this to create Storage
 	public static Storage getInstance() {
+		
+		
 		if (storage == null) {
 			storage = new Storage();
 		}
@@ -42,6 +46,8 @@ class Storage {
 	 * Load activeFile and archiveFile into activeEntries and archiveEntries
 	 */
 	private Storage(){
+		logger.setParent(FingerTips.setLoggingParent());
+		logger.info("Initialising Storage.");
 		
 		activeFile = new File("activeFile.txt");
 		archiveFile = new File("archiveFile.txt");
@@ -52,27 +58,39 @@ class Storage {
 		displayEntries = activeEntries;
 		
 		if (activeFile.exists()) {
+			logger.fine("Loading Active Entries.");
 			loadFromFile(activeFile, activeEntries);
 			Collections.sort(activeEntries);
+			logger.fine("Done.");
 		}
 		else{
+			logger.info("No active list found.");
 			try {
+				logger.fine("Creating new list.");
 				activeFile.createNewFile();
 				System.out.println("No active list found. New list created.");
+				logger.fine("Created.");
 			} catch (IOException e) {
+				logger.severe("Unable to Create File.");
 				System.out.println("IOException for activeFile.");
 				System.exit(-1);
 			}
 		}
 
 		if (archiveFile.exists()) {
+			logger.fine("Loading Active Entries.");
 			loadFromFile(archiveFile, archiveEntries);
+			logger.fine("Done.");
 		}
 		else{
+			logger.info("No archive found.");
 			try {
+				logger.fine("Creating new archive.");
 				archiveFile.createNewFile();
 				System.out.println("No archive found. New archive created.");
+				logger.fine("Created.");
 			} catch (IOException e) {
+				logger.severe("Unable to Create File.");
 				System.out.println("IOException for archiveFile.");
 				System.exit(-1);
 			}

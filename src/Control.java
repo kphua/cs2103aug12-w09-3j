@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 class Control {
 	private static Control control;
@@ -7,15 +8,20 @@ class Control {
 //	private boolean edit, newList; // modes
 	private CMD undo;
 	private Entry tempHold;
+	private static final Logger logger = Logger.getLogger(Control.class.getName());
 
 	private String MSG_ERROR = "Invalid input!";
 
 	private Control() {
-		// initialise.
-		// load entries
+
+		logger.setParent(FingerTips.setLoggingParent());
+		logger.info("Initialising Control.");
+		
 		storage = Storage.getInstance();
 		processor = new Processor();
 		undo = new CMD(null, null);
+		
+		logger.info("Control Initialised.");
 	}
 	
 	public static Control getInstance() {

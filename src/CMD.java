@@ -1,3 +1,5 @@
+import java.util.logging.Logger;
+
 
 class CMD {
 	
@@ -23,5 +25,28 @@ class CMD {
 
 	public void setData(Object data) {
 		this.data = data;
+	}
+	
+	public String toString(){
+		String strVer = "";
+		
+		switch(commandType){
+		case ADD: 		strVer = "add "; 	 break;
+		case REMOVE: 	strVer = "remove ";  break;
+		case CLEAR: 	strVer = "clear"; 	 break;
+		case UNDO:		strVer = "undo"; 	 break;
+		case EDIT:		strVer = "edit "; 	 break;
+		case DISPLAY: 	strVer = "display "; break;
+		case DONE:		strVer = "done "; 	 break;
+		case ERROR:		strVer = "ERROR: ";  break;	
+		default:
+			assert false;
+		}
+		
+		if(data == null) strVer.concat("null");
+		else strVer.concat(data.toString());
+		
+		return strVer;
+		
 	}
 }

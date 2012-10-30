@@ -1,16 +1,50 @@
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.*;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 class FingerTips {
 
-	Control control;
-	Scanner sc;
-	boolean cont;
+	private Control control;
+	private Scanner sc;
+	private boolean cont;
+	
+	private static final Logger logger = Logger.getLogger(FingerTips.class.getName());
+	private static final String logFile = "runLog.log";
+	private static final Level handlerLevel = Level.FINE;
+	private static final Level loggerLevel = Level.FINE;
 
 	public FingerTips(){
+		initialiseLogger();
+		
+		logger.info("Logger initialization complete.");
+		
 		sc = new Scanner(System.in);
 		cont = true;
 		control = Control.getInstance();
+		
+		logger.info("Initialization Complete.");
+	}
+
+	private void initialiseLogger() {
+		try {
+			Handler h = new FileHandler(logFile);
+			h.setFormatter(new SimpleFormatter());
+			h.setLevel(handlerLevel);
+			logger.addHandler(h);
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		logger.setLevel(loggerLevel);
 	}
 
 	public static void main(String args[]) throws FileNotFoundException {
@@ -39,6 +73,8 @@ class FingerTips {
 
 	private void runUserInput(String userInput) {
 		CMD actionMSG = control.performAction(userInput);
+		logger.info(actionMSG.toString());
+		
 		switch(actionMSG.getCommandType()){
 		case ADD: 
 			if(actionMSG.getData()==null){
@@ -60,9 +96,11 @@ class FingerTips {
 			//			if(answer.equals("y")){
 			//				runUserInput("edit");
 			//			} else {
+			
 			control.setTempHold(null);
 			Collections.sort(control.getStorage().getActiveEntries());
 			System.out.println("Added.");
+			
 			//			}
 			break;
 
@@ -204,5 +242,9 @@ class FingerTips {
 
 	public static void showToUser(String text) {
 		System.out.println(text);
+	}
+	
+	public static Logger setLoggingParent(){
+		return logger;
 	}
 }
