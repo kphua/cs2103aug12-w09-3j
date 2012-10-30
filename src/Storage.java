@@ -46,7 +46,7 @@ class Storage {
 	 * Load activeFile and archiveFile into activeEntries and archiveEntries
 	 */
 	private Storage(){
-		logger.setParent(FingerTips.setLoggingParent());
+		logger.setParent(FingerTips.getLoggingParent());
 		logger.info("Initialising Storage.");
 		
 		activeFile = new File("activeFile.txt");
