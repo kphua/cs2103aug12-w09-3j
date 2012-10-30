@@ -30,10 +30,10 @@ import java.awt.Dialog.ModalExclusionType;
 import javax.swing.SwingConstants;
 import java.awt.Window.Type;
 import java.awt.TextArea;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.factories.FormFactory;
-import com.jgoodies.forms.layout.RowSpec;
+//import com.jgoodies.forms.layout.FormLayout;
+//import com.jgoodies.forms.layout.ColumnSpec;
+//import com.jgoodies.forms.factories.FormFactory;
+//import com.jgoodies.forms.layout.RowSpec;
 import javax.swing.JTextArea;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
@@ -112,28 +112,17 @@ public class UI extends JFrame implements ActionListener {
 		textField.addActionListener(new inputListener());
 		
 		mainArea = new JTextArea(welcome);
-		
-//		DefaultCaret caret = (DefaultCaret) mainArea.getCaret();
-//		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 		JScrollPane scrollPane = new JScrollPane(mainArea);
-//		scrollPane.setBounds(10, 60, 420, 317);
-//		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-		
-//		scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
-//			public void adjustmentValueChanged(AdjustmentEvent e) {
-//				e.getAdjustable().setValue(e.getAdjustable().getMaximum());
-//			}
-//		});
+		scrollPane.setBounds(20, 20, 420, 317);
+		getContentPane().add(scrollPane);
+		scrollPane.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		
 		mainArea.setEditable(false);
 		mainArea.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		mainArea.setBackground(new Color(230, 230, 250));
-		//mainArea.setLineWrap(true);
-		mainArea.setBounds(20, 20, 420, 317);
-		getContentPane().add(mainArea);
-		mainArea.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+//		mainArea.setLineWrap(true);
 //		mainArea.setCaretPosition(mainArea.getText().length() - 1);
-		mainArea.setCaretPosition(mainArea.getText().length());
 //		cols();
 		
 		JTextArea currentList = new JTextArea();
