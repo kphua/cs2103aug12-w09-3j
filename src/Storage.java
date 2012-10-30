@@ -303,5 +303,6 @@ class Storage {
 	//removes all entries from activeEntries
 	public void clearActive(){
 		activeEntries = new ArrayList<Entry>();
+		assert activeEntries.isEmpty();		// assert all entries cleared
 	}
 }
