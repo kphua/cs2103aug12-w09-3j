@@ -100,6 +100,9 @@ public class Processor {
 		
 		case ADD:
 			if(temp.length == 1) return new CMD(userCMD, null);			//add <nothing>
+			else if(temp[1].isEmpty() || temp[1].equals("\"") || temp[1].equals("\" ") 
+					|| temp[1].equals("\" \"")) 
+				return new CMD(userCMD, null);
 			else {
 				Entry newTask = new Entry();
 				buildEntry(newTask, temp);
