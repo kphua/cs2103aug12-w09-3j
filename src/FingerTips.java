@@ -62,7 +62,7 @@ class FingerTips {
 
 	private void run() {
 
-		printWelcomeMSG();
+	//	printWelcomeMSG();
 
 		String userInput;
 
@@ -75,15 +75,35 @@ class FingerTips {
 		}
 	}
 
-	private void runUserInput(String userInput) {
+//	private void runUserInput(String userInput) {
+	private String runUserInput(String userInput) {
 		CMD actionMSG = control.performAction(userInput);
 		
 		logger.info(actionMSG.toString());
 		
-		followUpAction(actionMSG);
+		//followUpAction(actionMSG);
+		String output = followUpAction(actionMSG);
+		return output;
 	}
 
-	private void followUpAction(CMD actionMSG) {
+	
+//	private void followUpAction(CMD actionMSG) {
+//		switch(actionMSG.getCommandType()){
+//		case ADD: 		add(actionMSG); 		break;
+//		case REMOVE: 	remove(actionMSG);		break;
+//		case UNDO: 		undo(actionMSG);		break;
+//		case DISPLAY:	display(actionMSG);		break;
+//		case EDIT:		edit(actionMSG);		break;
+//		case DONE: 		done(actionMSG);		break;
+//		case HELP: 		help();					break;
+//		case QUIT: 		quit();					break;
+//		case CLEAR:		clear();				break;
+//		case ERROR:		error(actionMSG);		break;
+//		default: undo(actionMSG);
+//		}
+//	}
+	
+	private String followUpAction(CMD actionMSG) {
 		switch(actionMSG.getCommandType()){
 		case ADD: 		add(actionMSG); 		break;
 		case REMOVE: 	remove(actionMSG);		break;
@@ -93,10 +113,12 @@ class FingerTips {
 		case DONE: 		done(actionMSG);		break;
 		case HELP: 		help();					break;
 		case QUIT: 		quit();					break;
-		case CLEAR:		clear();				break;
+		case CLEAR:		return SUCCESS_MSG_CLEAR;
 		case ERROR:		error(actionMSG);		break;
 		default: undo(actionMSG);
-		}
+		
+		}	
+		return "incomplete";
 	}
 	
 	//Add action
@@ -281,7 +303,7 @@ class FingerTips {
 		System.out.println(text);
 	}
 	
-	//for logger initialisation use
+	//for logger initialization use
 	public static Logger getLoggingParent(){
 		return logger;
 	}
