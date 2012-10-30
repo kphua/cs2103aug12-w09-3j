@@ -13,11 +13,11 @@ class FingerTips {
 	private static final String MSG_WELCOME = "\nWelcome To FingerTips!\n";
 	private static final String MSG_DEFAULT_ASSISTANCE = "Enter \"help\" for further usage instructions.";
 	
-	private static final String SUCCESS_MSG_ADD = "Added.";
-	private static final String SUCCESS_MSG_REMOVE = "Removed";
-	private static final String SUCCESS_MSG_DONE = "Entry marked as done and shifted to archive.";
-	private static final String SUCCESS_MSG_CLEAR = "All active entries deleted.";
-	private static final String SUCCESS_MSG_EXIT = "Goodbye.";
+	private static final String SUCCESS_MSG_ADD = "Added.\n";
+	private static final String SUCCESS_MSG_REMOVE = "Removed.\n";
+	private static final String SUCCESS_MSG_DONE = "Entry marked as done and shifted to archive.\n";
+	private static final String SUCCESS_MSG_CLEAR = "All active entries deleted.\n";
+	private static final String SUCCESS_MSG_EXIT = "Goodbye.\n";
 	
 	private static final Logger logger = Logger.getLogger(FingerTips.class.getName());
 	private static final String logFile = "runLog.log";
@@ -76,7 +76,7 @@ class FingerTips {
 	}
 
 //	private void runUserInput(String userInput) {
-	private String runUserInput(String userInput) {
+	public String runUserInput(String userInput) {
 		CMD actionMSG = control.performAction(userInput);
 		
 		logger.info(actionMSG.toString());
@@ -111,7 +111,7 @@ class FingerTips {
 		case DISPLAY:	display(actionMSG);		break;
 		case EDIT:		edit(actionMSG);		break;
 		case DONE: 		done(actionMSG);		break;
-		case HELP: 		help();					break;
+		case HELP: 		return help();	
 		case QUIT: 		quit();					break;
 		case CLEAR:		return SUCCESS_MSG_CLEAR;
 		case ERROR:		error(actionMSG);		break;
@@ -254,7 +254,8 @@ class FingerTips {
 	//Ending MSG
 	private void quit() {
 		cont = false;
-		System.out.println(SUCCESS_MSG_EXIT);
+		//System.out.println(SUCCESS_MSG_EXIT);
+		System.exit(0);
 	}
 	
 	
@@ -271,30 +272,49 @@ class FingerTips {
 	}
 	
 	//normalMode help
-	private static void help() {
-		System.out.println("add <data>:\t\t   add an entry with related dates, description, priority etc.");
-		System.out.println("\t\t\t   prefix @ indicates venue, prefix # indicates a hashtag.");
-		System.out.println("remove <number>:\t   remove the selected entry for the active list.");
-		System.out.println("edit <number>:\t\t   enters edit mode for selected entry.");
-		System.out.println("undo:\t\t\t   reverses the previous action.");
-		System.out.println("display:\t\t   shows the activelist.");
-		System.out.println("display <search criteria>: generates a list of entries fulfilling the search criteria.");
-		System.out.println("done <number>:\t\t   marks an entry as completed");
-		System.out.println("clear:\t\t\t   deletes all entries permanently (use with caution!)");
-		System.out.println("quit:\t\t\t   terminates the program.");
+	private static String help() {
+//		System.out.println("add <data>:\t\t   add an entry with related dates, description, priority etc.");
+//		System.out.println("\t\t\t   prefix @ indicates venue, prefix # indicates a hashtag.");
+//		System.out.println("remove <number>:\t   remove the selected entry for the active list.");
+//		System.out.println("edit <number>:\t\t   enters edit mode for selected entry.");
+//		System.out.println("undo:\t\t\t   reverses the previous action.");
+//		System.out.println("display:\t\t   shows the activelist.");
+//		System.out.println("display <search criteria>: generates a list of entries fulfilling the search criteria.");
+//		System.out.println("done <number>:\t\t   marks an entry as completed");
+//		System.out.println("clear:\t\t\t   deletes all entries permanently (use with caution!)");
+//		System.out.println("quit:\t\t\t   terminates the program.");
+		return ("add <data>:\t\t   add an entry with related dates, description, priority etc.\n") +
+				("\t\t   prefix @ indicates venue, prefix # indicates a hashtag.\n") +
+				("remove <number>:\t   remove the selected entry for the active list.\n") +
+				("edit <number>:\t   enters edit mode for selected entry.\n") +
+				("undo:\t\t   reverses the previous action.\n") +
+				("display:\t\t   shows the activelist.\n") +
+				("display <search criteria>:\t   generates a list of entries fulfilling the search criteria.\n") +
+				("done <number>:\t   marks an entry as completed.\n") +
+				("clear:\t\t   deletes all entries permanently (use with caution!).\n") +
+				("quit:\t\t   terminates the program.\n");
 	}
 
 	//editMode help
-	private void helpEditMode() {
-		System.out.println("\nEnter a field followed by the new data it should be replaced with.");
-		System.out.println("desc:     edit description.");
-		System.out.println("ddate:    edit due date.");
-		System.out.println("display:  shows data in the current node.");
-		System.out.println("priority: edit priority");
-		System.out.println("hash #:   edit hash tags");
-		System.out.println("st:       edit start time");
-		System.out.println("et:       edit end time");
-		System.out.println("venue @:  edit venue");
+	private static String helpEditMode() {
+//		System.out.println("\nEnter a field followed by the new data it should be replaced with.");
+//		System.out.println("desc:     edit description.");
+//		System.out.println("ddate:    edit due date.");
+//		System.out.println("display:  shows data in the current node.");
+//		System.out.println("priority: edit priority");
+//		System.out.println("hash #:   edit hash tags");
+//		System.out.println("st:       edit start time");
+//		System.out.println("et:       edit end time");
+//		System.out.println("venue @:  edit venue");
+		return ("\nEnter a field followed by the new data it should be replaced with.\n") +
+				("desc:\t edit description\n") +
+				("ddate:\t edit due date\n") +
+				("display:\t shows data in the current node\n") +
+				("priority:\t edit priority\n") +
+				("hash #:\t edit hash tags\n") +
+				("st:\t edit start time\n") +
+				("et:\t edit end time\n") +
+				("venue @:\t edit venue\n");
 	}
 	
 	//Public Methods
