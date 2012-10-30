@@ -10,6 +10,8 @@ import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 import java.awt.Color;
 import javax.swing.border.BevelBorder;
@@ -18,6 +20,8 @@ import javax.swing.JTextField;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 
 import javax.swing.border.TitledBorder;
 import javax.swing.border.CompoundBorder;
@@ -40,6 +44,7 @@ import javax.swing.JButton;
 import javax.swing.border.EtchedBorder;
 import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.TableColumn;
+import javax.swing.text.DefaultCaret;
 import javax.swing.text.Document;
 import javax.swing.ImageIcon;
 import java.awt.event.ComponentAdapter;
@@ -50,17 +55,25 @@ public class UI extends JFrame implements ActionListener {
 	private JPanel mainPane;
 	private JTextField textField;
 	private String userInput;
-	private CMD display_output;
-	private Control control;
-	private String output;
 	private TableColumn id, task, start_time, end_time, duedate, hashtags;
 	private DefaultTableColumnModel headers;
+	private JTextArea mainArea;
+	
+	
+	private FingerTips ft;
+	
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
+		boolean cont = true;
+		String input;
+		UI frame = null;
+		String output;
+		
+		
+		Runnable run = new Runnable(){
 			public void run() {
 				try {
 					UI frame = new UI();
@@ -69,13 +82,19 @@ public class UI extends JFrame implements ActionListener {
 					e.printStackTrace();
 				}
 			}
-		});
+		};
+		
+		EventQueue.invokeLater(run);
+
+		
 	}
 
 	/**
 	 * Create the frame.
 	 */
 	public UI() {
+		ft = new FingerTips();
+		
 		setTitle("FingerTips");
 		
 		setResizable(false);
@@ -90,9 +109,21 @@ public class UI extends JFrame implements ActionListener {
 		getContentPane().add(textField);
 		textField.setColumns(10);
 		textField.setBorder(new TitledBorder(new CompoundBorder(new BevelBorder(BevelBorder.LOWERED, new Color(204, 204, 204), new Color(153, 153, 153), new Color(204, 204, 204), new Color(153, 153, 153)), new BevelBorder(BevelBorder.LOWERED, new Color(204, 204, 204), new Color(153, 153, 153), new Color(204, 204, 204), new Color(153, 153, 153))), "Enter input:", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(102, 102, 102)));
-		textField.addActionListener(this);
+		textField.addActionListener(new inputListener());
 		
-		JTextArea mainArea = new JTextArea(welcome);
+		mainArea = new JTextArea(welcome);
+		
+//		DefaultCaret caret = (DefaultCaret) mainArea.getCaret();
+//		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+		JScrollPane scrollPane = new JScrollPane(mainArea);
+//		scrollPane.setBounds(10, 60, 420, 317);
+//		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		
+//		scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
+//			public void adjustmentValueChanged(AdjustmentEvent e) {
+//				e.getAdjustable().setValue(e.getAdjustable().getMaximum());
+//			}
+//		});
 		
 		mainArea.setEditable(false);
 		mainArea.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -101,8 +132,9 @@ public class UI extends JFrame implements ActionListener {
 		mainArea.setBounds(20, 20, 420, 317);
 		getContentPane().add(mainArea);
 		mainArea.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		mainArea.setCaretPosition(mainArea.getText().length() - 1);
-		cols();
+//		mainArea.setCaretPosition(mainArea.getText().length() - 1);
+		mainArea.setCaretPosition(mainArea.getText().length());
+//		cols();
 		
 		JTextArea currentList = new JTextArea();
 		currentList.setEditable(false);
@@ -114,12 +146,12 @@ public class UI extends JFrame implements ActionListener {
 		//currentList.setText("");
 		//currentList.append("User input: ");
 		
-        InputStream in = getClass().getResourceAsStream("activeTextFile.txt");
-        try {
-            currentList.read(new InputStreamReader(in), null);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        InputStream in = getClass().getResourceAsStream("activeTextFile.txt");
+//        try {
+//            currentList.read(new InputStreamReader(in), null);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 		
 		JLabel lblNewLabel = new JLabel("");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -134,7 +166,7 @@ public class UI extends JFrame implements ActionListener {
 		lblCurrentList.setBounds(460, 20, 214, 14);
 		getContentPane().add(lblCurrentList);
 		
-		display_output = control.performAction("display");
+		//display_output = control.performAction("display");
 		//mainArea.display(output);
 		//Document doc = mainArea.getDocument();
 		//PrintStream out = new PrintStream(new DocumentOutputStream(doc));
@@ -163,6 +195,23 @@ public class UI extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent a) {
 		// TODO Auto-generated method stub
 		userInput = textField.getText();
-		display_output = control.performAction(userInput);
+		//display_output = control.performAction(userInput);
 	}
+	
+	class inputListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			String input = textField.getText();
+			textField.setText(null);
+			System.out.println();
+			String output = ft.runUserInput(input);
+			mainArea.append("\n"+ output);
+			
+		}
+		
+	}
+	
 }
+
+

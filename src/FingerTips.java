@@ -12,6 +12,7 @@ class FingerTips {
 	private Control control;
 	private Scanner sc;
 	private boolean cont;
+
 	
 	private static final Logger logger = Logger.getLogger(FingerTips.class.getName());
 	private static final String logFile = "runLog.log";
@@ -20,7 +21,7 @@ class FingerTips {
 
 	public FingerTips(){
 		initialiseLogger();
-		
+			
 		logger.info("Logger initialization complete.");
 		
 		sc = new Scanner(System.in);
@@ -47,14 +48,14 @@ class FingerTips {
 		logger.setLevel(loggerLevel);
 	}
 
-	public static void main(String args[]) throws FileNotFoundException {
-		FingerTips ft = new FingerTips();
-		ft.run();
-	}
+//	public static void main(String args[]) throws FileNotFoundException {
+//		FingerTips ft = new FingerTips();
+//		ft.run();
+//	}
 
-	private void run() {
+	public void run() {
 
-		printWelcomeMSG();
+//		printWelcomeMSG();
 
 		String userInput;
 
@@ -71,7 +72,7 @@ class FingerTips {
 		System.out.println("Enter \"help\" for further usage instructions.");
 	}
 
-	private void runUserInput(String userInput) {
+	public String runUserInput(String userInput) {
 		CMD actionMSG = control.performAction(userInput);
 		logger.info(actionMSG.toString());
 		
@@ -99,8 +100,7 @@ class FingerTips {
 			
 			control.setTempHold(null);
 			Collections.sort(control.getStorage().getActiveEntries());
-			System.out.println("Added.");
-			
+//			System.out.println("Added.");
 			//			}
 			break;
 
@@ -208,10 +208,11 @@ class FingerTips {
 			System.out.println("Goodbye.");
 			break;
 		case CLEAR:
-			System.out.println("All active entries deleted.");
-			break;
+			return "All active entries deleted.";
+
 		default: System.out.println(actionMSG.getData());
 		}
+		return "incomplete";
 	}
 
 	private void helpEditMode() {
