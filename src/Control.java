@@ -13,8 +13,7 @@ class Control {
 	private String MSG_ERROR = "Invalid input!";
 
 	private Control() {
-
-		logger.setParent(FingerTips.setLoggingParent());
+		logger.setParent(FingerTips.getLoggingParent());
 		logger.info("Initialising Control.");
 		
 		storage = Storage.getInstance();
