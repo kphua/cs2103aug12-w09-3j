@@ -55,6 +55,7 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableColumnModel;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.text.DefaultCaret;
 import javax.swing.text.Document;
@@ -234,13 +235,13 @@ public class UI extends JFrame implements ActionListener {
 	private Vector<Vector> convertToVV(Vector<Entry> a) {
 		// TODO Auto-generated method stub
 		Vector<Vector> out = new Vector<Vector>();
-		for(int j=0; j<6; j++)
+		for(int j=0; j<a.size(); j++)
 			out.add(new Vector());
 		
 		int i = 0;
 		
 		for(Entry e : a){
-			Vector v = out.get(0);
+			Vector v = out.get(i);
 			v.add(i+1);
 			v.add(e.getDesc());
 			v.add(e.getStart());
@@ -342,7 +343,11 @@ public class UI extends JFrame implements ActionListener {
 		Vector<Entry> a = control.getStorage().getDisplayEntries();
 		Vector<Vector> data = convertToVV(a);
 		
-		table = new JTable(data, columnNames);
+//		table = new JTable(data, columnNames);
+//		table.repaint();
+		DefaultTableModel dm = new DefaultTableModel(data, columnNames);
+		table.setModel(dm);
+		dm.fireTableDataChanged();
 	}
 	
 	private void followUpAction(CMD actionMSG) {
