@@ -23,8 +23,8 @@ public class testProcessor {
 		
 		input[0] = "  ";		// returns ERROR & Invalid Input.
 		input[1] = "testing"; 	// returns ERROR & Invalid Input.
-		// returns ADD & Test for add 1am 2pm 1/1/2012 null null null
-		input[2] = "add \"Test for add\" 1am 2pm 1/1/2012";
+		// returns ADD & Test for add from 1pm to 2pm on 1/1/2012
+		input[2] = "add \"Test for add\" 1pm 2pm 1/1/2012";
 		input[3] = "clear";		// returns CLEAR & null
 		input[4] = "done";		// returns ERROR & Invalid Input.
 		input[5] = "done 2";	// returns DONE & 2
@@ -45,7 +45,7 @@ public class testProcessor {
 		// set expectedOutput results
 		expectedOutput[0] = "ERROR Invalid Input.";
 		expectedOutput[1] = "ERROR Invalid Input.";
-		expectedOutput[2] = "ADD Test for add 1am 2pm 1/1/2012 null null null";
+		expectedOutput[2] = "ADD Test for add from 1pm to 2pm on 1/1/2012 ";
 		expectedOutput[3] = "CLEAR null";
 		expectedOutput[4] = "ERROR Invalid Input.";
 		expectedOutput[5] = "DONE 2";
