@@ -50,11 +50,6 @@ import javax.swing.ImageIcon;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import javax.swing.JTable;
-import java.awt.Panel;
-import javax.swing.JSeparator;
-import java.awt.TextField;
-import java.awt.Label;
-import java.awt.List;
 
 public class UI extends JFrame implements ActionListener {
 
@@ -106,25 +101,23 @@ public class UI extends JFrame implements ActionListener {
 		setResizable(false);
 		setBackground(Color.WHITE);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(1000, 548);
+		setSize(900, 600);
 		getContentPane().setLayout(null);
 		
 		textField = new JTextField();
 		textField.setBackground(new Color(245, 245, 245));
-		textField.setBounds(609, 438, 375, 73);
+		textField.setBounds(20, 495, 589, 58);
 		getContentPane().add(textField);
 		textField.setColumns(10);
 		textField.setBorder(new TitledBorder(new CompoundBorder(new BevelBorder(BevelBorder.LOWERED, new Color(204, 204, 204), new Color(153, 153, 153), new Color(204, 204, 204), new Color(153, 153, 153)), new BevelBorder(BevelBorder.LOWERED, new Color(204, 204, 204), new Color(153, 153, 153), new Color(204, 204, 204), new Color(153, 153, 153))), "Enter input:", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(102, 102, 102)));
 		textField.addActionListener(new inputListener());
 		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(609, 24, 375, 403);
+		mainArea = new JTextArea(welcome);
+		JScrollPane scrollPane = new JScrollPane(mainArea);
+		scrollPane.setBounds(20, 26, 589, 449);
 		getContentPane().add(scrollPane);
 		scrollPane.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-		
-		mainArea = new JTextArea(welcome);
-		scrollPane.setViewportView(mainArea);
 		
 		mainArea.setEditable(false);
 		mainArea.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -134,34 +127,12 @@ public class UI extends JFrame implements ActionListener {
 //		mainArea.setCaretPosition(mainArea.getText().length() - 1);
 //		cols();
 		
-		String[] columnNames = {"ID",
-                "Task",
-                "Time",
-                "Date",
-                "!",
-                "#"};
-		
-		Object[][] data = {
-			    {"Kathy", "Smith",
-			     "Snowboarding", new Integer(5), new Boolean(false), "-"},
-			    {"John", "Doe",
-			     "Rowing", new Integer(3), new Boolean(true), "-"},
-			    {"Sue", "Black",
-			     "Knitting", new Integer(2), new Boolean(false), "-"},
-			    {"Jane", "White",
-			     "Speed reading", new Integer(20), new Boolean(true), "-"},
-			    {"Joe", "Brown",
-			     "Pool", new Integer(10), new Boolean(false), "-"}
-		        };
-		
-		JTable table = new JTable(data, columnNames);
-		table.setEnabled(false);
-		JScrollPane scrollPane2 = new JScrollPane(table);
-		scrollPane2.setBackground(new Color(220, 220, 220));
-		scrollPane2.setBounds(10, 61, 589, 448);
-		getContentPane().add(scrollPane2);
-		scrollPane2.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		
+		JTextArea currentList = new JTextArea();
+		currentList.setEditable(false);
+		currentList.setBackground(new Color(220, 220, 220));
+		currentList.setBounds(635, 51, 236, 378);
+		getContentPane().add(currentList);
+		currentList.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		
 		//currentList.setText("");
 		//currentList.append("User input: ");
@@ -179,12 +150,11 @@ public class UI extends JFrame implements ActionListener {
 		lblNewLabel.setBounds(648, 455, 214, 98);
 		getContentPane().add(lblNewLabel);
 		
-		JLabel lblCurrentList = new JLabel("Tasks List:");
-		lblCurrentList.setHorizontalAlignment(SwingConstants.CENTER);
+		JLabel lblCurrentList = new JLabel("Current List:");
 		lblCurrentList.setBackground(new Color(216, 191, 216));
 		lblCurrentList.setForeground(new Color(153, 102, 153));
-		lblCurrentList.setFont(new Font("Franklin Gothic Book", Font.BOLD, 21));
-		lblCurrentList.setBounds(10, 26, 589, 24);
+		lblCurrentList.setFont(new Font("Franklin Gothic Book", Font.PLAIN, 20));
+		lblCurrentList.setBounds(648, 26, 214, 14);
 		getContentPane().add(lblCurrentList);
 		
 		//display_output = control.performAction("display");
@@ -211,6 +181,7 @@ public class UI extends JFrame implements ActionListener {
 	
 	static String welcome = "Welcome to FingerTips!\n" +
 	"Enter \"help\" for further usage instructions.\n";
+	private JTable table;
 
 	@Override
 	public void actionPerformed(ActionEvent a) {
