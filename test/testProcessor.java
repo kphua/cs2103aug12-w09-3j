@@ -21,12 +21,12 @@ public class testProcessor {
 		String[] actualOutput = new String[19];
 		String[] expectedOutput = new String[19];
 		
-		input[0] = "  ";		// returns ERROR & Invalid Input.
-		input[1] = "testing"; 	// returns ERROR & Invalid Input.
+		input[0] = "  ";		// returns ERROR & Invalid Input & Input should follow a "<command> <data>" format
+		input[1] = "testing"; 	// returns ERROR & Invalid Input & Input should follow a "<command> <data>" format
 		// returns ADD & Test for add from 1pm to 2pm on 1/1/2012
 		input[2] = "add \"Test for add\" 1pm 2pm 1/1/2012";
 		input[3] = "clear";		// returns CLEAR & null
-		input[4] = "done";		// returns ERROR & Invalid Input.
+		input[4] = "done";		// returns ERROR & Invalid Input & Input should follow a "<command> <data>" format
 		input[5] = "done 2";	// returns DONE & 2
 		input[6] = "display";	// returns DISPLAY & null
 		input[7] = "display 3";	// returns DISPLAY & 3
@@ -43,11 +43,11 @@ public class testProcessor {
 		input[18] = "help";	// returns HELP & null
 		
 		// set expectedOutput results
-		expectedOutput[0] = "ERROR Invalid Input.";
-		expectedOutput[1] = "ERROR Invalid Input.";
+		expectedOutput[0] = "ERROR Invalid Input. Input should follow a \"<command> <data>\" format";
+		expectedOutput[1] = "ERROR Invalid Input. Input should follow a \"<command> <data>\" format";
 		expectedOutput[2] = "ADD Test for add from 1pm to 2pm on 1/1/2012 ";
 		expectedOutput[3] = "CLEAR null";
-		expectedOutput[4] = "ERROR Invalid Input.";
+		expectedOutput[4] = "ERROR Invalid Input. Input should follow a \"<command> <data>\" format";
 		expectedOutput[5] = "DONE 2";
 		expectedOutput[6] = "DISPLAY null";
 		expectedOutput[7] = "DISPLAY 3";
