@@ -42,6 +42,8 @@ import java.io.*;
 
 import javax.swing.JButton;
 import javax.swing.border.EtchedBorder;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.TableColumn;
 import javax.swing.text.DefaultCaret;
@@ -55,6 +57,7 @@ import javax.swing.JSeparator;
 import java.awt.TextField;
 import java.awt.Label;
 import java.awt.List;
+import javax.swing.UIManager;
 
 public class UI extends JFrame implements ActionListener {
 
@@ -136,14 +139,14 @@ public class UI extends JFrame implements ActionListener {
 		
 		String[] columnNames = {"ID",
                 "Task",
-                "Time",
-                "Date",
-                "!",
-                "#"};
+                "Start Time",
+                "End Time",
+                "Due Date",
+                "Priority"};
 		
 		Object[][] data = {
 			    {"Kathy", "Smith",
-			     "Snowboarding", new Integer(5), new Boolean(false), "-"},
+			     "Snowboarding Hahaha Hehehehe Hohohoho ZZZZZZZZZZ", new Integer(5), new Boolean(false), "-"},
 			    {"John", "Doe",
 			     "Rowing", new Integer(3), new Boolean(true), "-"},
 			    {"Sue", "Black",
@@ -154,30 +157,25 @@ public class UI extends JFrame implements ActionListener {
 			     "Pool", new Integer(10), new Boolean(false), "-"}
 		        };
 		
-		JTable table = new JTable(data, columnNames);
+		final JTable table = new JTable(data, columnNames);
+		table.setBackground(UIManager.getColor("Button.background"));
+		table.setShowVerticalLines(false);
+		table.setShowHorizontalLines(false);
 		table.setEnabled(false);
+		ColumnsAutoSizer.sizeColumnsToFit(table);
+		
+		// automatically resize the columns whenever the data in the table changes
+		table.getModel().addTableModelListener(new TableModelListener() {
+		    public void tableChanged(TableModelEvent e) {
+		        ColumnsAutoSizer.sizeColumnsToFit(table);
+		    }
+		});
+		
 		JScrollPane scrollPane2 = new JScrollPane(table);
 		scrollPane2.setBackground(new Color(220, 220, 220));
 		scrollPane2.setBounds(10, 61, 589, 448);
 		getContentPane().add(scrollPane2);
 		scrollPane2.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		
-		
-		//currentList.setText("");
-		//currentList.append("User input: ");
-		
-//        InputStream in = getClass().getResourceAsStream("activeTextFile.txt");
-//        try {
-//            currentList.read(new InputStreamReader(in), null);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-		
-		JLabel lblNewLabel = new JLabel("");
-		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\Zhen Zhen\\Desktop\\Pictures\\KeyIcon.png"));
-		lblNewLabel.setBounds(648, 455, 214, 98);
-		getContentPane().add(lblNewLabel);
 		
 		JLabel lblCurrentList = new JLabel("Tasks List:");
 		lblCurrentList.setHorizontalAlignment(SwingConstants.CENTER);
@@ -218,6 +216,7 @@ public class UI extends JFrame implements ActionListener {
 		userInput = textField.getText();
 		//display_output = control.performAction(userInput);
 	}
+	
 	
 	class inputListener implements ActionListener{
 
