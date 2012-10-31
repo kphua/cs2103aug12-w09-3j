@@ -30,10 +30,10 @@ import java.awt.Dialog.ModalExclusionType;
 import javax.swing.SwingConstants;
 import java.awt.Window.Type;
 import java.awt.TextArea;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.factories.FormFactory;
-import com.jgoodies.forms.layout.RowSpec;
+//import com.jgoodies.forms.layout.FormLayout;
+//import com.jgoodies.forms.layout.ColumnSpec;
+//import com.jgoodies.forms.factories.FormFactory;
+//import com.jgoodies.forms.layout.RowSpec;
 import javax.swing.JTextArea;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
@@ -49,6 +49,7 @@ import javax.swing.text.Document;
 import javax.swing.ImageIcon;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import javax.swing.JTable;
 
 public class UI extends JFrame implements ActionListener {
 
@@ -100,12 +101,12 @@ public class UI extends JFrame implements ActionListener {
 		setResizable(false);
 		setBackground(Color.WHITE);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(700, 450);
+		setSize(900, 600);
 		getContentPane().setLayout(null);
 		
 		textField = new JTextField();
 		textField.setBackground(new Color(245, 245, 245));
-		textField.setBounds(20, 360, 420, 44);
+		textField.setBounds(20, 495, 589, 58);
 		getContentPane().add(textField);
 		textField.setColumns(10);
 		textField.setBorder(new TitledBorder(new CompoundBorder(new BevelBorder(BevelBorder.LOWERED, new Color(204, 204, 204), new Color(153, 153, 153), new Color(204, 204, 204), new Color(153, 153, 153)), new BevelBorder(BevelBorder.LOWERED, new Color(204, 204, 204), new Color(153, 153, 153), new Color(204, 204, 204), new Color(153, 153, 153))), "Enter input:", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(102, 102, 102)));
@@ -113,7 +114,7 @@ public class UI extends JFrame implements ActionListener {
 		
 		mainArea = new JTextArea(welcome);
 		JScrollPane scrollPane = new JScrollPane(mainArea);
-		scrollPane.setBounds(20, 20, 420, 317);
+		scrollPane.setBounds(20, 26, 589, 449);
 		getContentPane().add(scrollPane);
 		scrollPane.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -121,6 +122,7 @@ public class UI extends JFrame implements ActionListener {
 		mainArea.setEditable(false);
 		mainArea.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		mainArea.setBackground(new Color(230, 230, 250));
+		
 //		mainArea.setLineWrap(true);
 //		mainArea.setCaretPosition(mainArea.getText().length() - 1);
 //		cols();
@@ -128,7 +130,7 @@ public class UI extends JFrame implements ActionListener {
 		JTextArea currentList = new JTextArea();
 		currentList.setEditable(false);
 		currentList.setBackground(new Color(220, 220, 220));
-		currentList.setBounds(460, 45, 214, 245);
+		currentList.setBounds(635, 51, 236, 378);
 		getContentPane().add(currentList);
 		currentList.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		
@@ -145,14 +147,14 @@ public class UI extends JFrame implements ActionListener {
 		JLabel lblNewLabel = new JLabel("");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\Zhen Zhen\\Desktop\\Pictures\\KeyIcon.png"));
-		lblNewLabel.setBounds(460, 306, 214, 98);
+		lblNewLabel.setBounds(648, 455, 214, 98);
 		getContentPane().add(lblNewLabel);
 		
 		JLabel lblCurrentList = new JLabel("Current List:");
 		lblCurrentList.setBackground(new Color(216, 191, 216));
 		lblCurrentList.setForeground(new Color(153, 102, 153));
 		lblCurrentList.setFont(new Font("Franklin Gothic Book", Font.PLAIN, 20));
-		lblCurrentList.setBounds(460, 20, 214, 14);
+		lblCurrentList.setBounds(648, 26, 214, 14);
 		getContentPane().add(lblCurrentList);
 		
 		//display_output = control.performAction("display");
@@ -178,7 +180,8 @@ public class UI extends JFrame implements ActionListener {
 	}
 	
 	static String welcome = "Welcome to FingerTips!\n" +
-	"Enter \"help\" for further usage instructions.";
+	"Enter \"help\" for further usage instructions.\n";
+	private JTable table;
 
 	@Override
 	public void actionPerformed(ActionEvent a) {
@@ -195,12 +198,11 @@ public class UI extends JFrame implements ActionListener {
 			textField.setText(null);
 			System.out.println();
 			String output = ft.runUserInput(input);
-			mainArea.append("\n"+ output);
+			mainArea.append("\n" + output);
 			
 		}
 		
 	}
-	
 }
 
 
