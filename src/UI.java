@@ -201,8 +201,16 @@ public class UI extends JFrame implements ActionListener {
 		table.setShowVerticalLines(false);
 		table.setShowHorizontalLines(false);
 		table.setEnabled(false);
-		ColumnsAutoSizer.sizeColumnsToFit(table);
+//		ColumnsAutoSizer.sizeColumnsToFit(table);
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		table.getColumnModel().getColumn(0).setPreferredWidth(20);
+		table.getColumnModel().getColumn(1).setPreferredWidth(300);
+		table.getColumnModel().getColumn(2).setPreferredWidth(90);
+		table.getColumnModel().getColumn(3).setPreferredWidth(90);
+		table.getColumnModel().getColumn(4).setPreferredWidth(90);
+		table.getColumnModel().getColumn(5).setPreferredWidth(80);
 		
+	
 		// automatically resize the columns whenever the data in the table changes
 		table.getModel().addTableModelListener(new TableModelListener() {
 		    public void tableChanged(TableModelEvent e) {
@@ -347,6 +355,13 @@ public class UI extends JFrame implements ActionListener {
 //		table.repaint();
 		DefaultTableModel dm = new DefaultTableModel(data, columnNames);
 		table.setModel(dm);
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		table.getColumnModel().getColumn(0).setPreferredWidth(20);
+		table.getColumnModel().getColumn(1).setPreferredWidth(300);
+		table.getColumnModel().getColumn(2).setPreferredWidth(90);
+		table.getColumnModel().getColumn(3).setPreferredWidth(90);
+		table.getColumnModel().getColumn(4).setPreferredWidth(90);
+		table.getColumnModel().getColumn(5).setPreferredWidth(80);
 		dm.fireTableDataChanged();
 	}
 	
