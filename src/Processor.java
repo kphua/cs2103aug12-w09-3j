@@ -11,181 +11,247 @@ public class Processor {
 
 	private Hashtable <String, String> reservedWordsConverter;
 	private Hashtable <String, String> reservedWordsConverterEditMode;
-	private Hashtable <String, Integer> indicativeWordsIdentifier;
+	private Hashtable <String, String> indicativeWordsIdentifier;
 	private File reservedWords, reservedWordsEditMode, indicativeWords;
 	private Scanner scanner = new Scanner(System.in);
 	private static final Logger logger = Logger.getLogger(Control.class.getName());
 
-	private static final String ERROR_MSG_INVALID_INPUT = "Invalid Input.";
+	private static final String ERROR_MSG_INVALID_INPUT = "Invalid Input. Input should follow a \"<command> <data>\" format";
 	private static final String ERROR_MSG_FATAL_ERROR = "Fatal Error. Critical files are missing.\n" +
-			"Re-install Program or contact your service provider.\n" +
-			"Program will now terminate.\n" +
-			"Press Enter to continue.";
+														"Re-install Program or contact your service provider.\n" +
+														"Program will now terminate.\n" +
+														"Press Enter to continue.";
 
 	//loads reserved words into hashTables
 	public Processor() {
 		logger.setParent(FingerTips.getLoggingParent());
 		logger.info("Initialising Processor");
-		
+				
 		reservedWords = new File("reservedWords.txt");
 		reservedWordsEditMode = new File("reservedWordsEditMode.txt");
 		indicativeWords = new File("indicativeWOrds.txt");
-		BufferedReader reader;
-		Scanner sc;
-
-		logger.fine("Loading reservedWords for normal commands.");
+		reservedWordsConverter = new Hashtable<String, String>();
+		reservedWordsConverterEditMode = new Hashtable<String, String>();
+		indicativeWordsIdentifier = new Hashtable<String, String>();
 		
-		try {
-			reader = new BufferedReader(new FileReader(reservedWords));
-			sc = new Scanner(reader);
-			reservedWordsConverter = new Hashtable<String, String>();
-			reservedWordsConverterEditMode = new Hashtable<String, String>();
-			indicativeWordsIdentifier = new Hashtable<String, Integer>();
-
-			while(sc.hasNext()){
-				reservedWordsConverter.put(sc.next(), sc.next());
-			}
-
-			sc.close();
-		} catch (FileNotFoundException fnfe) {
-			System.out.println(ERROR_MSG_FATAL_ERROR);
-			scanner.nextLine();
-			System.exit(0);
-		}
+		loadFromFile(reservedWords, reservedWordsConverter);		
+		loadFromFile(reservedWordsEditMode, reservedWordsConverterEditMode);		
+		loadFromFile(indicativeWords, indicativeWordsIdentifier);
 		
-		logger.fine("Done.");
-		logger.fine("Loading reservedWords for edit commands.");
-		
-		try {
-			reader = new BufferedReader(new FileReader(reservedWordsEditMode));
-			sc = new Scanner(reader);
-
-			while(sc.hasNext()){
-				reservedWordsConverterEditMode.put(sc.next(), sc.next());
-			}
-			
-			sc.close();
-		} catch (FileNotFoundException fnfe) {
-			System.out.println(ERROR_MSG_FATAL_ERROR);
-			scanner.nextLine();
-			System.exit(0);
-		}
-		
-		logger.fine("Done.");
-		logger.fine("Loading indicative words.");
-		
-		try {
-			reader = new BufferedReader(new FileReader(indicativeWords));
-			sc = new Scanner(reader);
-			
-			while(sc.hasNext()){
-				indicativeWordsIdentifier.put(sc.next(), sc.nextInt());
-			}
-
-			sc.close();
-		} catch (FileNotFoundException fnfe) {
-			System.out.println(ERROR_MSG_FATAL_ERROR);
-			scanner.nextLine();
-			System.exit(0);
-		}
-		
-		logger.fine("Done.");
 		logger.info("Processor Initialised.");
 	}
 
 
-	public CMD translateToCMD(String userInput) {
-
-		String[] temp = userInput.split(" ", 2);
+	private void loadFromFile(File from, Hashtable<String,String> to) {
 		
-		//check if input is valid
-		if(temp.length==0){ 
-			return new CMD(COMMAND_TYPE.ERROR, " ");
-		}
-
-		//check if first word is a command
-		temp[0] = temp[0].toLowerCase();
-		if(!reservedWordsConverter.containsKey(temp[0])) {
-			return (new CMD(COMMAND_TYPE.ERROR, ERROR_MSG_INVALID_INPUT));
-		}
-
-		String cmd = reservedWordsConverter.get(temp[0]);
-		COMMAND_TYPE userCMD = determineCommandType(cmd);
-
-		switch(userCMD){
+		logger.fine("Loading " + from.getName());
 		
-		case ADD:
-			if(temp.length == 1) return new CMD(userCMD, null);			//add <nothing>
-			else if(temp[1].isEmpty() || temp[1].equals("\"") || temp[1].equals("\" ") 
-					|| temp[1].equals("\" \"")) 
-				return new CMD(userCMD, null);
-			else {
-				Entry newTask = new Entry();
-				buildEntry(newTask, temp);
-				return new CMD(userCMD, newTask);						//add <long string of data>
-			}
-		case CLEAR: 
-			return new CMD(userCMD, null);
-		case DONE:
-			if(temp.length > 1 && isInteger(temp[1])){
-				Integer i = Integer.parseInt(temp[1]);
-				return new CMD(userCMD, i);
-			}
-			else return new CMD(COMMAND_TYPE.ERROR, ERROR_MSG_INVALID_INPUT);
+		Scanner sc;
+		BufferedReader reader;
 		
-		case DISPLAY:
-			if(temp.length == 1) {								//display <nothing>
-				return new CMD(userCMD, null);
-			}
-			else{
-				if(temp.length > 2){							//display <long string>
-					String searchCriteria = mergeString(temp, 1, temp.length);
-					return new CMD(userCMD, searchCriteria);
-				} else {
-					if(isInteger(temp[1])){						//display <number>
-						Integer i = Integer.parseInt(temp[1]);
-						return new CMD(userCMD, i);
-					}
-					return new CMD(userCMD, temp[1]);			//display <hash/search criteria>
-				}
+		try {
+			reader = new BufferedReader(new FileReader(from));
+			sc = new Scanner(reader);
+			
+			while(sc.hasNext()){
+				to.put(sc.next(), sc.next());
 			}
 
-		case EDIT:
-			if(temp.length == 1) {								//edit <nothing>
-				return new CMD(userCMD, null);					
-			}
-			else {
-
-				if(isInteger(temp[1])){							//edit <number>
-					Integer i = Integer.parseInt(temp[1]);
-					return new CMD(userCMD, i);
-				}
-				else{
-					return new CMD(userCMD, null);				//input is invalid, but assumes user wants to edit something
-				}
-			}
-
-		case REMOVE: 
-			if(temp.length==1) {								//remove <nothing>
-				return new CMD(userCMD, null);
-			}
-			if(isInteger(temp[1])){								//remove <number>
-				Integer i = Integer.parseInt(temp[1]);
-				return new CMD(userCMD, i);
-			}
-			else{
-				return new CMD(userCMD, temp[1]);				//remove <hash>
-			}
-		case UNDO: return new CMD(userCMD, null);
-		case QUIT: return new CMD(userCMD, null);	
-		case HELP: return new CMD(userCMD, null);
-		default:
-			return new CMD(userCMD, ERROR_MSG_INVALID_INPUT);
+			sc.close();
+		} catch (FileNotFoundException fnfe) {
+			logger.severe(ERROR_MSG_FATAL_ERROR);
+			System.out.println(ERROR_MSG_FATAL_ERROR);
+			scanner.nextLine();
+			System.exit(0);
 		}
-
+		
+		logger.fine("Done.");
 	}
 
 	
+	//Checks if the initial input is valid
+	//Checks:
+	//1. if there is no input
+	//2. if the first word is a valid word
+	//3. if there is any data
+	private boolean initialInputCheck(String userInput) {
+		if(userInput == null) 
+			return true;
+		
+		userInput = userInput.trim();
+		
+		if(userInput.length() == 0) 
+			return true;
+		
+		String[] temp = userInput.split(" ", 2);
+		
+		if(temp.length==0)	
+			return true;
+	
+		temp[0] = temp[0].toLowerCase();
+		if(!reservedWordsConverter.containsKey(temp[0])) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * 
+	 * @param userInput
+	 * @return completed CMD
+	 */
+	public CMD translateToCMD(String userInput) {
+		
+		if(initialInputCheck(userInput)) 
+			return new CMD(COMMAND_TYPE.ERROR, ERROR_MSG_INVALID_INPUT);
+		
+		userInput = userInput.trim();
+		String[] inputBreakdown = userInput.split(" ", 2);
+				
+		return buildCMD(inputBreakdown);
+	}
+
+
+	/**
+	 * @param inputBreakdown
+	 * @return CMD
+	 */
+	private CMD buildCMD(String[] inputBreakdown) {
+		
+		String cmd = reservedWordsConverter.get(inputBreakdown[0]);
+		COMMAND_TYPE userCMD = determineCommandType(cmd);
+		
+		if(inputBreakdown.length > 1) {
+			inputBreakdown[1] = inputBreakdown[1].trim();
+			if(inputBreakdown[1].length()==0) 
+				inputBreakdown = new String[] {inputBreakdown[0]};
+		}
+		
+		switch(userCMD){
+		
+		case ADD:
+			return add(inputBreakdown, userCMD);
+		case DONE:
+			return done(inputBreakdown, userCMD);
+		case DISPLAY:
+			return display(inputBreakdown, userCMD);
+		case EDIT:
+			return edit(inputBreakdown, userCMD);
+		case REMOVE: 
+			return remove(inputBreakdown, userCMD);
+		case CLEAR:	case UNDO: case QUIT: case HELP: 
+			return new CMD(userCMD, null);
+		default:
+			return new CMD(userCMD, ERROR_MSG_INVALID_INPUT);
+		}
+	}
+
+
+	/**
+	 * @param inputBreakdown
+	 * @param userCMD
+	 * @return
+	 */
+	private CMD remove(String[] inputBreakdown, COMMAND_TYPE userCMD) {
+		if(inputBreakdown.length==1) {								//remove <nothing>
+			return new CMD(userCMD, null);
+		}
+		if(isInteger(inputBreakdown[1])){							//remove <number>
+			Integer i = Integer.parseInt(inputBreakdown[1]);
+			return new CMD(userCMD, i);
+		}
+		else{
+			return new CMD(userCMD, inputBreakdown[1]);				//remove <hash>
+		}
+	}
+
+
+	/**
+	 * @param inputBreakdown
+	 * @param userCMD
+	 * @return
+	 */
+	private CMD edit(String[] inputBreakdown, COMMAND_TYPE userCMD) {
+		if(inputBreakdown.length == 1) {								//edit <nothing>
+			return new CMD(userCMD, null);					
+		}
+		else {
+
+			if(isInteger(inputBreakdown[1])){							//edit <number>
+				Integer i = Integer.parseInt(inputBreakdown[1]);
+				return new CMD(userCMD, i);
+			}
+			else{
+				return new CMD(userCMD, null);				//input is invalid, but assumes user wants to edit something
+			}
+		}
+	}
+
+
+	/**
+	 * @param inputBreakdown
+	 * @param userCMD
+	 * @return
+	 */
+	private CMD display(String[] inputBreakdown, COMMAND_TYPE userCMD) {
+		if(inputBreakdown.length == 1) {								//display <nothing>
+			return new CMD(userCMD, null);
+		}
+		else{
+			if(inputBreakdown.length > 2){							//display <long string>
+				String searchCriteria = mergeString(inputBreakdown, 1, inputBreakdown.length);
+				return new CMD(userCMD, searchCriteria);
+			} else {
+				if(isInteger(inputBreakdown[1])){						//display <number>
+					Integer i = Integer.parseInt(inputBreakdown[1]);
+					return new CMD(userCMD, i);
+				}
+				return new CMD(userCMD, inputBreakdown[1]);			//display <hash/search criteria>
+			}
+		}
+	}
+
+
+	/**
+	 * @param inputBreakdown
+	 * @param userCMD
+	 * @return
+	 */
+	private CMD done(String[] inputBreakdown, COMMAND_TYPE userCMD) {
+		if(inputBreakdown.length > 1 && isInteger(inputBreakdown[1])){
+			Integer i = Integer.parseInt(inputBreakdown[1]);
+			return new CMD(userCMD, i);
+		}
+		else return new CMD(COMMAND_TYPE.ERROR, ERROR_MSG_INVALID_INPUT);
+	}
+
+
+	/**
+	 * @param temp
+	 * @param userCMD
+	 * @return
+	 */
+	private CMD add(String[] temp, COMMAND_TYPE userCMD) {
+		if(temp.length == 1) return new CMD(userCMD, null);			//add <nothing>
+		else if(temp[1].equals("\"") || temp[1].equals("\" ") || temp[1].equals("\" \"")) 
+			return new CMD(userCMD, null);
+		else {
+			Entry newTask = new Entry();
+			buildEntry(newTask, temp);
+			return new CMD(userCMD, newTask);						//add <long string of data>
+		}
+	}
+
+	
+	
+
+	private String getDataString() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
 	//INCOMPLETE
 	private void buildEntry(Entry newTask, String[] data) {
 		
