@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Vector;
 import java.util.logging.Logger;
 
 class Control {
@@ -13,7 +14,7 @@ class Control {
 	private String MSG_ERROR = "Invalid input!";
 
 	private Control() {
-		logger.setParent(FingerTips.getLoggingParent());
+		logger.setParent(UI.getLoggingParent());
 		logger.info("Initialising Control.");
 		
 		storage = Storage.getInstance();
@@ -85,7 +86,7 @@ class Control {
 			return command;
 		case DISPLAY:
 			if (command.getData() == null) {
-				command.setData((ArrayList<Entry>)storage.display());
+				command.setData((Vector<Entry>)storage.display());
 			}
 			else {
 					
@@ -160,8 +161,8 @@ class Control {
 			undo.setCommandType(Processor.COMMAND_TYPE.ADD);
 			break;
 		case CLEAR: 
-			storage.setActiveEntries((ArrayList<Entry>) undo.getData());
-			undo.setData(new ArrayList<Entry>());
+			storage.setActiveEntries((Vector<Entry>) undo.getData());
+			undo.setData(new Vector<Entry>());
 			break;
 		case EDIT: break;		//each entry needs a unique identity for this to work...
 		case DONE:
