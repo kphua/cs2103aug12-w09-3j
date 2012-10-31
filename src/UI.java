@@ -370,7 +370,8 @@ public class UI extends JFrame implements ActionListener {
 		private void add(CMD actionMSG) {
 			if(actionMSG.getData()==null){
 				mainArea.append("\n" +"Please enter a description for your task:");
-				String description = sc.nextLine().trim();
+				String description = textField.getText().trim();
+				textField.setText(null);
 				description = "add \"".concat(description);
 				control.performAction(description);
 			}
@@ -407,7 +408,7 @@ public class UI extends JFrame implements ActionListener {
 					mainArea.append("\n" +"Enter the field you wish to modify, and the new data to replace with.");
 					mainArea.append("\n" +"Type \"end\" to exit edit mode and \"help\" for futher assistance.");
 					System.out.print("\nCommand (Edit Mode): ");
-					userInput = sc.nextLine();
+					userInput = textField.getText().trim();
 
 					userInput = userInput.trim();
 					//call processor
@@ -426,7 +427,7 @@ public class UI extends JFrame implements ActionListener {
 				while(true){
 					try{
 						System.out.print("Index: ");
-						a = sc.nextInt();
+						a = Integer.parseInt(textField.getText());
 						sc.nextLine();
 						mainArea.append("\n");
 						if(control.getStorage().getActiveEntries().size() < a)
@@ -465,7 +466,7 @@ public class UI extends JFrame implements ActionListener {
 				int rmvIndex;
 				try{
 					System.out.print("Index: ");
-					rmvIndex = sc.nextInt();
+					rmvIndex = Integer.parseInt(textField.getText());
 					String newInstruction = "remove ".concat(Integer.toString(rmvIndex));
 					control.performAction(newInstruction);
 					mainArea.append("\n");
