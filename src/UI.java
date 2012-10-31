@@ -134,19 +134,19 @@ public class UI extends JFrame implements ActionListener {
 		setResizable(false);
 		setBackground(Color.WHITE);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(1000, 548);
+		setSize(1100, 550);
 		getContentPane().setLayout(null);
 		
 		textField = new JTextField();
 		textField.setBackground(new Color(245, 245, 245));
-		textField.setBounds(609, 438, 375, 73);
+		textField.setBounds(700, 438, 375, 73);
 		getContentPane().add(textField);
 		textField.setColumns(10);
 		textField.setBorder(new TitledBorder(new CompoundBorder(new BevelBorder(BevelBorder.LOWERED, new Color(204, 204, 204), new Color(153, 153, 153), new Color(204, 204, 204), new Color(153, 153, 153)), new BevelBorder(BevelBorder.LOWERED, new Color(204, 204, 204), new Color(153, 153, 153), new Color(204, 204, 204), new Color(153, 153, 153))), "Enter input:", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(102, 102, 102)));
 		textField.addActionListener(new inputListener());
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(609, 24, 375, 403);
+		scrollPane.setBounds(700, 24, 375, 403);
 		getContentPane().add(scrollPane);
 		scrollPane.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -212,7 +212,7 @@ public class UI extends JFrame implements ActionListener {
 		
 		JScrollPane scrollPane2 = new JScrollPane(table);
 		scrollPane2.setBackground(new Color(220, 220, 220));
-		scrollPane2.setBounds(10, 61, 589, 448);
+		scrollPane2.setBounds(15, 61, 670, 448);
 		getContentPane().add(scrollPane2);
 		scrollPane2.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		
