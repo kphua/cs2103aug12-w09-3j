@@ -24,7 +24,7 @@ public class Processor {
 
 	//loads reserved words into hashTables
 	public Processor() {
-		logger.setParent(FingerTips.getLoggingParent());
+		logger.setParent(UI.getLoggingParent());
 		logger.info("Initialising Processor");
 				
 		reservedWords = new File("reservedWords.txt");

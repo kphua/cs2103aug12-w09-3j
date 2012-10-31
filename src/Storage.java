@@ -22,9 +22,9 @@ class Storage {
 	private File archiveFile;
 	private File activeTextFile;
 	private File archiveTextFile;
-	private ArrayList<Entry> activeEntries;
-	private ArrayList<Entry> archiveEntries;
-	private ArrayList<Entry> displayEntries;
+	private Vector<Entry> activeEntries;
+	private Vector<Entry> archiveEntries;
+	private Vector<Entry> displayEntries;
 	private FileWriter fw;
 	private BufferedWriter bw;
 	private static final Logger logger = Logger.getLogger(Control.class.getName());
@@ -46,15 +46,15 @@ class Storage {
 	 * Load activeFile and archiveFile into activeEntries and archiveEntries
 	 */
 	private Storage(){
-		logger.setParent(FingerTips.getLoggingParent());
+		logger.setParent(UI.getLoggingParent());
 		logger.info("Initialising Storage.");
 		
 		activeFile = new File("activeFile.txt");
 		archiveFile = new File("archiveFile.txt");
 		activeTextFile = new File("activeTextFile.txt");
 		archiveTextFile = new File("archiveTextFile.txt");
-		activeEntries = new ArrayList<Entry>();
-		archiveEntries = new ArrayList<Entry>();
+		activeEntries = new Vector<Entry>();
+		archiveEntries = new Vector<Entry>();
 		displayEntries = activeEntries;
 		
 		if (activeFile.exists()) {
@@ -99,14 +99,14 @@ class Storage {
 		
 	}
 
-	private void loadFromFile(File source, ArrayList<Entry> entries) {
+	private void loadFromFile(File source, Vector<Entry> destination) {
 		// read from file
 		try {
 			FileInputStream newFile = new FileInputStream(source);
 			ObjectInputStream restore = new ObjectInputStream(newFile);
 			Entry entry;
 			while ((entry = (Entry) restore.readObject()) != null) {
-				entries.add(entry);
+				destination.add(entry);
 			}
 			restore.close();
 		} catch (EOFException eofe) {
@@ -129,7 +129,7 @@ class Storage {
 		if(archiveChanged) saveToFile(archiveFile, archiveEntries, archiveTextFile);
 	}
 	
-	public void saveToFile(File objDest, ArrayList<Entry> list, File txtDest) {
+	public void saveToFile(File objDest, Vector<Entry> list, File txtDest) {
 
 		// copy entries from ArrayList back to the respective files
 		try {
@@ -196,27 +196,27 @@ class Storage {
 	 * for (Entry entry : storage.getActiveEntries()) {
 	 * System.out.println("activeList: " + entry); }
 	 */
-	public ArrayList<Entry> getActiveEntries() {
+	public Vector<Entry> getActiveEntries() {
 		return activeEntries;
 	}
 
-	public void setActiveEntries(ArrayList<Entry> entries) {
+	public void setActiveEntries(Vector<Entry> entries) {
 		this.activeEntries = entries;
 	}
 
-	public ArrayList<Entry> getArchiveEntries() {
+	public Vector<Entry> getArchiveEntries() {
 		return archiveEntries;
 	}
 
-	public void setArchiveEntries(ArrayList<Entry> entries) {
+	public void setArchiveEntries(Vector<Entry> entries) {
 		this.archiveEntries = entries;
 	}
 
-	public ArrayList<Entry> getDisplayEntries() {
+	public Vector<Entry> getDisplayEntries() {
 		return displayEntries;
 	}
 
-	public void setDisplayEntries(ArrayList<Entry> entries) {
+	public void setDisplayEntries(Vector<Entry> entries) {
 		this.displayEntries = entries;
 	}
 
@@ -231,7 +231,7 @@ class Storage {
 	 * displayEntries for printing. displayEntries will be initialized each time
 	 * this method is called. ~storage.displayAll()
 	 */
-//	public ArrayList<Entry> displayAll() {
+//	public Vector<Entry> displayAll() {
 //		displayEntries.clear();
 //		for (Entry entry : activeEntries) {
 //			displayEntries.add(entry);
@@ -243,7 +243,7 @@ class Storage {
 		// System.out.println(entry); }
 //	}
 	
-	public ArrayList<Entry> display(){
+	public Vector<Entry> display(){
 		displayEntries = activeEntries;
 		return displayEntries;
 	}
@@ -254,11 +254,11 @@ class Storage {
 	 * each time this method is called. Keyword can be description, hashtag
 	 * "#tagname", venue "@location". ~storage.displayKeyword(KEYWORD_TO_FIND)
 	 */
-	public ArrayList<Entry> displayKeyword(String keyword) {
+	public Vector<Entry> displayKeyword(String keyword) {
 		
 		keyword = keyword.toLowerCase();
 		
-		displayEntries = new ArrayList<Entry>();
+		displayEntries = new Vector<Entry>();
 		for (Entry entry : activeEntries) {
 			if (entry.toString().toLowerCase().contains(keyword)) {
 				displayEntries.add(entry);
@@ -274,8 +274,8 @@ class Storage {
 	 * each time this method is called. Keyword can be description, hashtag
 	 * "#tagname", venue "@location". ~storage.displayKeyword(KEYWORD_TO_FIND)
 	 */
-	public ArrayList<Entry> displayIndex(int index) {
-		ArrayList<Entry> temp = new ArrayList <Entry>();
+	public Vector<Entry> displayIndex(int index) {
+		Vector<Entry> temp = new Vector<Entry>();
 		Entry e = displayEntries.get(index); 
 		temp.add(e);
 		return temp;
@@ -287,7 +287,7 @@ class Storage {
 	 * time this method is called. User to enter date in the form dd/mm/yyyy.
 	 * ~storage.displayDate(dd/mm/yyyy)
 	 */
-	public ArrayList<Entry> displayDate(String date) {
+	public Vector<Entry> displayDate(String date) {
 		displayEntries.clear();
 		Entry newEntry = new Entry();
 		newEntry.setDateCal(date);
@@ -302,7 +302,7 @@ class Storage {
 	//CLEAR function
 	//removes all entries from activeEntries
 	public void clearActive(){
-		activeEntries = new ArrayList<Entry>();
+		activeEntries = new Vector<Entry>();
 		assert activeEntries.isEmpty();		// assert all entries cleared
 	}
 }
