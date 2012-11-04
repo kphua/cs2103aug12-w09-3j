@@ -122,7 +122,7 @@ class Control {
 			//if it is valid, load the entry into tempHold, then convert to add's edit
 			//if not convert to edit <nothing>
 			if(command.getData()!=null){
-				if((int)command.getData() > storage.getActiveEntries().size()) {	
+				if((int)command.getData() > storage.getActiveEntries().size() || (int)command.getData()<1) {	
 					System.out.print("Invalid input. Enter a valid index number.");
 					command.setData(" ");
 				}

@@ -127,7 +127,6 @@ class FingerTips {
 		//			} else {
 		
 		control.setTempHold(null);
-		Collections.sort(control.getStorage().getActiveEntries());
 		System.out.println(SUCCESS_MSG_ADD);
 		
 		//			}
@@ -199,7 +198,7 @@ class FingerTips {
 
 	private void remove(CMD actionMSG) {
 		if(actionMSG.getData() == null){
-			System.out.println("Which entry do you want to remove?");
+			System.out.println("Which entry do you want to remove? (Enter 0 to not remove anything)");
 			int rmvIndex;
 			try{
 				System.out.print("Index: ");
