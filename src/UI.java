@@ -138,25 +138,27 @@ public class UI extends JFrame implements ActionListener {
 		getContentPane().setLayout(null);
 		
 		textField = new JTextField();
-		textField.setBackground(new Color(245, 245, 245));
-		textField.setBounds(700, 438, 375, 73);
+		textField.setBackground(new Color(240, 240, 240));
+		textField.setBounds(700, 432, 375, 73);
+		textField.setFont(new Font("Consolas", Font.PLAIN, 13));
 		getContentPane().add(textField);
 		textField.setColumns(10);
-		textField.setBorder(new TitledBorder(new CompoundBorder(new BevelBorder(BevelBorder.LOWERED, new Color(204, 204, 204), new Color(153, 153, 153), new Color(204, 204, 204), new Color(153, 153, 153)), new BevelBorder(BevelBorder.LOWERED, new Color(204, 204, 204), new Color(153, 153, 153), new Color(204, 204, 204), new Color(153, 153, 153))), "Enter input:", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(102, 102, 102)));
+		textField.setBorder(new TitledBorder(new LineBorder(new Color(192, 192, 192), 3), "Enter input:", TitledBorder.LEADING, TitledBorder.TOP, new Font("Consolas", Font.PLAIN, 11), new Color(102, 102, 102)));
 		textField.addActionListener(new inputListener());
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(700, 24, 375, 403);
+		scrollPane.setBounds(700, 21, 375, 403);
 		getContentPane().add(scrollPane);
-		scrollPane.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		scrollPane.setBorder(new LineBorder(new Color(139, 0, 139), 2));
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		
 		mainArea = new JTextArea(welcome);
 		scrollPane.setViewportView(mainArea);
 		
 		mainArea.setEditable(false);
-		mainArea.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		mainArea.setBackground(new Color(230, 230, 250));
+		mainArea.setFont(new Font("Consolas", Font.PLAIN, 13));
+		mainArea.setBackground(new Color(204, 193, 218));
+		mainArea.setLineWrap(true);
 		
 //		mainArea.setLineWrap(true);
 //		mainArea.setCaretPosition(mainArea.getText().length() - 1);
@@ -201,14 +203,15 @@ public class UI extends JFrame implements ActionListener {
 		table.setShowVerticalLines(false);
 		table.setShowHorizontalLines(false);
 		table.setEnabled(false);
+		table.setFont(new Font("Consolas", Font.PLAIN, 13));
 //		ColumnsAutoSizer.sizeColumnsToFit(table);
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		table.getColumnModel().getColumn(0).setPreferredWidth(20);
 		table.getColumnModel().getColumn(1).setPreferredWidth(300);
-		table.getColumnModel().getColumn(2).setPreferredWidth(90);
-		table.getColumnModel().getColumn(3).setPreferredWidth(90);
-		table.getColumnModel().getColumn(4).setPreferredWidth(90);
-		table.getColumnModel().getColumn(5).setPreferredWidth(80);
+		table.getColumnModel().getColumn(2).setPreferredWidth(88);
+		table.getColumnModel().getColumn(3).setPreferredWidth(88);
+		table.getColumnModel().getColumn(4).setPreferredWidth(91);
+		table.getColumnModel().getColumn(5).setPreferredWidth(81);
 		
 	
 		// automatically resize the columns whenever the data in the table changes
@@ -219,18 +222,26 @@ public class UI extends JFrame implements ActionListener {
 		});
 		
 		JScrollPane scrollPane2 = new JScrollPane(table);
-		scrollPane2.setBackground(new Color(220, 220, 220));
-		scrollPane2.setBounds(15, 61, 670, 448);
+		scrollPane2.setOpaque(true);
+		scrollPane2.setBorder(new LineBorder(new Color(252, 213, 181)));
+		scrollPane2.setBackground(new Color(255, 204, 51));
+		scrollPane2.setBounds(15, 61, 670, 439);
 		getContentPane().add(scrollPane2);
-		scrollPane2.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		
-		JLabel lblCurrentList = new JLabel("Tasks List:");
+		JLabel lblCurrentList = new JLabel("Task List");
 		lblCurrentList.setHorizontalAlignment(SwingConstants.CENTER);
-		lblCurrentList.setBackground(new Color(216, 191, 216));
-		lblCurrentList.setForeground(new Color(153, 102, 153));
-		lblCurrentList.setFont(new Font("Franklin Gothic Book", Font.BOLD, 21));
-		lblCurrentList.setBounds(10, 26, 589, 24);
+		lblCurrentList.setOpaque(true);
+		lblCurrentList.setBackground(new Color(192, 80, 77));
+		lblCurrentList.setForeground(new Color(255, 255, 255));
+		lblCurrentList.setFont(new Font("Consolas", Font.PLAIN, 22));
+		lblCurrentList.setBounds(15, 26, 670, 24);
 		getContentPane().add(lblCurrentList);
+		
+		JPanel panel = new JPanel();
+		panel.setBorder(new LineBorder(new Color(192, 80, 77), 2));
+		panel.setBackground(new Color(252, 213, 181));
+		panel.setBounds(10, 20, 680, 485);
+		getContentPane().add(panel);
 		
 		//display_output = control.performAction("display");
 		//mainArea.display(output);
@@ -358,10 +369,10 @@ public class UI extends JFrame implements ActionListener {
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		table.getColumnModel().getColumn(0).setPreferredWidth(20);
 		table.getColumnModel().getColumn(1).setPreferredWidth(300);
-		table.getColumnModel().getColumn(2).setPreferredWidth(90);
-		table.getColumnModel().getColumn(3).setPreferredWidth(90);
-		table.getColumnModel().getColumn(4).setPreferredWidth(90);
-		table.getColumnModel().getColumn(5).setPreferredWidth(80);
+		table.getColumnModel().getColumn(2).setPreferredWidth(88);
+		table.getColumnModel().getColumn(3).setPreferredWidth(88);
+		table.getColumnModel().getColumn(4).setPreferredWidth(91);
+		table.getColumnModel().getColumn(5).setPreferredWidth(81);
 		dm.fireTableDataChanged();
 	}
 	
@@ -543,15 +554,14 @@ public class UI extends JFrame implements ActionListener {
 //			System.out.println("done <number>:\t\t   marks an entry as completed");
 //			System.out.println("clear:\t\t\t   deletes all entries permanently (use with caution!)");
 //			System.out.println("quit:\t\t\t   terminates the program.");
-			return ("add <data>:\t\t   add an entry with related dates, description, priority etc.\n") +
-					("\t\t   prefix @ indicates venue, prefix # indicates a hashtag.\n") +
-					("remove <number>:\t   remove the selected entry for the active list.\n") +
-					("edit <number>:\t   enters edit mode for selected entry.\n") +
+			return ("add <data>:\t   add an entry with related dates,\t\t   description, priority etc.\n") +
+					("\t\t   prefix @ indicates venue, prefix\t\t   # indicates a hashtag.\n") +
+					("remove <number>:   remove the selected entry for\t\t   the active list.\n") +
+					("edit <number>:\t   enters edit mode for selected\t\t   entry.\n") +
 					("undo:\t\t   reverses the previous action.\n") +
-					("display:\t\t   shows the activelist.\n") +
-					("display <search criteria>:\t   generates a list of entries fulfilling the search criteria.\n") +
+					("display <keyword>: generates a list of entries\t\t\t   fulfilling the search criteria.\n") +
 					("done <number>:\t   marks an entry as completed.\n") +
-					("clear:\t\t   deletes all entries permanently (use with caution!).\n") +
+					("clear:\t\t   deletes all entries permanently\t\t   (use with caution!).\n") +
 					("quit:\t\t   terminates the program.\n");
 		}
 
@@ -581,7 +591,6 @@ public class UI extends JFrame implements ActionListener {
 		public static Logger getLoggingParent(){
 			return logger;
 		}
-		
 }
 
 
