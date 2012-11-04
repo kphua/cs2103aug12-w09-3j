@@ -303,6 +303,7 @@ class Storage {
 	//removes all entries from activeEntries
 	public void clearActive(){
 		activeEntries = new Vector<Entry>();
+		displayEntries = activeEntries;
 		assert activeEntries.isEmpty();		// assert all entries cleared
 	}
 }
