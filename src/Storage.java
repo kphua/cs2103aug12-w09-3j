@@ -152,6 +152,7 @@ class Storage {
 	 */
 	public void addEntry(Entry entry) {
 		activeEntries.add(entry);
+		Collections.sort(displayEntries);
 	}
 
 	/*
@@ -173,6 +174,7 @@ class Storage {
 		a = displayEntries.contains(entry);
 		displayEntries.remove(entry);
 		activeEntries.remove(entry);
+		
 		
 	}
 	
