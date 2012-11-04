@@ -10,6 +10,10 @@ class CMD {
 		commandType = command;
 		this.setData(data);
 	}
+	
+	public CMD clone(CMD original){
+		return new CMD(original.getCommandType(), original.getData());
+	}
 
 	public Processor.COMMAND_TYPE getCommandType() {
 		return commandType;
@@ -39,6 +43,7 @@ class CMD {
 		case DISPLAY: 	strVer = "display "; break;
 		case DONE:		strVer = "done "; 	 break;
 		case ERROR:		strVer = "ERROR: ";  break;	
+		case REDO: 		strVer = "redo";	 break;
 		default:
 			assert false;
 		}

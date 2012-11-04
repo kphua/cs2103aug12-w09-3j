@@ -62,7 +62,7 @@ class FingerTips {
 
 	private void run() {
 
-	//	printWelcomeMSG();
+		printWelcomeMSG();
 
 		String userInput;
 
@@ -76,49 +76,32 @@ class FingerTips {
 	}
 
 //	private void runUserInput(String userInput) {
-	public String runUserInput(String userInput) {
+	public void runUserInput(String userInput) {
 		CMD actionMSG = control.performAction(userInput);
 		
 		logger.info(actionMSG.toString());
 		
 		//followUpAction(actionMSG);
-		String output = followUpAction(actionMSG);
-		return output;
+		followUpAction(actionMSG);
+		
 	}
-
 	
-//	private void followUpAction(CMD actionMSG) {
-//		switch(actionMSG.getCommandType()){
-//		case ADD: 		add(actionMSG); 		break;
-//		case REMOVE: 	remove(actionMSG);		break;
-//		case UNDO: 		undo(actionMSG);		break;
-//		case DISPLAY:	display(actionMSG);		break;
-//		case EDIT:		edit(actionMSG);		break;
-//		case DONE: 		done(actionMSG);		break;
-//		case HELP: 		help();					break;
-//		case QUIT: 		quit();					break;
-//		case CLEAR:		clear();				break;
-//		case ERROR:		error(actionMSG);		break;
-//		default: undo(actionMSG);
-//		}
-//	}
-	
-	private String followUpAction(CMD actionMSG) {
+	private void followUpAction(CMD actionMSG) {
 		switch(actionMSG.getCommandType()){
 		case ADD: 		add(actionMSG); 		break;
 		case REMOVE: 	remove(actionMSG);		break;
-		case UNDO: 		undo(actionMSG);		break;
 		case DISPLAY:	display(actionMSG);		break;
 		case EDIT:		edit(actionMSG);		break;
-		case DONE: 		done(actionMSG);		break;
-		case HELP: 		return help();	
+		case DONE: 		done();					break;
+		case HELP: 		help();					break;	
 		case QUIT: 		quit();					break;
-		case CLEAR:		return SUCCESS_MSG_CLEAR;
+		case CLEAR:		clear();				break;
 		case ERROR:		error(actionMSG);		break;
-		default: undo(actionMSG);
+		case UNDO: 		undo(actionMSG);		break;
+		case REDO: 		redo(actionMSG);		break;
+		default: assert false;
 		
 		}	
-		return "incomplete";
 	}
 	
 	//Add action
@@ -165,18 +148,18 @@ class FingerTips {
 				userInput = sc.nextLine();
 
 				userInput = userInput.trim();
-				//call processor
+			
 				String[] response = control.processEditMode(userInput);
 				if(response[0].equals("display")) System.out.println(response[1]);
 				else if(response[0].equals("help")) helpEditMode();
 				else if(response[0].equals("end")) break;
 				else if(response[0].equals("Error")) System.out.println(response[1]);
 			}
-
+			
 			control.setTempHold(null);
 		}
 		else {
-			undo(actionMSG);
+//			undo(actionMSG);
 			int a;
 			while(true){
 				try{
@@ -184,7 +167,7 @@ class FingerTips {
 					a = sc.nextInt();
 					sc.nextLine();
 					System.out.println();
-					if(control.getStorage().getActiveEntries().size() < a)
+					if(control.getStorage().getActiveEntries().size() < a || a<1)
 						System.out.println("Invalid input. Enter a valid index number.");
 					else{
 						runUserInput("edit "+ a);
@@ -200,7 +183,7 @@ class FingerTips {
 	}
 
 	private void display(CMD actionMSG) {
-		ArrayList<Entry> print = (ArrayList<Entry>) actionMSG.getData();
+		Vector<Entry> print = (Vector<Entry>) actionMSG.getData();
 		if(print.isEmpty()){
 			System.out.println("There is nothing to print.");
 		}
@@ -236,13 +219,17 @@ class FingerTips {
 	}
 
 	//Follow up for DONE
-		private void done(CMD actionMSG) {
+		private void done() {
 			System.out.println(SUCCESS_MSG_DONE);
 		}
 	
 	//Prints action taken.
 	private void undo(CMD actionMSG) {
-		
+		System.out.println(actionMSG.getData());
+	}
+	
+	//Prints action taken.
+	private void redo(CMD actionMSG) {
 		System.out.println(actionMSG.getData());
 	}
 	
@@ -272,49 +259,30 @@ class FingerTips {
 	}
 	
 	//normalMode help
-	private static String help() {
-//		System.out.println("add <data>:\t\t   add an entry with related dates, description, priority etc.");
-//		System.out.println("\t\t\t   prefix @ indicates venue, prefix # indicates a hashtag.");
-//		System.out.println("remove <number>:\t   remove the selected entry for the active list.");
-//		System.out.println("edit <number>:\t\t   enters edit mode for selected entry.");
-//		System.out.println("undo:\t\t\t   reverses the previous action.");
-//		System.out.println("display:\t\t   shows the activelist.");
-//		System.out.println("display <search criteria>: generates a list of entries fulfilling the search criteria.");
-//		System.out.println("done <number>:\t\t   marks an entry as completed");
-//		System.out.println("clear:\t\t\t   deletes all entries permanently (use with caution!)");
-//		System.out.println("quit:\t\t\t   terminates the program.");
-		return ("add <data>:\t\t   add an entry with related dates, description, priority etc.\n") +
-				("\t\t   prefix @ indicates venue, prefix # indicates a hashtag.\n") +
-				("remove <number>:\t   remove the selected entry for the active list.\n") +
-				("edit <number>:\t   enters edit mode for selected entry.\n") +
-				("undo:\t\t   reverses the previous action.\n") +
-				("display:\t\t   shows the activelist.\n") +
-				("display <search criteria>:\t   generates a list of entries fulfilling the search criteria.\n") +
-				("done <number>:\t   marks an entry as completed.\n") +
-				("clear:\t\t   deletes all entries permanently (use with caution!).\n") +
-				("quit:\t\t   terminates the program.\n");
+	private static void help() {
+		System.out.println("add <data>:\t\t   add an entry with related dates, description, priority etc.");
+		System.out.println("\t\t\t   prefix @ indicates venue, prefix # indicates a hashtag.");
+		System.out.println("remove <number>:\t   remove the selected entry for the active list.");
+		System.out.println("edit <number>:\t\t   enters edit mode for selected entry.");
+		System.out.println("undo:\t\t\t   reverses the previous action.");
+		System.out.println("display:\t\t   shows the activelist.");
+		System.out.println("display <search criteria>: generates a list of entries fulfilling the search criteria.");
+		System.out.println("done <number>:\t\t   marks an entry as completed");
+		System.out.println("clear:\t\t\t   deletes all entries permanently (use with caution!)");
+		System.out.println("quit:\t\t\t   terminates the program.");
 	}
 
 	//editMode help
-	private static String helpEditMode() {
-//		System.out.println("\nEnter a field followed by the new data it should be replaced with.");
-//		System.out.println("desc:     edit description.");
-//		System.out.println("ddate:    edit due date.");
-//		System.out.println("display:  shows data in the current node.");
-//		System.out.println("priority: edit priority");
-//		System.out.println("hash #:   edit hash tags");
-//		System.out.println("st:       edit start time");
-//		System.out.println("et:       edit end time");
-//		System.out.println("venue @:  edit venue");
-		return ("\nEnter a field followed by the new data it should be replaced with.\n") +
-				("desc:\t edit description\n") +
-				("ddate:\t edit due date\n") +
-				("display:\t shows data in the current node\n") +
-				("priority:\t edit priority\n") +
-				("hash #:\t edit hash tags\n") +
-				("st:\t edit start time\n") +
-				("et:\t edit end time\n") +
-				("venue @:\t edit venue\n");
+	private static void helpEditMode() {
+		System.out.println("\nEnter a field followed by the new data it should be replaced with.");
+		System.out.println("desc:     edit description.");
+		System.out.println("ddate:    edit due date.");
+		System.out.println("display:  shows data in the current node.");
+		System.out.println("priority: edit priority");
+		System.out.println("hash #:   edit hash tags");
+		System.out.println("st:       edit start time");
+		System.out.println("et:       edit end time");
+		System.out.println("venue @:  edit venue");
 	}
 	
 	//Public Methods

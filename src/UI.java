@@ -377,6 +377,7 @@ public class UI extends JFrame implements ActionListener {
 		case QUIT: 		quit();					break;
 		case CLEAR:		clear();				break;
 		case ERROR:		error(actionMSG);		break;
+		case REDO:		redo(actionMSG);		break;
 		default: undo(actionMSG);
 		}
 	}
@@ -437,7 +438,7 @@ public class UI extends JFrame implements ActionListener {
 				control.setTempHold(null);
 			}
 			else {
-				undo(actionMSG);
+//				undo(actionMSG);
 				int a;
 				while(true){
 					try{
@@ -445,7 +446,7 @@ public class UI extends JFrame implements ActionListener {
 						a = Integer.parseInt(textField.getText());
 						sc.nextLine();
 						mainArea.append("\n");
-						if(control.getStorage().getActiveEntries().size() < a)
+						if(control.getStorage().getActiveEntries().size() < a || a<1)
 							mainArea.append("\n" +"Invalid input. Enter a valid index number.");
 						else{
 							runUserInput("edit "+ a);
@@ -503,6 +504,11 @@ public class UI extends JFrame implements ActionListener {
 		
 		//Prints action taken.
 		private void undo(CMD actionMSG) {
+			
+			mainArea.append("\n" +actionMSG.getData());
+		}
+		
+		private void redo(CMD actionMSG) {
 			
 			mainArea.append("\n" +actionMSG.getData());
 		}

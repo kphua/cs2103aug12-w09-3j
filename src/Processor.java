@@ -140,7 +140,7 @@ public class Processor {
 			return edit(inputBreakdown, userCMD);
 		case REMOVE: 
 			return remove(inputBreakdown, userCMD);
-		case CLEAR:	case UNDO: case QUIT: case HELP: 
+		case CLEAR:	case QUIT: case HELP: case UNDO: case REDO: 
 			return new CMD(userCMD, null);
 		default:
 			return new CMD(userCMD, ERROR_MSG_INVALID_INPUT);
@@ -243,14 +243,6 @@ public class Processor {
 		}
 	}
 
-	
-	
-
-	private String getDataString() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 
 	//INCOMPLETE
 	private void buildEntry(Entry newTask, String[] data) {
@@ -303,7 +295,6 @@ public class Processor {
 //						try {
 //							newTask.setDate(new SimpleDateFormat("dd/MM/yyyy", Locale.US).parse(data[i+1]));
 //						} catch (ParseException e) {
-//							// TODO Auto-generated catch block
 //							e.printStackTrace();
 //						}
 //					} else if(indicativeWordsIdentifier.get(i+1)<8){
@@ -335,6 +326,7 @@ public class Processor {
 	//checks if a string can be converted into an integer
 	private boolean isInteger(String string) {
 		try{
+			@SuppressWarnings("unused")
 			Integer i = Integer.parseInt(string);
 			return true;
 		}
@@ -353,6 +345,7 @@ public class Processor {
 		if(dayFalse || monthFalse || yearFalse) return false;
 		
 		try {
+			@SuppressWarnings("unused")
 			Date date = new SimpleDateFormat("dd/MM/yyyy", Locale.US).parse(s);
 			return true;
 		} catch (ParseException e) {
@@ -385,7 +378,7 @@ public class Processor {
 	}
 	
 	enum COMMAND_TYPE {
-		ADD, REMOVE, UNDO, DISPLAY, EDIT, QUIT, ERROR, HELP, DONE, CLEAR
+		ADD, REMOVE, UNDO, DISPLAY, EDIT, QUIT, ERROR, HELP, DONE, CLEAR, REDO
 	};
 
 	private COMMAND_TYPE determineCommandType(String commandString) {
@@ -407,6 +400,8 @@ public class Processor {
 			return COMMAND_TYPE.DONE;
 		} else if (commandString.equalsIgnoreCase("clear")) {
 			return COMMAND_TYPE.CLEAR;
+		} else if (commandString.equalsIgnoreCase("redo")) {
+			return COMMAND_TYPE.REDO;	
 		} else
 			return COMMAND_TYPE.ERROR;
 	}
