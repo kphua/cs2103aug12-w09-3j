@@ -167,6 +167,9 @@ public class UI extends JFrame implements ActionListener {
 		Vector<Vector> data = convertToVV(a);
 		
 		table = new JTable(data, columnNames);
+		table.getTableHeader().setFont(new Font("Consolas", Font.BOLD, 13));
+		table.getTableHeader().setBackground(new Color(75, 172, 198));
+		table.getTableHeader().setForeground(new Color(255, 255, 255));
 //		final JTable table = new JTable(data, columnNames);
 //		table.setBackground(UIManager.getColor("Button.background"));
 	    TableCellRenderer renderer = new TableCellRenderer() {
@@ -176,18 +179,22 @@ public class UI extends JFrame implements ActionListener {
 	                Object value, boolean isSelected, boolean hasFocus,
 	                int row, int column) {
 	            label.setOpaque(true);
-	            label.setText("" + value);
+	            label.setFont(new Font("Consolas", Font.PLAIN, 13));
+	            if (value != null) {
+	            	label.setText("" + value);
+	            } else {
+	            	label.setText("");
+	            }
 	            Color alternate = UIManager.getColor("table.alternateRowColor");
 	            if (row % 2 == 1) {
 	                label.setBackground(alternate);
 	            } else {
-	                label.setBackground(Color.red);
+	                label.setBackground(new Color(198, 217, 241));
 	            }
 	            return label;
 	        }
 	    };
 	    table.setDefaultRenderer(Object.class, renderer);
-		
 		table.setShowVerticalLines(false);
 		table.setShowHorizontalLines(false);
 		table.setEnabled(false);
@@ -212,7 +219,7 @@ public class UI extends JFrame implements ActionListener {
 		JScrollPane scrollPane2 = new JScrollPane(table);
 		scrollPane2.setOpaque(true);
 		scrollPane2.setBorder(new LineBorder(new Color(252, 213, 181)));
-		scrollPane2.setBackground(new Color(255, 204, 51));
+		scrollPane2.setBackground(new Color(252, 213, 181));
 		scrollPane2.setBounds(15, 61, 670, 439);
 		getContentPane().add(scrollPane2);
 		
@@ -239,6 +246,11 @@ public class UI extends JFrame implements ActionListener {
 
 	}
 	
+	private void setOpacity(boolean b) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	private Vector<Vector> convertToVV(Vector<Entry> a) {
 		// TODO Auto-generated method stub
 		Vector<Vector> out = new Vector<Vector>();
