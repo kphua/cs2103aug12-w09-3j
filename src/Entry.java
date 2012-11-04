@@ -52,6 +52,7 @@ class Entry implements Serializable, Comparable<Entry> {
 
 	//clone constructor
 	public Entry(Entry copy){
+		ID = copy.ID;
 		description = copy.description;
 		priority = copy.priority;
 		hashTags = copy.hashTags;
@@ -175,6 +176,9 @@ class Entry implements Serializable, Comparable<Entry> {
 		this.completeStatus = completeStatus;
 	}
 
+	
+	
+	
 	// for printing of entries
 	public String toString() {
 		String converted;
@@ -194,6 +198,8 @@ class Entry implements Serializable, Comparable<Entry> {
 	public int compareTo(Entry entry) {
 
 		int i;
+		
+		if(ID == entry.getID()) return 0;
 
 		if(dueDate == null || entry.dueDate == null || dueDate.equals(entry.dueDate)){
 

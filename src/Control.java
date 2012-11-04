@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Vector;
 import java.util.logging.Logger;
 
@@ -7,11 +7,9 @@ class Control {
 	private Processor processor;
 	private Storage storage;
 //	private boolean edit, newList; // modes
-	private CMD undo;
+	private LinkedList<CMD> undo, redo;
 	private Entry tempHold;
 	private static final Logger logger = Logger.getLogger(Control.class.getName());
-
-	private String MSG_ERROR = "Invalid input!";
 
 	private Control() {
 		logger.setParent(UI.getLoggingParent());
@@ -19,7 +17,8 @@ class Control {
 		
 		storage = Storage.getInstance();
 		processor = new Processor();
-		undo = new CMD(null, null);
+		undo = new LinkedList<CMD>();
+		redo = new LinkedList<CMD>();
 		
 		logger.info("Control Initialised.");
 	}
@@ -35,15 +34,23 @@ class Control {
 
 		CMD command = processor.translateToCMD(userInput);
 
+		return carryOutCMD(command);
+	}
+
+	/**
+	 * @param command
+	 * @return
+	 */
+	private CMD carryOutCMD(CMD command) {
 		switch (command.getCommandType()) {
-		// need to store previous version everytime in case of undo action
+		// need to store previous version every time in case of undo action
 		case ADD:
 			if(command.getData()!=null){
 				tempHold = (Entry) command.getData();
 				storage.addEntry(tempHold);
 				storage.save(true, false);
-				undo = command;
-				undo.setData(new Entry(tempHold));
+				command.setData(tempHold);
+				undo.push(command);
 			}
 						
 			return command;
@@ -62,8 +69,9 @@ class Control {
 						command.setData("Invalid Index.");
 						return command;
 					}
-					undo.setCommandType(command.getCommandType());
-					undo.setData(storage.getDisplayEntries().get(i-1));
+					
+					command.setData(storage.getDisplayEntries().get(i-1));
+					undo.push(command);
 					storage.removeEntry(i);
 					storage.save(true, false);
 				}
@@ -74,16 +82,22 @@ class Control {
 			return command;
 			
 		case CLEAR:
-			undo.setCommandType(command.getCommandType());
-			undo.setData(storage.getActiveEntries());
+			command.setData(storage.getActiveEntries());
+			undo.push(command);
 			storage.clearActive();
 			storage.save(true, false);
 			return command;
 		case UNDO:
 			command.setData(undo());
-			if(undo.getCommandType()==Processor.COMMAND_TYPE.DONE) storage.save(true, true);
-			else storage.save(true, false);
+			
 			return command;
+			
+		case REDO:
+			command.setData(redo());
+			
+			return command;
+			
+			
 		case DISPLAY:
 			if (command.getData() == null) {
 				command.setData((Vector<Entry>)storage.display());
@@ -133,8 +147,8 @@ class Control {
 				command.setData("Invalid index.");
 			} else {
 				Entry e = storage.updateCompletedEntry(i);
-				undo.setCommandType(command.getCommandType());
-				undo.setData(e);
+				command.setData(e);
+				undo.push(command);
 				storage.save(true, true);
 			}
 			
@@ -146,52 +160,68 @@ class Control {
 		default:
 			return command;
 		}
+	}
+
+	private String redo() {
+		if(redo.isEmpty()) return "There are no further redo-s."; 
 		
+		CMD action = redo.pop();
+		undo.push(action);
+		
+		
+		carryOutCMD(action);
+		
+		
+		
+		if(action.getCommandType()==Processor.COMMAND_TYPE.DONE){
+			storage.save(true, true);
+		}
+		else {
+			storage.save(true, false);
+		}
+		
+		return "Redo completed";
 	}
 
 	private String undo() {
-		if(undo.getCommandType()==null) return "There are no further undo-s."; 
-		switch(undo.getCommandType()){
+		if(undo.isEmpty()) return "There are no further undo-s."; 
+		
+		CMD action = undo.pop();
+		redo.push(action);
+		
+		switch(action.getCommandType()){
 		case ADD: 
-			storage.removeEntry((Entry)undo.getData());
-			undo.setCommandType(Processor.COMMAND_TYPE.REMOVE);
+			storage.removeEntry((Entry)action.getData());
 			break;		//amend storage remove function to search for objects and not indexes before implement
 		case REMOVE: 
-			storage.addEntry((Entry)undo.getData());
-			undo.setCommandType(Processor.COMMAND_TYPE.ADD);
+			storage.addEntry((Entry)action.getData());
 			break;
 		case CLEAR: 
-			storage.setActiveEntries((Vector<Entry>) undo.getData());
-			undo.setData(new Vector<Entry>());
+			storage.setActiveEntries((Vector<Entry>) action.getData());
 			break;
-		case EDIT: break;		//each entry needs a unique identity for this to work...
+		case EDIT: 
+			
+			
+			break;		//each entry needs a unique identity for this to work...
 		case DONE:
-			storage.undoDoneAction((Entry)undo.getData());
-			break;		//storage function to move it back...Entry is given undeer data of Undo
+			storage.undoDoneAction((Entry)action.getData());
+			break;		//storage function to move it back...Entry is given under data of Undo
 			default: 
-				return "There are no further undo-s.";
+				return "There are no further undo-s.";	
 		}
+		
+		if(action.getCommandType()==Processor.COMMAND_TYPE.DONE){
+			storage.save(true, true);
+		}
+		else {
+			storage.save(true, false);
+		}
+		
+		
 		return "Undo completed.";
 		
 	}
 
-	private void getPrintEntry(ArrayList<String> toPrint, Entry entry) {
-		String lineToPrint = null;
-		lineToPrint = entry.getDesc();
-		if (entry.getStart() != null) 
-			lineToPrint = lineToPrint.concat(" at " + entry.getStart());
-		if (entry.getEnd() != null) 
-			lineToPrint = lineToPrint.concat(" to " + entry.getEnd());
-		if (entry.getDate() != null) 
-			lineToPrint = lineToPrint.concat(" on " + entry.getDate());
-		if (entry.getVenue() != null) 
-			lineToPrint = lineToPrint.concat(" " + entry.getVenue());
-		if (entry.getPriority() != null) 
-			lineToPrint = lineToPrint.concat(" " + entry.getPriority());
-		if (entry.getTagDesc() != null) 
-			lineToPrint = lineToPrint.concat(" " + entry.getTagDesc());
-		toPrint.add(lineToPrint);
-	}
 
 	//checks if a string can be converted into an integer
 	private boolean isInteger(Object object) {
