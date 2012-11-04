@@ -14,6 +14,7 @@ delete delete
 help help 
 h help
 undo undo
+ud undo
 u undo
 quit quit
 exit quit
@@ -23,3 +24,5 @@ finish done
 fin done
 clear clear
 clr clear
+redo redo
+rd	redo

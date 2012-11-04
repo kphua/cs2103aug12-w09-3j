@@ -169,8 +169,11 @@ class Storage {
 	}
 	
 	public void removeEntry(Entry entry){
+		boolean a = activeEntries.contains(entry);
+		a = displayEntries.contains(entry);
 		displayEntries.remove(entry);
 		activeEntries.remove(entry);
+		
 	}
 	
 	/*
