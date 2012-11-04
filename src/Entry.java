@@ -18,6 +18,7 @@ class Entry implements Serializable, Comparable<Entry> {
 	 * class so as to preserve the object properties of Entry
 	 */
 	private static final long serialVersionUID = 1L;
+	private String ID;
 	private String description;
 	private String priority;
 	private ArrayList <String> hashTags;
@@ -27,9 +28,26 @@ class Entry implements Serializable, Comparable<Entry> {
 	private String startTime, endTime;
 	private int completeStatus;
 	private Calendar dueDate;
+	
 
 	// constructor
 	public Entry() {
+		ID = assignID();
+	}
+
+	/**
+	 * @return 
+	 * 
+	 */
+	private String assignID() {
+		Calendar cal = Calendar.getInstance();
+		String year = ((Integer)cal.get(Calendar.YEAR)).toString();
+		String month = ((Integer)cal.get(Calendar.MONTH)).toString();
+		String day = ((Integer)cal.get(Calendar.DAY_OF_MONTH)).toString();
+		String hr = ((Integer)cal.get(Calendar.HOUR_OF_DAY)).toString();
+		String min = ((Integer)cal.get(Calendar.MINUTE)).toString();
+		String sec = ((Integer)cal.get(Calendar.SECOND)).toString();
+		return year.concat(month+day+hr+min+sec);
 	}
 
 	//clone constructor
@@ -224,5 +242,9 @@ class Entry implements Serializable, Comparable<Entry> {
 
 	public void setTagDesc(String tagDesc) {
 		this.tagDesc = tagDesc;
+	}
+	
+	public String getID(){
+		return ID;
 	}
 }
