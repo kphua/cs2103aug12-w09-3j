@@ -4,6 +4,8 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.InputMismatchException;
@@ -123,6 +125,11 @@ public class UI extends JFrame implements ActionListener {
 		
 		mainArea = new JTextArea(welcome);
 		scrollPane.setViewportView(mainArea);
+		// set view to stick to the bottom of the message box, but cannot 
+		scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {  
+			public void adjustmentValueChanged(AdjustmentEvent e) {  
+			e.getAdjustable().setValue(e.getAdjustable().getMaximum());  
+			}});
 		
 		mainArea.setEditable(false);
 		mainArea.setFont(new Font("Consolas", Font.PLAIN, 13));
@@ -202,11 +209,11 @@ public class UI extends JFrame implements ActionListener {
 //		ColumnsAutoSizer.sizeColumnsToFit(table);
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		table.getColumnModel().getColumn(0).setPreferredWidth(20);
-		table.getColumnModel().getColumn(1).setPreferredWidth(300);
-		table.getColumnModel().getColumn(2).setPreferredWidth(88);
-		table.getColumnModel().getColumn(3).setPreferredWidth(88);
-		table.getColumnModel().getColumn(4).setPreferredWidth(91);
-		table.getColumnModel().getColumn(5).setPreferredWidth(81);
+		table.getColumnModel().getColumn(1).setPreferredWidth(290);
+		table.getColumnModel().getColumn(2).setPreferredWidth(80);
+		table.getColumnModel().getColumn(3).setPreferredWidth(80);
+		table.getColumnModel().getColumn(4).setPreferredWidth(90);
+		table.getColumnModel().getColumn(5).setPreferredWidth(89);
 		
 	
 		// automatically resize the columns whenever the data in the table changes
@@ -368,11 +375,11 @@ public class UI extends JFrame implements ActionListener {
 		table.setModel(dm);
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		table.getColumnModel().getColumn(0).setPreferredWidth(20);
-		table.getColumnModel().getColumn(1).setPreferredWidth(300);
-		table.getColumnModel().getColumn(2).setPreferredWidth(88);
-		table.getColumnModel().getColumn(3).setPreferredWidth(88);
-		table.getColumnModel().getColumn(4).setPreferredWidth(91);
-		table.getColumnModel().getColumn(5).setPreferredWidth(81);
+		table.getColumnModel().getColumn(1).setPreferredWidth(290);
+		table.getColumnModel().getColumn(2).setPreferredWidth(80);
+		table.getColumnModel().getColumn(3).setPreferredWidth(80);
+		table.getColumnModel().getColumn(4).setPreferredWidth(90);
+		table.getColumnModel().getColumn(5).setPreferredWidth(89);
 		dm.fireTableDataChanged();
 	}
 	
@@ -384,7 +391,8 @@ public class UI extends JFrame implements ActionListener {
 		case DISPLAY:	display(actionMSG);		break;
 		case EDIT:		edit(actionMSG);		break;
 		case DONE: 		done(actionMSG);		break;
-		case HELP: 		mainArea.append("\n" + help());					break;
+		case HELP: 		mainArea.append("\n" + help());
+												break;
 		case QUIT: 		quit();					break;
 		case CLEAR:		clear();				break;
 		case ERROR:		error(actionMSG);		break;
@@ -477,14 +485,14 @@ public class UI extends JFrame implements ActionListener {
 			if(print.isEmpty()){
 				mainArea.append("\n" +"There is nothing to print.");
 			}
-			else{
-				int j=1;
-
-				for (int i=0; i<print.size(); i++) {
-					mainArea.append("\n" + j + ". " + print.get(i).toString());
-					j++;
-				}
-			}
+//			else{
+//				int j=1;
+//
+//				for (int i=0; i<print.size(); i++) {
+//					mainArea.append("\n" + j + ". " + print.get(i).toString());
+//					j++;
+//				}
+//			}
 		}
 
 		private void remove(CMD actionMSG) {
@@ -532,7 +540,13 @@ public class UI extends JFrame implements ActionListener {
 		//Ending MSG
 		private void quit() {
 			cont = false;
-			//mainArea.append("\n" +SUCCESS_MSG_EXIT);
+			mainArea.append("\n" +SUCCESS_MSG_EXIT);
+			 try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			System.exit(0);
 		}
 		
