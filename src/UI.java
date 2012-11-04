@@ -1,45 +1,10 @@
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.awt.FlowLayout;
-import java.awt.Font;
-
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.border.EmptyBorder;
 import java.awt.Color;
-import javax.swing.border.BevelBorder;
-
-import javax.swing.JTextField;
-import java.awt.SystemColor;
+import java.awt.Component;
+import java.awt.EventQueue;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.AdjustmentEvent;
-import java.awt.event.AdjustmentListener;
-
-import javax.swing.border.TitledBorder;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.LineBorder;
-import java.awt.Dialog.ModalExclusionType;
-import javax.swing.SwingConstants;
-import java.awt.Window.Type;
-import java.awt.TextArea;
-//import com.jgoodies.forms.layout.FormLayout;
-//import com.jgoodies.forms.layout.ColumnSpec;
-//import com.jgoodies.forms.factories.FormFactory;
-//import com.jgoodies.forms.layout.RowSpec;
-import javax.swing.JTextArea;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-import java.io.*;
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -50,25 +15,29 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-import javax.swing.JButton;
-import javax.swing.border.EtchedBorder;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
-import javax.swing.text.DefaultCaret;
-import javax.swing.text.Document;
-import javax.swing.ImageIcon;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import javax.swing.JTable;
-import java.awt.Panel;
-import javax.swing.JSeparator;
-import java.awt.TextField;
-import java.awt.Label;
-import java.awt.List;
-import javax.swing.UIManager;
+//import com.jgoodies.forms.layout.FormLayout;
+//import com.jgoodies.forms.layout.ColumnSpec;
+//import com.jgoodies.forms.factories.FormFactory;
+//import com.jgoodies.forms.layout.RowSpec;
+
 
 public class UI extends JFrame implements ActionListener {
 
@@ -199,7 +168,26 @@ public class UI extends JFrame implements ActionListener {
 		
 		table = new JTable(data, columnNames);
 //		final JTable table = new JTable(data, columnNames);
-		table.setBackground(UIManager.getColor("Button.background"));
+//		table.setBackground(UIManager.getColor("Button.background"));
+	    TableCellRenderer renderer = new TableCellRenderer() {
+	        JLabel label = new JLabel();
+	        @Override
+	        public Component getTableCellRendererComponent(JTable table,
+	                Object value, boolean isSelected, boolean hasFocus,
+	                int row, int column) {
+	            label.setOpaque(true);
+	            label.setText("" + value);
+	            Color alternate = UIManager.getColor("table.alternateRowColor");
+	            if (row % 2 == 1) {
+	                label.setBackground(alternate);
+	            } else {
+	                label.setBackground(Color.red);
+	            }
+	            return label;
+	        }
+	    };
+	    table.setDefaultRenderer(Object.class, renderer);
+		
 		table.setShowVerticalLines(false);
 		table.setShowHorizontalLines(false);
 		table.setEnabled(false);
