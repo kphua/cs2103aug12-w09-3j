@@ -105,12 +105,12 @@ public class UI extends JFrame implements ActionListener {
 		setResizable(false);
 		setBackground(Color.WHITE);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(1100, 550);
+		setSize(1140, 550);
 		getContentPane().setLayout(null);
 		
 		textField = new JTextField();
 		textField.setBackground(new Color(240, 240, 240));
-		textField.setBounds(700, 432, 375, 73);
+		textField.setBounds(700, 432, 420, 73);
 		textField.setFont(new Font("Consolas", Font.PLAIN, 13));
 		getContentPane().add(textField);
 		textField.setColumns(10);
@@ -118,7 +118,7 @@ public class UI extends JFrame implements ActionListener {
 		textField.addActionListener(new inputListener());
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(700, 21, 375, 403);
+		scrollPane.setBounds(700, 21, 420, 403);
 		getContentPane().add(scrollPane);
 		scrollPane.setBorder(new LineBorder(new Color(139, 0, 139), 2));
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -228,6 +228,7 @@ public class UI extends JFrame implements ActionListener {
 		scrollPane2.setBorder(new LineBorder(new Color(252, 213, 181)));
 		scrollPane2.setBackground(new Color(252, 213, 181));
 		scrollPane2.setBounds(15, 61, 670, 439);
+		scrollPane2.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		getContentPane().add(scrollPane2);
 		
 		JLabel lblCurrentList = new JLabel("Task List");
