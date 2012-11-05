@@ -16,7 +16,7 @@ public class Processor {
 	private Scanner scanner = new Scanner(System.in);
 	private static final Logger logger = Logger.getLogger(Control.class.getName());
 
-	private static final String ERROR_MSG_INVALID_INPUT = "Invalid Input. Input should follow a \"<command> <data>\" format";
+	private static final String ERROR_MSG_INVALID_INPUT = "Invalid Input. Input should follow a \"<command> <data>\"\nformat.\n";
 	private static final String ERROR_MSG_FATAL_ERROR = "Fatal Error. Critical files are missing.\n" +
 														"Re-install Program or contact your service provider.\n" +
 														"Program will now terminate.\n" +

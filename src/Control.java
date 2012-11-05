@@ -214,7 +214,7 @@ class Control {
 	
 	private CMD redo(CMD command) {
 		if(redo.isEmpty()) {
-			command.setData("There are no further redo-s.");
+			command.setData("There are no further redo-s.\n");
 			return command; 
 		}
 		
@@ -233,7 +233,7 @@ class Control {
 			storage.save(true, false);
 		}
 		
-		command.setData("Redo completed");
+		command.setData("Redo completed\n");
 		return command;
 	}
 
@@ -244,7 +244,7 @@ class Control {
 	
 	private CMD undo(CMD command) {
 		if(undo.isEmpty()) {
-			command.setData("There are no further undo-s.");
+			command.setData("There are no further undo-s.\n");
 			return command; 
 		}
 		
@@ -281,7 +281,7 @@ class Control {
 			storage.save(true, false);
 		}
 		
-		command.setData("Undo completed.");
+		command.setData("Undo completed.\n");
 		return command;
 		
 	}
