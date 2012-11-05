@@ -575,15 +575,15 @@ public class UI extends JFrame implements ActionListener {
 //			System.out.println("done <number>:\t\t   marks an entry as completed");
 //			System.out.println("clear:\t\t\t   deletes all entries permanently (use with caution!)");
 //			System.out.println("quit:\t\t\t   terminates the program.");
-			return ("add <data>:\t   add an entry with related dates,\t\t   description, priority etc.\n") +
-					("\t\t   prefix @ indicates venue, prefix\t\t   # indicates a hashtag.\n") +
-					("remove <number>:   remove the selected entry for\t\t   the active list.\n") +
-					("edit <number>:\t   enters edit mode for selected\t\t   entry.\n") +
-					("undo:\t\t   reverses the previous action.\n") +
-					("display <keyword>: generates a list of entries\t\t\t   fulfilling the search criteria.\n") +
-					("done <number>:\t   marks an entry as completed.\n") +
-					("clear:\t\t   deletes all entries permanently\t\t   (use with caution!).\n") +
-					("quit:\t\t   terminates the program.\n");
+			return ("add <data>:\t   add an entry with related dates,\t\t\t   description, priority etc.\n") +
+					("\t\t   prefix @ indicates venue, prefix #\t\t\t   indicates a hashtag.\n") +
+					("\nremove <number>:   remove the selected entry for the\t\t\t   active list.\n") +
+					("\nedit <number>:\t   enters edit mode for selected entry.\n") +
+					("\nundo:\t\t   reverses the previous action.\n") +
+					("\ndisplay <keyword>: generates a list of entries\t\t\t\t   fulfilling the search criteria.\n") +
+					("\ndone <number>:\t   marks an entry as completed.\n") +
+					("\nclear:\t\t   deletes all entries permanently\t\t\t   (use with caution!).\n") +
+					("\nquit:\t\t   terminates the program.\n");
 		}
 
 		//editMode help
@@ -597,15 +597,15 @@ public class UI extends JFrame implements ActionListener {
 //			System.out.println("st:       edit start time");
 //			System.out.println("et:       edit end time");
 //			System.out.println("venue @:  edit venue");
-			return ("\nEnter a field followed by the new data it should be replaced with.\n") +
-					("desc:\t edit description\n") +
-					("ddate:\t edit due date\n") +
-					("display:\t shows data in the current node\n") +
-					("priority:\t edit priority\n") +
-					("hash #:\t edit hash tags\n") +
-					("st:\t edit start time\n") +
-					("et:\t edit end time\n") +
-					("venue @:\t edit venue\n");
+			return ("\nEnter a field followed by the new data it should be\nreplaced with.\n") +
+					("desc:\t  edit description\n") +
+					("ddate:\t  edit due date\n") +
+					("display:  shows data in the current node\n") +
+					("priority: edit priority\n") +
+					("hash #:\t  edit hash tags\n") +
+					("st:\t  edit start time\n") +
+					("et:\t  edit end time\n") +
+					("venue @:  edit venue\n");
 		}
 		
 		//for logger initialization use
