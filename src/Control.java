@@ -3,6 +3,8 @@ import java.util.Vector;
 import java.util.logging.Logger;
 
 class Control {
+	private static final String MSG_ERROR_INVALID_INDEX = "Invalid input. Enter a valid index number.";
+	private static final String MSG_ERROR_EDIT_EMPTY_ACTIVELIST = "There is nothing to edit.";
 	private static Control control;
 	private Processor processor;
 	private Storage storage;
@@ -44,103 +46,28 @@ class Control {
 	private CMD carryOutCMD(CMD command) {
 		switch (command.getCommandType()) {
 		// need to store previous version every time in case of undo action
-		case ADD:
-			if(command.getData()!=null){
-				tempHold = (Entry) command.getData();
-				storage.addEntry(tempHold);
-				storage.save(true, false);
-				command.setData(tempHold);
-				undo.push(command);
-			}
-						
-			return command;
-			
-		case REMOVE:
-			//if there is nothing in command.getData, get active list over to tempList, 
-						//then ask user what he want to remove
-			//if command.data contains hashtag, do a search for the hashtag, port to tempList, 
-						//then ask user what he want to remove
-			//if there is something in the Storage's tempList 
-			if(command.getData()!=null){
-				if(isInteger(command.getData())) {
-					Integer i = (Integer) command.getData(); 
-					if(i<1 || i>storage.getDisplayEntries().size()){
-						command.setCommandType(Processor.COMMAND_TYPE.ERROR);
-						command.setData("Invalid Index.");
-						return command;
-					}
-					
-					command.setData(storage.getDisplayEntries().get(i-1));
-					undo.push(command);
-					storage.removeEntry(i);
-					storage.save(true, false);
-				}
-				else{
-					//if commandData was a String
-				}
-			}
-			return command;
-			
-		case CLEAR:
-			command.setData(storage.getActiveEntries());
-			undo.push(command);
-			storage.clearActive();
-			storage.save(true, false);
-			return command;
-		case UNDO:
-			command.setData(undo());
-			
-			return command;
-			
-		case REDO:
-			command.setData(redo());
-			
-			return command;
-			
-			
-		case DISPLAY:
-			if (command.getData() == null) {
-				command.setData((Vector<Entry>)storage.display());
-			}
-			else {
-					
-				// if the data is integer to specify index
-				if(isInteger(command.getData())){						
-					Integer index = (Integer) command.getData();
-					command.setData(storage.displayIndex(index));
-				}
-				// if the data is string to be searched
-				else {
-					String keyword = (String) command.getData();
-					command.setData(storage.displayKeyword(keyword));
-				}
-			}
-			
-			return command;
-		case EDIT:
-			//check if number given by edit <number> is valid
-			//if it is valid, load the entry into tempHold, then convert to add's edit
-			//if not convert to edit <nothing>
-			if(command.getData()!=null){
-				if((int)command.getData() > storage.getActiveEntries().size() || (int)command.getData()<1) {	
-					System.out.print("Invalid input. Enter a valid index number.");
-					command.setData(" ");
-				}
-				else{
-					tempHold = storage.getActiveEntries().get((int)command.getData()-1);
-					command.setData(null);
-				}
-				
-			} else {	
-				if(tempHold == null){ 	//edit <nothing>						
-					command.setData("Which entry do you want to edit?");
-				}
-			}
-			//sort
-			
-			return command;
-			
-		case DONE:
+		case ADD:			return add(command);
+		case REMOVE:		return remove(command);
+		case CLEAR:			return clear(command);
+		case UNDO:			return undo(command);
+		case REDO:			return redo(command);			
+		case DISPLAY:		return display(command);
+		case EDIT:			return edit(command);
+		case DONE:			return done(command);
+		default:			return command;
+//		case QUIT: case HELP:
+//			return command;
+		
+		}
+	}
+
+	/**
+	 * @param command
+	 * @return
+	 */
+	private CMD done(CMD command) {
+		
+		if(isInteger(command.getData())){
 			Integer i = (Integer) command.getData();
 			if(i > storage.getActiveEntries().size() || i < 1) {
 				command.setCommandType(Processor.COMMAND_TYPE.ERROR);
@@ -151,19 +78,145 @@ class Control {
 				undo.push(command);
 				storage.save(true, true);
 			}
-			
-			return command;
-		case QUIT:
-			return command;
-		case HELP:
-			return command;
-		default:
-			return command;
+		} else {
+			Entry e = (Entry) command.getData();
+			storage.getActiveEntries().add(e);
+			storage.getArchiveEntries().remove(e);
 		}
+		
+		return command;
 	}
 
-	private String redo() {
-		if(redo.isEmpty()) return "There are no further redo-s."; 
+	/**
+	 * @param command
+	 * @return
+	 */
+	private CMD edit(CMD command) {
+		//check if number given by edit <number> is valid
+		//if it is valid, load the entry into tempHold, then convert to add's edit
+		//if not convert to edit <nothing>
+		
+		if(storage.getActiveEntries().isEmpty()) {
+			command.setCommandType(Processor.COMMAND_TYPE.ERROR);
+			command.setData(MSG_ERROR_EDIT_EMPTY_ACTIVELIST);
+			return command;
+		}
+		
+		if(command.getData()!=null){
+			if((int)command.getData() > storage.getActiveEntries().size() || (int)command.getData()<1) {	
+				System.out.print(MSG_ERROR_INVALID_INDEX);
+				command.setData(" ");
+			}
+			else{
+				tempHold = storage.getActiveEntries().get((int)command.getData()-1);
+				command.setData(null);
+			}
+			
+		} else {	
+			if(tempHold == null){ 	//edit <nothing>						
+				command.setData("Which entry do you want to edit?");
+			}
+		}
+		//sort
+		
+		return command;
+	}
+
+	/**
+	 * @param command
+	 * @return
+	 */
+	private CMD display(CMD command) {
+		if (command.getData() == null) {
+			command.setData((Vector<Entry>)storage.display());
+		}
+		else {
+				
+			// if the data is integer to specify index
+			if(isInteger(command.getData())){						
+				Integer index = (Integer) command.getData();
+				command.setData(storage.displayIndex(index));
+			}
+			// if the data is string to be searched
+			else {
+				String keyword = (String) command.getData();
+				command.setData(storage.displayKeyword(keyword));
+			}
+		}
+		
+		return command;
+	}
+
+
+	/**
+	 * @param command
+	 * @return
+	 */
+	private CMD clear(CMD command) {
+		command.setData(storage.getActiveEntries());
+		undo.push(command);
+		storage.clearActive();
+		storage.save(true, false);
+		return command;
+	}
+
+	/**
+	 * @param command
+	 * @return
+	 */
+	private CMD remove(CMD command) {
+		//if there is nothing in command.getData, get active list over to tempList, 
+					//then ask user what he want to remove
+		//if command.data contains hashtag, do a search for the hashtag, port to tempList, 
+					//then ask user what he want to remove
+		//if there is something in the Storage's tempList 
+		if(command.getData()!=null){
+			if(isInteger(command.getData())) {
+				Integer i = (Integer) command.getData(); 
+				if(i<1 || i>storage.getDisplayEntries().size()){
+					command.setCommandType(Processor.COMMAND_TYPE.ERROR);
+					command.setData("Invalid Index.");
+					return command;
+				}
+				
+				command.setData(storage.getDisplayEntries().get(i-1));
+				undo.push(command);
+				storage.removeEntry(i);
+				storage.save(true, false);
+			}
+			else{
+				//if commandData was a String
+			}
+		}
+		return command;
+	}
+
+	/**
+	 * @param command
+	 * @return
+	 */
+	private CMD add(CMD command) {
+		if(command.getData()!=null){
+			tempHold = (Entry) command.getData();
+			storage.addEntry(tempHold);
+			storage.save(true, false);
+			command.setData(tempHold);
+			undo.push(command);
+		}
+					
+		return command;
+	}
+
+	/**
+	 * @param command
+	 * @return
+	 */
+	
+	private CMD redo(CMD command) {
+		if(redo.isEmpty()) {
+			command.setData("There are no further redo-s.");
+			return command; 
+		}
 		
 		CMD action = redo.pop();
 		undo.push(action);
@@ -180,11 +233,20 @@ class Control {
 			storage.save(true, false);
 		}
 		
-		return "Redo completed";
+		command.setData("Redo completed");
+		return command;
 	}
 
-	private String undo() {
-		if(undo.isEmpty()) return "There are no further undo-s."; 
+	/**
+	 * @param command
+	 * @return
+	 */
+	
+	private CMD undo(CMD command) {
+		if(undo.isEmpty()) {
+			command.setData("There are no further undo-s.");
+			return command; 
+		}
 		
 		CMD action = undo.pop();
 		redo.push(action);
@@ -198,6 +260,7 @@ class Control {
 			break;
 		case CLEAR: 
 			storage.setActiveEntries((Vector<Entry>) action.getData());
+			storage.setDisplayEntries(storage.getActiveEntries());
 			break;
 		case EDIT: 
 			
@@ -207,7 +270,8 @@ class Control {
 			storage.undoDoneAction((Entry)action.getData());
 			break;		//storage function to move it back...Entry is given under data of Undo
 			default: 
-				return "There are no further undo-s.";	
+				logger.severe("Unexpected CMD action recorded.");
+				assert false;	
 		}
 		
 		if(action.getCommandType()==Processor.COMMAND_TYPE.DONE){
@@ -217,8 +281,8 @@ class Control {
 			storage.save(true, false);
 		}
 		
-		
-		return "Undo completed.";
+		command.setData("Undo completed.");
+		return command;
 		
 	}
 
