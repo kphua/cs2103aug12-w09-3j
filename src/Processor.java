@@ -155,7 +155,8 @@ public class Processor {
 	 */
 	private CMD remove(String[] inputBreakdown, COMMAND_TYPE userCMD) {
 		if(inputBreakdown.length==1) {								//remove <nothing>
-			return new CMD(userCMD, null);
+//			return new CMD(userCMD, null);
+			return new CMD(COMMAND_TYPE.ERROR, ERROR_MSG_INVALID_INPUT);
 		}
 		if(isInteger(inputBreakdown[1])){							//remove <number>
 			Integer i = Integer.parseInt(inputBreakdown[1]);
@@ -233,9 +234,11 @@ public class Processor {
 	 * @return
 	 */
 	private CMD add(String[] temp, COMMAND_TYPE userCMD) {
-		if(temp.length == 1) return new CMD(userCMD, null);			//add <nothing>
-		else if(temp[1].equals("\"") || temp[1].equals("\" ") || temp[1].equals("\" \"")) 
-			return new CMD(userCMD, null);
+//		if(temp.length == 1) return new CMD(userCMD, null);			//add <nothing>
+//		else if(temp[1].equals("\"") || temp[1].equals("\" ") || temp[1].equals("\" \"")) 
+//			return new CMD(userCMD, null);
+		if (temp.length == 1 || temp[1].equals("\"") || temp[1].equals("\" ") || temp[1].equals("\" \"")) 
+			return new CMD(COMMAND_TYPE.ERROR, ERROR_MSG_INVALID_INPUT);
 		else {
 			Entry newTask = new Entry();
 			buildEntry(newTask, temp);

@@ -52,9 +52,6 @@ public class UI extends JFrame implements ActionListener {
 	Vector<String> columnNames;
 	
 	private JTable table;
-	
-	
-	
 	private FingerTips ft;
 	
 
@@ -135,32 +132,6 @@ public class UI extends JFrame implements ActionListener {
 		mainArea.setFont(new Font("Consolas", Font.PLAIN, 13));
 		mainArea.setBackground(new Color(204, 193, 218));
 		mainArea.setLineWrap(true);
-		
-//		mainArea.setLineWrap(true);
-//		mainArea.setCaretPosition(mainArea.getText().length() - 1);
-//		cols();
-		
-//		Object[][] data;
-		
-//		String[] columnNames = {"ID",
-//                "Task",
-//                "Start Time",
-//                "End Time",
-//                "Due Date",
-//                "Priority"};
-		
-//		data = new Object[][] {
-//			    {"Kathy", "Smith",
-//			     "Snowboarding Hahaha Hehehehe Hohohoho ZZZZZZZZZZ", new Integer(5), new Boolean(false), "-"},
-//			    {"John", "Doe",
-//			     "Rowing", new Integer(3), new Boolean(true), "-"},
-//			    {"Sue", "Black",
-//			     "Knitting", new Integer(2), new Boolean(false), "-"},
-//			    {"Jane", "White",
-//			     "Speed reading", new Integer(20), new Boolean(true), "-"},
-//			    {"Joe", "Brown",
-//			     "Pool", new Integer(10), new Boolean(false), "-"}
-//		        };
 		
 		columnNames = new Vector<String>();
 		columnNames.add("ID");
@@ -245,12 +216,6 @@ public class UI extends JFrame implements ActionListener {
 		panel.setBackground(new Color(252, 213, 181));
 		panel.setBounds(10, 20, 680, 485);
 		getContentPane().add(panel);
-		
-		//display_output = control.performAction("display");
-		//mainArea.display(output);
-		//Document doc = mainArea.getDocument();
-		//PrintStream out = new PrintStream(new DocumentOutputStream(doc));
-		//out.println("Hello World");
 
 	}
 	
