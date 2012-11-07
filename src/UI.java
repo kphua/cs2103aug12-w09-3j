@@ -217,6 +217,8 @@ public class UI extends JFrame implements ActionListener {
 		panel.setBackground(new Color(252, 213, 181));
 		panel.setBounds(10, 20, 680, 485);
 		getContentPane().add(panel);
+		
+		mainArea.append("\nCommand: ");
 
 	}
 	
@@ -295,18 +297,39 @@ public class UI extends JFrame implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			if(!editMode){	
 				
-				mainArea.append("\nCommand: ");
 				String input = textField.getText();
 				textField.setText(null);
 				mainArea.append(input);
 				input = input.trim();
 				
 				runUserInput(input);
+				
+				if(editMode) mainArea.append("\nCommand (Edit Mode): ");
+				else mainArea.append("\nCommand: ");
+			} else {					
+				userInput = textField.getText().trim().toLowerCase();
+				textField.setText(null);
+				mainArea.append(userInput);
+				//call processor
+				String[] response = control.processEditMode(userInput);
+				if(response[0].equals("display")) mainArea.append("\n" +response[1]);
+				else if(response[0].equals("help")) mainArea.append("\n" +helpEditMode());
+				else if(response[0].equals("end")) {
+					editMode = false;
+					control.setEditHolder(null);
+					mainArea.append("\nEdit Mode ended.");
+					mainArea.append("\nCommand: ");
+					return;
+				}
+				else if(response[0].equals("Error")) mainArea.append("\n" +response[1]);
+				
+				mainArea.append("\nCommand (Edit Mode): ");
+			}
 			
-			
+			refreshTable();
 		}
-		
 	}
 	
 	private void initialiseLogger() {
@@ -334,6 +357,13 @@ public class UI extends JFrame implements ActionListener {
 		//followUpAction(actionMSG);
 		followUpAction(actionMSG);
 		
+
+	}
+
+	/**
+	 * 
+	 */
+	private void refreshTable() {
 		Vector<Entry> a = control.getStorage().getDisplayEntries();
 		Vector<Vector> data = convertToVV(a);
 		
@@ -357,7 +387,7 @@ public class UI extends JFrame implements ActionListener {
 		case REMOVE: 	remove(actionMSG);		break;
 		case UNDO: 		undo(actionMSG);		break;
 		case DISPLAY:	display(actionMSG);		break;
-		case EDIT:		edit(actionMSG);		break;
+		case EDIT:		edit();					break;
 		case DONE: 		done(actionMSG);		break;
 		case HELP: 		mainArea.append("\n" + help());
 												break;
@@ -392,7 +422,7 @@ public class UI extends JFrame implements ActionListener {
 			//				runUserInput("edit");
 			//			} else {
 			
-			control.setTempHold(null);
+			control.setEditHolder(null);
 			Collections.sort(control.getStorage().getActiveEntries());
 			mainArea.append("\n" +SUCCESS_MSG_ADD);
 			
@@ -400,54 +430,13 @@ public class UI extends JFrame implements ActionListener {
 		}
 		
 		//Edit Mode
-		private void edit(CMD actionMSG) {
-			String userInput;
+		private void edit() {
 			editMode = true;
-			
-			if(actionMSG.getData()==null){
+			mainArea.append("\n" +"Entry: ");
+			mainArea.append(control.processEditMode("display")[1]);
 
-				while(true){
-					mainArea.append("\n" +"Entry: ");
-					mainArea.append("\n" +control.processEditMode("display")[1]);
-
-					mainArea.append("\n" +"Enter the field you wish to modify, and the new data to replace with.");
-					mainArea.append("\n" +"Type \"end\" to exit edit mode and \"help\" for futher assistance.");
-					System.out.print("\nCommand (Edit Mode): ");
-					userInput = textField.getText().trim();
-
-					userInput = userInput.trim();
-					//call processor
-					String[] response = control.processEditMode(userInput);
-					if(response[0].equals("display")) mainArea.append("\n" +response[1]);
-					else if(response[0].equals("help")) mainArea.append("\n" +helpEditMode());
-					else if(response[0].equals("end")) break;
-					else if(response[0].equals("Error")) mainArea.append("\n" +response[1]);
-				}
-
-				control.setTempHold(null);
-			}
-			else {
-//				undo(actionMSG);
-				int a;
-				while(true){
-					try{
-						System.out.print("Index: ");
-						a = Integer.parseInt(textField.getText());
-						sc.nextLine();
-						mainArea.append("\n");
-						if(control.getStorage().getActiveEntries().size() < a || a<1)
-							mainArea.append("\n" +"Invalid input. Enter a valid index number.");
-						else{
-							runUserInput("edit "+ a);
-							break;
-						}
-					}
-					catch(InputMismatchException e){
-						mainArea.append("\n" +"Invalid input. Action aborted.");
-						break;
-					}
-				}
-			}
+			mainArea.append("\n" +"Enter the field you wish to modify, and the new data to replace with.");
+			mainArea.append("\n" +"Type \"end\" to exit edit mode and \"help\" for futher assistance.");
 		}
 
 		private void display(CMD actionMSG) {

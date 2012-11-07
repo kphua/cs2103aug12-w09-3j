@@ -9,6 +9,8 @@ import java.io.*;
 
 public class Processor {
 
+	private static final String ERROR_MSG_ADD_PROPER_FORM = "Error: add <description> <data>, where description is encapsuled by \".";
+	private static final String ERROR_MSG_EDIT_INVALID_INDEX = "Error: Type \"edit\" with a valid index.";
 	private static final String ERROR_MSG_RMV_INVALID_INPUT = "Invalid input. Input for remove should follow \"<command> <index>\".";
 	private Hashtable <String, String> reservedWordsConverter;
 	private Hashtable <String, String> reservedWordsConverterEditMode;
@@ -156,7 +158,7 @@ public class Processor {
 	 */
 	private CMD remove(String[] inputBreakdown, COMMAND_TYPE userCMD) {
 		if(inputBreakdown.length==1) {								//remove <nothing>
-			return new CMD(userCMD, null);
+			return new CMD(Processor.COMMAND_TYPE.ERROR, ERROR_MSG_RMV_INVALID_INPUT);	
 		}
 		if(isInteger(inputBreakdown[1])){							//remove <number>
 			Integer i = Integer.parseInt(inputBreakdown[1]);
@@ -174,18 +176,16 @@ public class Processor {
 	 * @return
 	 */
 	private CMD edit(String[] inputBreakdown, COMMAND_TYPE userCMD) {
-		if(inputBreakdown.length == 1) {								//edit <nothing>
-			return new CMD(userCMD, null);					
+		if(inputBreakdown.length == 1){
+			return new CMD(COMMAND_TYPE.ERROR, ERROR_MSG_EDIT_INVALID_INDEX);
 		}
-		else {
-
-			if(isInteger(inputBreakdown[1])){							//edit <number>
-				Integer i = Integer.parseInt(inputBreakdown[1]);
-				return new CMD(userCMD, i);
-			}
-			else{
-				return new CMD(userCMD, null);				//input is invalid, but assumes user wants to edit something
-			}
+		
+		if(isInteger(inputBreakdown[1])){							//edit <number>
+			Integer i = Integer.parseInt(inputBreakdown[1]);
+			return new CMD(userCMD, i);
+		}
+		else{
+			return new CMD(COMMAND_TYPE.ERROR, ERROR_MSG_EDIT_INVALID_INDEX);
 		}
 	}
 
@@ -234,7 +234,7 @@ public class Processor {
 	 * @return
 	 */
 	private CMD add(String[] temp, COMMAND_TYPE userCMD) {
-		if(temp.length == 1) return new CMD(userCMD, null);			//add <nothing>
+		if(temp.length <= 1) return new CMD(COMMAND_TYPE.ERROR, ERROR_MSG_ADD_PROPER_FORM);			//add <nothing>
 		else if(temp[1].equals("\"") || temp[1].equals("\" ") || temp[1].equals("\" \"")) 
 			return new CMD(userCMD, null);
 		else {

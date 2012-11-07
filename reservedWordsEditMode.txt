@@ -11,7 +11,7 @@ priority priority
 pri priority
 p priority
 hash hash
-h hash
+# hash
 starttime starttime
 st starttime
 endtime endtime
@@ -19,6 +19,7 @@ et endtime
 venue venue
 v venue
 help help
+h help
 end end
 quit end
 q end
