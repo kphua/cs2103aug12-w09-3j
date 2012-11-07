@@ -175,7 +175,7 @@ class Control {
 				Integer i = (Integer) command.getData(); 
 				if(i<1 || i>storage.getDisplayEntries().size()){
 					command.setCommandType(Processor.COMMAND_TYPE.ERROR);
-					command.setData("Invalid Index.");
+					command.setData("Invalid Index.\n");
 					return command;
 				}
 				
