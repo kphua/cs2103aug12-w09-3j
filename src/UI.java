@@ -92,6 +92,7 @@ public class UI extends JFrame implements ActionListener {
 		initialiseLogger();
 		
 		sc = new Scanner(System.in);
+		editMode = false;
 		cont = true;
 		control = Control.getInstance();
 		
@@ -323,20 +324,21 @@ public class UI extends JFrame implements ActionListener {
 	
 	private Control control;
 	private Scanner sc;
-	private boolean cont;
+	private boolean cont, editMode;
 	
 	class inputListener implements ActionListener{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			mainArea.append("\nCommand: ");
-			String input = textField.getText();
-			textField.setText(null);
-			mainArea.append(input);
-			input = input.trim();
+				
+				mainArea.append("\nCommand: ");
+				String input = textField.getText();
+				textField.setText(null);
+				mainArea.append(input);
+				input = input.trim();
+				
+				runUserInput(input);
 			
-			
-			runUserInput(input);
 			
 		}
 		
@@ -435,6 +437,8 @@ public class UI extends JFrame implements ActionListener {
 		//Edit Mode
 		private void edit(CMD actionMSG) {
 			String userInput;
+			editMode = true;
+			
 			if(actionMSG.getData()==null){
 
 				while(true){
@@ -497,6 +501,7 @@ public class UI extends JFrame implements ActionListener {
 		}
 
 		private void remove(CMD actionMSG) {
+			
 			if(actionMSG.getData() == null){
 				mainArea.append("\n" +"Which entry do you want to remove?");
 				int rmvIndex;

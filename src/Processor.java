@@ -9,6 +9,7 @@ import java.io.*;
 
 public class Processor {
 
+	private static final String ERROR_MSG_RMV_INVALID_INPUT = "Invalid input. Input for remove should follow \"<command> <index>\".";
 	private Hashtable <String, String> reservedWordsConverter;
 	private Hashtable <String, String> reservedWordsConverterEditMode;
 	private Hashtable <String, String> indicativeWordsIdentifier;
@@ -119,7 +120,7 @@ public class Processor {
 	 */
 	private CMD buildCMD(String[] inputBreakdown) {
 		
-		String cmd = reservedWordsConverter.get(inputBreakdown[0]);
+		String cmd = reservedWordsConverter.get(inputBreakdown[0].toLowerCase());
 		COMMAND_TYPE userCMD = determineCommandType(cmd);
 		
 		if(inputBreakdown.length > 1) {
@@ -162,7 +163,7 @@ public class Processor {
 			return new CMD(userCMD, i);
 		}
 		else{
-			return new CMD(userCMD, inputBreakdown[1]);				//remove <hash>
+			return new CMD(Processor.COMMAND_TYPE.ERROR, ERROR_MSG_RMV_INVALID_INPUT);	
 		}
 	}
 
