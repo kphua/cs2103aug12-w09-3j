@@ -1,3 +1,4 @@
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Vector;
 import java.util.logging.Logger;
@@ -10,7 +11,7 @@ class Control {
 	private Storage storage;
 //	private boolean edit, newList; // modes
 	private LinkedList<CMD> undo, redo;
-	private Entry tempHold;
+	private Entry editHolder;
 	private static final Logger logger = Logger.getLogger(Control.class.getName());
 
 	private Control() {
@@ -102,22 +103,14 @@ class Control {
 			return command;
 		}
 		
-		if(command.getData()!=null){
-			if((int)command.getData() > storage.getActiveEntries().size() || (int)command.getData()<1) {	
-				System.out.print(MSG_ERROR_INVALID_INDEX);
-				command.setData(" ");
-			}
-			else{
-				tempHold = storage.getActiveEntries().get((int)command.getData()-1);
-				command.setData(null);
-			}
-			
-		} else {	
-			if(tempHold == null){ 	//edit <nothing>						
-				command.setData("Which entry do you want to edit?");
-			}
+		if((int)command.getData() > storage.getActiveEntries().size() || (int)command.getData()<1) {	
+			command.setCommandType(Processor.COMMAND_TYPE.ERROR);
+			command.setData(MSG_ERROR_INVALID_INDEX);
 		}
-		//sort
+		else{
+			editHolder = storage.getActiveEntries().get((int)command.getData()-1);
+			command.setData(null);
+		}
 		
 		return command;
 	}
@@ -170,23 +163,19 @@ class Control {
 		//if command.data contains hashtag, do a search for the hashtag, port to tempList, 
 					//then ask user what he want to remove
 		//if there is something in the Storage's tempList 
-		if(command.getData()!=null){
-			if(isInteger(command.getData())) {
-				Integer i = (Integer) command.getData(); 
-				if(i<1 || i>storage.getDisplayEntries().size()){
-					command.setCommandType(Processor.COMMAND_TYPE.ERROR);
-					command.setData("Invalid Index.\n");
-					return command;
-				}
-				
-				command.setData(storage.getDisplayEntries().get(i-1));
-				undo.push(command);
-				storage.removeEntry(i);
-				storage.save(true, false);
+		
+		if(isInteger(command.getData())) {
+			Integer i = (Integer) command.getData(); 
+			if(i<1 || i>storage.getDisplayEntries().size()){
+				command.setCommandType(Processor.COMMAND_TYPE.ERROR);
+				command.setData("Invalid Index.\n");
+				return command;
 			}
-			else{
-				//if commandData was a String
-			}
+
+			command.setData(storage.getDisplayEntries().get(i-1));
+			undo.push(command);
+			storage.removeEntry(i);
+			storage.save(true, false);
 		}
 		return command;
 	}
@@ -197,10 +186,10 @@ class Control {
 	 */
 	private CMD add(CMD command) {
 		if(command.getData()!=null){
-			tempHold = (Entry) command.getData();
-			storage.addEntry(tempHold);
+			editHolder = (Entry) command.getData();
+			storage.addEntry(editHolder);
 			storage.save(true, false);
-			command.setData(tempHold);
+			command.setData(editHolder);
 			undo.push(command);
 		}
 					
@@ -221,11 +210,17 @@ class Control {
 		CMD action = redo.pop();
 		undo.push(action);
 		
-		
-		carryOutCMD(action);
-		
-		
-		
+		switch(action.getCommandType()){
+		case EDIT:
+			Entry original = (Entry)action.getData();
+			action.setData(storage.removeEntry(original.getID()));
+			storage.addEntry(original);
+			
+			break;
+			default:
+				carryOutCMD(action);
+			
+		}
 		if(action.getCommandType()==Processor.COMMAND_TYPE.DONE){
 			storage.save(true, true);
 		}
@@ -263,7 +258,9 @@ class Control {
 			storage.setDisplayEntries(storage.getActiveEntries());
 			break;
 		case EDIT: 
-			
+			Entry original = (Entry)action.getData();
+			action.setData(storage.removeEntry(original.getID()));
+			storage.addEntry(original);
 			
 			break;		//each entry needs a unique identity for this to work...
 		case DONE:
@@ -302,11 +299,11 @@ class Control {
 	}
 
 	public Entry getTempHold() {
-		return tempHold;
+		return editHolder;
 	}
 
-	public void setTempHold(Entry tempHold) {
-		this.tempHold = tempHold;
+	public void setEditHolder(Entry tempHold) {
+		this.editHolder = tempHold;
 	}
 
 	public Storage getStorage() {
@@ -327,48 +324,58 @@ class Control {
 
 	public String[] processEditMode(String userInput) {
 		String[] cmd = processor.determineCmdEditMode(userInput);
+		CMD clone = new CMD(Processor.COMMAND_TYPE.EDIT, new Entry(editHolder));
+		
 		if(cmd.length > 1 && cmd[1] != null) cmd[1] = cmd[1].trim();
 		if(cmd[0].equals("description")){	
 			if(cmd[1]!=null && cmd[1].length()!=0)
-				tempHold.setDesc(cmd[1]);
+				editHolder.setDesc(cmd[1]);
 		} else if(cmd[0].equals("duedate")){
 			if(processor.isDate(cmd[1])){			//to be amended
-				tempHold.iniDDate();
-				tempHold.setDateCal(cmd[1]);
+				editHolder.iniDDate();
+				editHolder.setDateCal(cmd[1]);
 			}
 			else cmd = new String[] {"Error", "Invalid entry for date."};
 		} else if(cmd[0].equals("starttime")){
 			if(cmd[1].endsWith("am") || cmd[1].endsWith("pm"))
-				tempHold.setStart(cmd[1]);
+				editHolder.setStart(cmd[1]);
 			else cmd = new String[] {"Error", "Invalid time entry."};
 		} else if(cmd[0].equals("endtime")){
 			if(cmd[1].endsWith("am") || cmd[1].endsWith("pm"))
-				tempHold.setEnd(cmd[1]);
+				editHolder.setEnd(cmd[1]);
 			else cmd = new String[] {"Error", "Invalid time entry."};
 		} else if(cmd[0].equals("hash")){
 			if(cmd[1].startsWith("#"))
-				tempHold.setTagDesc(cmd[1]);
+				editHolder.setTagDesc(cmd[1]);
 			else cmd = new String[] {"Error", "Not a hashtag"};
 		} else if(cmd[0].equals("display")){
 			cmd = new String[]{cmd[0], null};
-			cmd[1] = printEntry(tempHold);
+			cmd[1] = printEntry(editHolder);
 		} else if(cmd[0].equals("priority")){
 			boolean restrictedWords = cmd[1].equalsIgnoreCase("high") || 
 					cmd[1].equalsIgnoreCase("medium") || cmd[1].equalsIgnoreCase("low");
 			if(restrictedWords){
-				tempHold.setPriority(cmd[1].toUpperCase());
+				editHolder.setPriority(cmd[1].toUpperCase());
 				//sort
 			}
 			else cmd = new String[] {"Error", "Not a priority"};
 		} else if(cmd[0].equals("venue")){
 			if(cmd[1].startsWith("@"))
-				tempHold.setVenue(cmd[1]);
+				editHolder.setVenue(cmd[1]);
 			else cmd = new String[] {"Error", "Invalid format for location."};
 		} else if(cmd[0].equals("help")){
-			
+			return cmd;
 		} else if(cmd[0].equals("end")){
+			return cmd;
 		} else {
 			cmd = new String[] {"Error", "Invalid edit field."};
+		}
+		
+		
+		if(!cmd[0].equals("Error")) {
+			undo.push(clone);
+			Collections.sort(storage.getActiveEntries());
+			storage.save(true, false);
 		}
 		
 		return cmd;

@@ -126,7 +126,7 @@ class FingerTips {
 		//				runUserInput("edit");
 		//			} else {
 		
-		control.setTempHold(null);
+		control.setEditHolder(null);
 		System.out.println(SUCCESS_MSG_ADD);
 		
 		//			}
@@ -155,7 +155,7 @@ class FingerTips {
 				else if(response[0].equals("Error")) System.out.println(response[1]);
 			}
 			
-			control.setTempHold(null);
+			control.setEditHolder(null);
 		}
 		else {
 //			undo(actionMSG);

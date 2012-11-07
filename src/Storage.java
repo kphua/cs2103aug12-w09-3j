@@ -311,4 +311,14 @@ class Storage {
 		displayEntries = activeEntries;
 		assert activeEntries.isEmpty();		// assert all entries cleared
 	}
+
+	public Entry removeEntry(String id) {
+		for(Entry e : activeEntries){
+			if(id.equals(e.getID())){
+				activeEntries.remove(e);
+				return e;
+			}
+		}
+		return null;
+	}
 }
