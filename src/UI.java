@@ -31,39 +31,27 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-//import com.jgoodies.forms.layout.FormLayout;
-//import com.jgoodies.forms.layout.ColumnSpec;
-//import com.jgoodies.forms.factories.FormFactory;
-//import com.jgoodies.forms.layout.RowSpec;
 
 
 public class UI extends JFrame implements ActionListener {
 
-	private JPanel mainPane;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JTextField textField;
-	private String userInput;
-	private TableColumn id, task, start_time, end_time, duedate, hashtags;
-	private DefaultTableColumnModel headers;
 	private JTextArea mainArea;
 	Vector<String> columnNames;
-	
 	private JTable table;
-	private FingerTips ft;
+	private String userInput;
 	
 
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		boolean cont = true;
-		String input;
-		UI frame = null;
-		String output;
-		
+	public static void main(String[] args) {	
 		
 		Runnable run = new Runnable(){
 			public void run() {
@@ -121,7 +109,8 @@ public class UI extends JFrame implements ActionListener {
 		scrollPane.setBorder(new LineBorder(new Color(139, 0, 139), 2));
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		
-		mainArea = new JTextArea(welcome);
+		mainArea = new JTextArea();
+		printWelcomeMSG();
 		scrollPane.setViewportView(mainArea);
 		// set view to stick to the bottom of the message box, but cannot 
 		scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {  
@@ -143,14 +132,12 @@ public class UI extends JFrame implements ActionListener {
 		columnNames.add("Priority");
 		
 		Vector<Entry> a = control.getStorage().getDisplayEntries();
-		Vector<Vector> data = convertToVV(a);
+		Vector<Vector<String>> data = convertToVV(a);
 		
 		table = new JTable(data, columnNames);
 		table.getTableHeader().setFont(new Font("Consolas", Font.BOLD, 13));
 		table.getTableHeader().setBackground(new Color(75, 172, 198));
 		table.getTableHeader().setForeground(new Color(255, 255, 255));
-//		final JTable table = new JTable(data, columnNames);
-//		table.setBackground(UIManager.getColor("Button.background"));
 	    TableCellRenderer renderer = new TableCellRenderer() {
 	        JLabel label = new JLabel();
 	        @Override
@@ -178,7 +165,6 @@ public class UI extends JFrame implements ActionListener {
 		table.setShowHorizontalLines(false);
 		table.setEnabled(false);
 		table.setFont(new Font("Consolas", Font.PLAIN, 13));
-//		ColumnsAutoSizer.sizeColumnsToFit(table);
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		table.getColumnModel().getColumn(0).setPreferredWidth(20);
 		table.getColumnModel().getColumn(1).setPreferredWidth(290);
@@ -220,22 +206,17 @@ public class UI extends JFrame implements ActionListener {
 
 	}
 	
-	private void setOpacity(boolean b) {
+	private Vector<Vector<String>> convertToVV(Vector<Entry> a) {
 		// TODO Auto-generated method stub
-		
-	}
-
-	private Vector<Vector> convertToVV(Vector<Entry> a) {
-		// TODO Auto-generated method stub
-		Vector<Vector> out = new Vector<Vector>();
+		Vector<Vector<String>> out = new Vector<Vector<String>>();
 		for(int j=0; j<a.size(); j++)
-			out.add(new Vector());
+			out.add(new Vector<String>());
 		
 		int i = 0;
 		
 		for(Entry e : a){
-			Vector v = out.get(i);
-			v.add(i+1);
+			Vector<String> v = out.get(i);
+			v.add(i+1+"");
 			v.add(e.getDesc());
 			v.add(e.getStart());
 			v.add(e.getEnd());
@@ -246,24 +227,7 @@ public class UI extends JFrame implements ActionListener {
 		
 		return out;
 	}
-
-	private void cols() {
-		id = new TableColumn(0);
-		id.setHeaderValue("ID #");
-		id.setPreferredWidth(10);
-		
-		headers = new DefaultTableColumnModel();
-		headers.addColumn(id);
-		headers.addColumn(task);
-		headers.addColumn(start_time);
-		headers.addColumn(end_time);
-		headers.addColumn(duedate);
-		headers.addColumn(hashtags);
-	}
 	
-	static String welcome = "Welcome to FingerTips!\n" +
-	"Enter \"help\" for further usage instructions.\n";
-
 	@Override
 	public void actionPerformed(ActionEvent a) {
 		// TODO Auto-generated method stub
@@ -273,8 +237,8 @@ public class UI extends JFrame implements ActionListener {
 	
 	//FingerTips portion
 	
-	private static final String MSG_WELCOME = "\nWelcome To FingerTips!\n";
-	private static final String MSG_DEFAULT_ASSISTANCE = "Enter \"help\" for further usage instructions.";
+	private static final String MSG_WELCOME = "Welcome To FingerTips!\n";
+	private static final String MSG_DEFAULT_ASSISTANCE = "Enter \"help\" for further usage instructions.\n";
 	
 	private static final String SUCCESS_MSG_ADD = "Added.\n";
 	private static final String SUCCESS_MSG_REMOVE = "Removed.\n";
@@ -297,12 +261,12 @@ public class UI extends JFrame implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 				
 				mainArea.append("\nCommand: ");
-				String input = textField.getText();
+				userInput = textField.getText();
 				textField.setText(null);
-				mainArea.append(input);
-				input = input.trim();
+				mainArea.append(userInput);
+				userInput = userInput.trim();
 				
-				runUserInput(input);
+				runUserInput(userInput);
 			
 			
 		}
@@ -325,20 +289,17 @@ public class UI extends JFrame implements ActionListener {
 		logger.info("Logger initialization complete.");
 	}
 	
-//	private void runUserInput(String userInput) {
 	public void runUserInput(String userInput) {
 		CMD actionMSG = control.performAction(userInput);
 		
 		logger.info(actionMSG.toString());
 		
-		//followUpAction(actionMSG);
 		followUpAction(actionMSG);
 		
 		Vector<Entry> a = control.getStorage().getDisplayEntries();
-		Vector<Vector> data = convertToVV(a);
+		Vector<Vector<String>> data = convertToVV(a);
 		
-//		table = new JTable(data, columnNames);
-//		table.repaint();
+
 		DefaultTableModel dm = new DefaultTableModel(data, columnNames);
 		table.setModel(dm);
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -378,25 +339,11 @@ public class UI extends JFrame implements ActionListener {
 				description = "add \"".concat(description);
 				control.performAction(description);
 			}
-
-			//			mainArea.append("\n" +"Add further information? y/n");
-			//			String answer = sc.nextLine();
-			//			answer = answer.toLowerCase();
-			//			while(!(answer.equals("y") || answer.equals("n"))){
-			//				mainArea.append("\n" +"Invalid answer.");
-			//				mainArea.append("\n" +"Add further information? y/n");
-			//				answer = sc.nextLine();
-			//			}
-			//			
-			//			if(answer.equals("y")){
-			//				runUserInput("edit");
-			//			} else {
 			
 			control.setTempHold(null);
 			Collections.sort(control.getStorage().getActiveEntries());
 			mainArea.append("\n" +SUCCESS_MSG_ADD);
-			
-			//			}
+	
 		}
 		
 		//Edit Mode
@@ -455,14 +402,6 @@ public class UI extends JFrame implements ActionListener {
 			if(print.isEmpty()){
 				mainArea.append("\n" +"There is nothing to print.");
 			}
-//			else{
-//				int j=1;
-//
-//				for (int i=0; i<print.size(); i++) {
-//					mainArea.append("\n" + j + ". " + print.get(i).toString());
-//					j++;
-//				}
-//			}
 		}
 
 		private void remove(CMD actionMSG) {
@@ -530,21 +469,12 @@ public class UI extends JFrame implements ActionListener {
 		
 		//Welcome Message
 		private void printWelcomeMSG() {
-			mainArea.append("\n" +MSG_WELCOME);
-			mainArea.append("\n" +MSG_DEFAULT_ASSISTANCE);
+			mainArea.append(MSG_WELCOME);
+			mainArea.append(MSG_DEFAULT_ASSISTANCE);
 		}
-	
+		
+		// default help message
 		private static String help() {
-//			System.out.println("add <data>:\t\t   add an entry with related dates, description, priority etc.");
-//			System.out.println("\t\t\t   prefix @ indicates venue, prefix # indicates a hashtag.");
-//			System.out.println("remove <number>:\t   remove the selected entry for the active list.");
-//			System.out.println("edit <number>:\t\t   enters edit mode for selected entry.");
-//			System.out.println("undo:\t\t\t   reverses the previous action.");
-//			System.out.println("display:\t\t   shows the activelist.");
-//			System.out.println("display <search criteria>: generates a list of entries fulfilling the search criteria.");
-//			System.out.println("done <number>:\t\t   marks an entry as completed");
-//			System.out.println("clear:\t\t\t   deletes all entries permanently (use with caution!)");
-//			System.out.println("quit:\t\t\t   terminates the program.");
 			return ("add <data>:\t   add an entry with related dates,\t\t\t   description, priority etc.\n") +
 					("\t\t   prefix @ indicates venue, prefix #\t\t\t   indicates a hashtag.\n") +
 					("\nremove <number>:   remove the selected entry for the\t\t\t   active list.\n") +
@@ -558,15 +488,6 @@ public class UI extends JFrame implements ActionListener {
 
 		//editMode help
 		private static String helpEditMode() {
-//			System.out.println("\nEnter a field followed by the new data it should be replaced with.");
-//			System.out.println("desc:     edit description.");
-//			System.out.println("ddate:    edit due date.");
-//			System.out.println("display:  shows data in the current node.");
-//			System.out.println("priority: edit priority");
-//			System.out.println("hash #:   edit hash tags");
-//			System.out.println("st:       edit start time");
-//			System.out.println("et:       edit end time");
-//			System.out.println("venue @:  edit venue");
 			return ("\nEnter a field followed by the new data it should be\nreplaced with.\n") +
 					("desc:\t  edit description\n") +
 					("ddate:\t  edit due date\n") +
