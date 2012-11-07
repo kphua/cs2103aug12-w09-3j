@@ -1,8 +1,6 @@
-import java.util.logging.Logger;
-
 
 class CMD {
-	
+
 	private Processor.COMMAND_TYPE commandType;
 	private Object data;
 
@@ -10,8 +8,8 @@ class CMD {
 		commandType = command;
 		this.setData(data);
 	}
-	
-	public CMD clone(CMD original){
+
+	public CMD clone(CMD original) {
 		return new CMD(original.getCommandType(), original.getData());
 	}
 
@@ -30,28 +28,48 @@ class CMD {
 	public void setData(Object data) {
 		this.data = data;
 	}
-	
-	public String toString(){
+
+	public String toString() {
 		String strVer = "";
-		
-		switch(commandType){
-		case ADD: 		strVer = "add "; 	 break;
-		case REMOVE: 	strVer = "remove ";  break;
-		case CLEAR: 	strVer = "clear"; 	 break;
-		case UNDO:		strVer = "undo"; 	 break;
-		case EDIT:		strVer = "edit "; 	 break;
-		case DISPLAY: 	strVer = "display "; break;
-		case DONE:		strVer = "done "; 	 break;
-		case ERROR:		strVer = "ERROR: ";  break;	
-		case REDO: 		strVer = "redo";	 break;
+
+		switch (commandType) {
+		case ADD:
+			strVer = "add ";
+			break;
+		case REMOVE:
+			strVer = "remove ";
+			break;
+		case CLEAR:
+			strVer = "clear";
+			break;
+		case UNDO:
+			strVer = "undo";
+			break;
+		case EDIT:
+			strVer = "edit ";
+			break;
+		case DISPLAY:
+			strVer = "display ";
+			break;
+		case DONE:
+			strVer = "done ";
+			break;
+		case ERROR:
+			strVer = "ERROR: ";
+			break;
+		case REDO:
+			strVer = "redo";
+			break;
 		default:
 			assert false;
 		}
-		
-		if(data == null) strVer.concat("null");
-		else strVer.concat(data.toString());
-		
+
+		if (data == null)
+			strVer.concat("null");
+		else
+			strVer.concat(data.toString());
+
 		return strVer;
-		
+
 	}
 }
