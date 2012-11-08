@@ -284,12 +284,12 @@ public class UI extends JFrame implements ActionListener {
 					editMode = false;
 					control.setEditHolder(null);
 					mainArea.append("\nEdit Mode ended.");
-					mainArea.append("\nCommand: ");
+					mainArea.append("\n\nCommand: ");
 					return;
 				}
 				else if(response[0].equals("Error")) mainArea.append("\n" +response[1]);
 				
-				mainArea.append("\nCommand (Edit Mode): ");
+				mainArea.append("\n\nCommand (Edit Mode): ");
 			}
 			
 			refreshTable();
@@ -382,14 +382,14 @@ public class UI extends JFrame implements ActionListener {
 			mainArea.append("\n" +"Entry: ");
 			mainArea.append(control.processEditMode("display")[1]);
 
-			mainArea.append("\n" +"Enter the field you wish to modify, and the new data to replace with.");
-			mainArea.append("\n" +"Type \"end\" to exit edit mode and \"help\" for futher assistance.");
+			mainArea.append("\n" +"Enter the field you wish to modify, and the new data to \nreplace with.");
+			mainArea.append("\n" +"Type \"end\" to exit edit mode and \"help\" for futher \nassistance.\n");
 		}
 
 		private void display(CMD actionMSG) {
 			Vector<Entry> print = (Vector<Entry>) actionMSG.getData();
 			if(print.isEmpty()){
-				mainArea.append("\n" +"There is nothing to print.");
+				mainArea.append("\n" +"There is nothing to print.\n");
 			}
 		}
 
@@ -485,7 +485,7 @@ public class UI extends JFrame implements ActionListener {
 					("hash #:\t  edit hash tags\n") +
 					("st:\t  edit start time\n") +
 					("et:\t  edit end time\n") +
-					("venue @:  edit venue\n");
+					("venue @:  edit venue");
 		}
 		
 		//for logger initialization use
