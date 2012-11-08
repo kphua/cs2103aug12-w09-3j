@@ -9,9 +9,9 @@ import java.io.*;
 
 public class Processor {
 
-	private static final String ERROR_MSG_ADD_PROPER_FORM = "Error: add <description> <data>, where description is encapsuled by \".";
-	private static final String ERROR_MSG_EDIT_INVALID_INDEX = "Error: Type \"edit\" with a valid index.";
-	private static final String ERROR_MSG_RMV_INVALID_INPUT = "Invalid input. Input for remove should follow \"<command> <index>\".";
+	private static final String ERROR_MSG_ADD_PROPER_FORM = "Error: add <description> <data>, where description is\nencapsuled by \" \".\n";
+	private static final String ERROR_MSG_EDIT_INVALID_INDEX = "Error: Type \"edit\" with a valid index.\n";
+	private static final String ERROR_MSG_RMV_INVALID_INPUT = "Invalid input. Input for remove should follow \"<command>\n<index>\".\n";
 	private Hashtable <String, String> reservedWordsConverter;
 	private Hashtable <String, String> reservedWordsConverterEditMode;
 	private Hashtable <String, String> indicativeWordsIdentifier;
@@ -23,7 +23,7 @@ public class Processor {
 	private static final String ERROR_MSG_FATAL_ERROR = "Fatal Error. Critical files are missing.\n" +
 														"Re-install Program or contact your service provider.\n" +
 														"Program will now terminate.\n" +
-														"Press Enter to continue.";
+														"Press Enter to continue.\n";
 
 	//loads reserved words into hashTables
 	public Processor() {

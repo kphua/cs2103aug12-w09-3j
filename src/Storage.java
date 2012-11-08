@@ -17,6 +17,12 @@ class Storage {
 	// - load function: loads from txt file
 	// - add/remove function: adding or deleting entries from list
 
+	private static final String ERROR_MSG_WRITING = "Error writing to file";
+	private static final String ERROR_MSG_LOADING = "Error loading from file";
+	private static final String MSG_NEW_ARCHIVELIST = "No archive found. New archive created.";
+	private static final String ERROR_MSG_IOEXCEPTION_ARCHIVEFILE = "IOException for archiveFile.";
+	private static final String ERROR_MSG_IOEXCEPTION_ACTIVEFILE = "IOException for activeFile.";
+	private static final String MSG_NEW_ACTIVELIST = "No active list found. New list created.";
 	private static Storage storage;
 	private File activeFile;
 	private File archiveFile;
@@ -68,11 +74,11 @@ class Storage {
 			try {
 				logger.fine("Creating new list.");
 				activeFile.createNewFile();
-				System.out.println("No active list found. New list created.");
+				System.out.println(MSG_NEW_ACTIVELIST);
 				logger.fine("Created.");
 			} catch (IOException e) {
 				logger.severe("Unable to Create File.");
-				System.out.println("IOException for activeFile.");
+				System.out.println(ERROR_MSG_IOEXCEPTION_ACTIVEFILE);
 				System.exit(-1);
 			}
 		}
@@ -87,11 +93,11 @@ class Storage {
 			try {
 				logger.fine("Creating new archive.");
 				archiveFile.createNewFile();
-				System.out.println("No archive found. New archive created.");
+				System.out.println(MSG_NEW_ARCHIVELIST);
 				logger.fine("Created.");
 			} catch (IOException e) {
 				logger.severe("Unable to Create File.");
-				System.out.println("IOException for archiveFile.");
+				System.out.println(ERROR_MSG_IOEXCEPTION_ARCHIVEFILE);
 				System.exit(-1);
 			}
 		}
@@ -113,7 +119,7 @@ class Storage {
 		} catch (ClassNotFoundException cnfe) {
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
-			System.out.println("Error loading from file");
+			System.out.println(ERROR_MSG_LOADING);
 		} 
 
 	}
@@ -143,7 +149,7 @@ class Storage {
 			}
 			objWriter.close();
 		} catch (IOException ioe) {
-			System.out.println("Error writing to file");
+			System.out.println(ERROR_MSG_WRITING);
 		}
 	}
 
