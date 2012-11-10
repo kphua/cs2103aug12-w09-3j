@@ -51,6 +51,9 @@ class CMD {
 		case DISPLAY:
 			strVer = "display ";
 			break;
+		case DISPLAYP:
+			strVer = "display+ ";
+			break;	
 		case DONE:
 			strVer = "done ";
 			break;
