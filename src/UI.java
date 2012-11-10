@@ -34,7 +34,6 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
-
 public class UI extends JFrame implements ActionListener {
 
 	/**
@@ -47,7 +46,6 @@ public class UI extends JFrame implements ActionListener {
 	private JTable table;
 	private String userInput;
 	
-
 	/**
 	 * Launch the application.
 	 */
@@ -66,7 +64,6 @@ public class UI extends JFrame implements ActionListener {
 		
 		EventQueue.invokeLater(run);
 
-		
 	}
 
 	/**
@@ -74,11 +71,11 @@ public class UI extends JFrame implements ActionListener {
 	 */
 	public UI() {
 		//FingerTips Portion
+		
 		initialiseLogger();
 		
 		sc = new Scanner(System.in);
 		editMode = false;
-		cont = true;
 		control = Control.getInstance();
 		
 		logger.info("Initialization Complete.");
@@ -209,7 +206,6 @@ public class UI extends JFrame implements ActionListener {
 	}
 	
 	private Vector<Vector<String>> convertToVV(Vector<Entry> a) {
-		// TODO Auto-generated method stub
 		Vector<Vector<String>> out = new Vector<Vector<String>>();
 		for(int j=0; j<a.size(); j++)
 			out.add(new Vector<String>());
@@ -232,7 +228,6 @@ public class UI extends JFrame implements ActionListener {
 	
 	@Override
 	public void actionPerformed(ActionEvent a) {
-		// TODO Auto-generated method stub
 		userInput = textField.getText();
 		//display_output = control.performAction(userInput);
 	}
@@ -248,38 +243,41 @@ public class UI extends JFrame implements ActionListener {
 	private static final String SUCCESS_MSG_CLEAR = "All active entries deleted.\n";
 	private static final String SUCCESS_MSG_EXIT = "Goodbye.\n";
 	
-	private static final Logger logger = Logger.getLogger(FingerTips.class.getName());
+	private static final Logger logger = Logger.getLogger(UI.class.getName());
 	private static final String logFile = "runLog.log";
 	private static final Level handlerLevel = Level.FINE;
 	private static final Level loggerLevel = Level.FINE;
 	
 	private Control control;
 	private Scanner sc;
-	private boolean cont, editMode;
+	private boolean editMode;
 	
+	
+	/*
+	 * Activates the following block of code when enter is hit for textField.
+	 * Edit Mode:  
+	 */
 	class inputListener implements ActionListener{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if(!editMode){	
+
+			//Take in userInput
+			userInput = textField.getText().trim();
+			
+			textField.setText(null);
+			mainArea.append(userInput);
+			
+			if(editMode){	
+				//EditMode
 				
-				userInput = textField.getText();
-				textField.setText(null);
-				mainArea.append(userInput);
-				userInput = userInput.trim();
-				
-				runUserInput(userInput);
-				
-				if(editMode) mainArea.append("\nCommand (Edit Mode): ");
-				else mainArea.append("\nCommand: ");
-			} else {					
-				userInput = textField.getText().trim().toLowerCase();
-				textField.setText(null);
-				mainArea.append(userInput);
-				//call processor
+				//Process input
 				String[] response = control.processEditMode(userInput);
-				if(response[0].equals("display")) mainArea.append("\n" +response[1]);
+				
+				//Carry out follow up.
+				if(response[0].equals("display")) mainArea.append("\n" + response[1]);
 				else if(response[0].equals("help")) mainArea.append("\n" +helpEditMode());
+				else if(response[0].equals("Error")) mainArea.append("\n" +response[1]);
 				else if(response[0].equals("end")) {
 					editMode = false;
 					control.setEditHolder(null);
@@ -287,15 +285,26 @@ public class UI extends JFrame implements ActionListener {
 					mainArea.append("\n\nCommand: ");
 					return;
 				}
-				else if(response[0].equals("Error")) mainArea.append("\n" +response[1]);
 				
 				mainArea.append("\n\nCommand (Edit Mode): ");
+				
+			} else {	
+				//Normal Mode
+				
+				//Process and take action on userInput
+				runUserInput(userInput);
+				
+				if(editMode) mainArea.append("\nCommand (Edit Mode): ");
+				else mainArea.append("\nCommand: ");
+			
 			}
 			
+			//refresh display
 			refreshTable();
 		}
 	}
 	
+	//Initializes Logger for tracking.
 	private void initialiseLogger() {
 		try {
 			Handler h = new FileHandler(logFile);
@@ -311,6 +320,7 @@ public class UI extends JFrame implements ActionListener {
 		logger.setLevel(loggerLevel);
 		logger.info("Logger initialization complete.");
 	}
+	
 	
 	public void runUserInput(String userInput) {
 		CMD actionMSG = control.performAction(userInput);
@@ -438,12 +448,10 @@ public class UI extends JFrame implements ActionListener {
 
 		//Ending MSG
 		private void quit() {
-			cont = false;
 			mainArea.append("\n" +SUCCESS_MSG_EXIT);
 			 try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			System.exit(0);
