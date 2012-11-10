@@ -4,8 +4,12 @@ import java.util.Vector;
 import java.util.logging.Logger;
 
 class Control {
-	private static final String MSG_ERROR_INVALID_INDEX = "Invalid input. Enter a valid index number.";
-	private static final String MSG_ERROR_EDIT_EMPTY_ACTIVELIST = "There is nothing to edit.";
+	private static final String SUCCESS_MSG_UNDO = "Undo completed.\n";
+	private static final String ERROR_MSG_UNDO = "There are no further undo-s.\n";
+	private static final String SUCCESS_MSG_REDO = "Redo completed\n";
+	private static final String ERROR_MSG_REDO = "There are no further redo-s.\n";
+	private static final String ERROR_MSG_INVALID_INDEX = "Invalid index. Enter a valid index number.\n";
+	private static final String ERROR_MSG_EDIT_EMPTY_ACTIVELIST = "There is nothing to edit.\n";
 	private static Control control;
 	private Processor processor;
 	private Storage storage;
@@ -72,7 +76,7 @@ class Control {
 			Integer i = (Integer) command.getData();
 			if(i > storage.getActiveEntries().size() || i < 1) {
 				command.setCommandType(Processor.COMMAND_TYPE.ERROR);
-				command.setData("Invalid index.");
+				command.setData(ERROR_MSG_INVALID_INDEX);
 			} else {
 				Entry e = storage.updateCompletedEntry(i);
 				command.setData(e);
@@ -99,13 +103,13 @@ class Control {
 		
 		if(storage.getActiveEntries().isEmpty()) {
 			command.setCommandType(Processor.COMMAND_TYPE.ERROR);
-			command.setData(MSG_ERROR_EDIT_EMPTY_ACTIVELIST);
+			command.setData(ERROR_MSG_EDIT_EMPTY_ACTIVELIST);
 			return command;
 		}
 		
 		if((int)command.getData() > storage.getActiveEntries().size() || (int)command.getData()<1) {	
 			command.setCommandType(Processor.COMMAND_TYPE.ERROR);
-			command.setData(MSG_ERROR_INVALID_INDEX);
+			command.setData(ERROR_MSG_INVALID_INDEX);
 		}
 		else{
 			editHolder = storage.getActiveEntries().get((int)command.getData()-1);
@@ -168,7 +172,7 @@ class Control {
 			Integer i = (Integer) command.getData(); 
 			if(i<1 || i>storage.getDisplayEntries().size()){
 				command.setCommandType(Processor.COMMAND_TYPE.ERROR);
-				command.setData("Invalid Index.\n");
+				command.setData(ERROR_MSG_INVALID_INDEX);
 				return command;
 			}
 
@@ -203,7 +207,7 @@ class Control {
 	
 	private CMD redo(CMD command) {
 		if(redo.isEmpty()) {
-			command.setData("There are no further redo-s.\n");
+			command.setData(ERROR_MSG_REDO);
 			return command; 
 		}
 		
@@ -228,7 +232,7 @@ class Control {
 			storage.save(true, false);
 		}
 		
-		command.setData("Redo completed\n");
+		command.setData(SUCCESS_MSG_REDO);
 		return command;
 	}
 
@@ -239,7 +243,7 @@ class Control {
 	
 	private CMD undo(CMD command) {
 		if(undo.isEmpty()) {
-			command.setData("There are no further undo-s.\n");
+			command.setData(ERROR_MSG_UNDO);
 			return command; 
 		}
 		
@@ -278,8 +282,7 @@ class Control {
 			storage.save(true, false);
 		}
 		
-		
-		command.setData("Undo completed.\n");
+		command.setData(SUCCESS_MSG_UNDO);
 		
 		return command;
 		
