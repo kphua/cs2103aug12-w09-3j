@@ -13,11 +13,11 @@ class Control {
 	private static Control control;
 	private Processor processor;
 	private Storage storage;
-//	private boolean edit, newList; // modes
 	private LinkedList<CMD> undo, redo;
 	private Entry editHolder;
 	private static final Logger logger = Logger.getLogger(Control.class.getName());
 
+	//Constructor
 	private Control() {
 		logger.setParent(UI.getLoggingParent());
 		logger.info("Initialising Control.");
@@ -30,6 +30,7 @@ class Control {
 		logger.info("Control Initialised.");
 	}
 	
+	//Singleton implementation
 	public static Control getInstance() {
 		if (control == null) {
 			control = new Control();
@@ -37,6 +38,7 @@ class Control {
 		return control;
 	}
 
+	
 	public CMD performAction(String userInput) {
 
 		CMD command = processor.translateToCMD(userInput);
@@ -327,9 +329,20 @@ class Control {
 		this.processor = processor;
 	}
 
+	
+	//Processes input for editMode
+	//Returns: size 2 String[], <command><msg to be printed, if any>
+	//Valid userInput follows the form <field><new data>
+	//For a list of supported fields, pls refer to "reservedWordsEditMode.txt"
+	//Possible output commands: help, display, end, error
+	
 	public String[] processEditMode(String userInput) {
+		//determine which field to be edited
 		String[] cmd = processor.determineCmdEditMode(userInput);
+		
+		//store pre-edit form for UNDO
 		CMD clone = new CMD(Processor.COMMAND_TYPE.EDIT, new Entry(editHolder));
+		
 		
 		if(cmd.length > 1 && cmd[1] != null) cmd[1] = cmd[1].trim();
 		if(cmd[0].equals("description")){	
