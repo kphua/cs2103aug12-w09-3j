@@ -38,7 +38,6 @@ class Storage {
 	//Singleton implementation. Call this to create Storage
 	public static Storage getInstance() {
 		
-		
 		if (storage == null) {
 			storage = new Storage();
 		}
@@ -61,7 +60,7 @@ class Storage {
 		archiveTextFile = new File("archiveTextFile.txt");
 		activeEntries = new Vector<Entry>();
 		archiveEntries = new Vector<Entry>();
-		displayEntries = activeEntries;
+		displayEntries = new Vector<Entry>();
 		
 		if (activeFile.exists()) {
 			logger.fine("Loading Active Entries.");
@@ -102,7 +101,7 @@ class Storage {
 			}
 		}
 		
-		
+		displayEntries.addAll(activeEntries);
 	}
 
 	private void loadFromFile(File source, Vector<Entry> destination) {
@@ -159,6 +158,8 @@ class Storage {
 	public void addEntry(Entry entry) {
 		activeEntries.add(entry);
 		Collections.sort(activeEntries);
+		displayEntries.add(entry);
+		Collections.sort(displayEntries);
 	}
 
 	/*
@@ -183,6 +184,13 @@ class Storage {
 		for(Entry e : activeEntries){
 			if(id.equals(e.getID())){
 				activeEntries.remove(e);
+				break;
+			}
+		}
+		
+		for(Entry e : displayEntries){
+			if(id.equals(e.getID())){
+				displayEntries.remove(e);
 				return e;
 			}
 		}
@@ -260,8 +268,10 @@ class Storage {
 		// System.out.println(entry); }
 //	}
 	
-	public Vector<Entry> display(){
-		displayEntries = activeEntries;
+	public Vector<Entry> display(boolean arc){
+		displayEntries.clear();
+		displayEntries.addAll(activeEntries);
+		if(arc) displayEntries.addAll(archiveEntries);
 		return displayEntries;
 	}
 	
@@ -271,16 +281,24 @@ class Storage {
 	 * each time this method is called. Keyword can be description, hashtag
 	 * "#tagname", venue "@location". ~storage.displayKeyword(KEYWORD_TO_FIND)
 	 */
-	public Vector<Entry> displayKeyword(String keyword) {
+	public Vector<Entry> displayKeyword(String keyword, boolean arc) {
 		
 		keyword = keyword.toLowerCase();
 		
-		displayEntries = new Vector<Entry>();
+		displayEntries.clear();
 		for (Entry entry : activeEntries) {
 			if (entry.toString().toLowerCase().contains(keyword)) {
 				displayEntries.add(entry);
 			}
 		}	
+		
+		if(arc){
+			for (Entry entry : archiveEntries) {
+				if (entry.toString().toLowerCase().contains(keyword)) {
+					displayEntries.add(entry);
+				}
+			}
+		}
 		return displayEntries;	
 		
 	}
@@ -319,8 +337,8 @@ class Storage {
 	//CLEAR function
 	//removes all entries from activeEntries
 	public void clearActive(){
-		activeEntries = new Vector<Entry>();
-		displayEntries = activeEntries;
+		activeEntries.clear();
+		displayEntries.clear();
 		assert activeEntries.isEmpty();		// assert all entries cleared
 	}
 
