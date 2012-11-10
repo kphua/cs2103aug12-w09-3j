@@ -8,8 +8,6 @@ import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.io.IOException;
 import java.util.Collections;
-import java.util.InputMismatchException;
-import java.util.Scanner;
 import java.util.Vector;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
@@ -29,8 +27,6 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
@@ -73,12 +69,10 @@ public class UI extends JFrame implements ActionListener {
 		
 		initialiseLogger();
 		
-		sc = new Scanner(System.in);
 		editMode = false;
 		control = Control.getInstance();
 		
 		logger.info("Initialization Complete.");
-		
 		
 		//END
 		
@@ -282,7 +276,6 @@ public class UI extends JFrame implements ActionListener {
 	private static final Level loggerLevel = Level.FINE;
 	
 	private Control control;
-	private Scanner sc;
 	private boolean editMode;
 	
 	/*
@@ -409,6 +402,7 @@ public class UI extends JFrame implements ActionListener {
 			mainArea.append("\n" +"Type \"end\" to exit edit mode and \"help\" for futher assistance.\n");
 		}
 
+		@SuppressWarnings("unchecked")
 		private void display(CMD actionMSG) {
 			Vector<Entry> print = (Vector<Entry>) actionMSG.getData();
 			if(print.isEmpty()){

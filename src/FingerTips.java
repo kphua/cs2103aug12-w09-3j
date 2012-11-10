@@ -17,7 +17,7 @@ class FingerTips {
 	private static final String SUCCESS_MSG_REMOVE = "Removed.\n";
 	private static final String SUCCESS_MSG_DONE = "Entry marked as done and shifted to archive.\n";
 	private static final String SUCCESS_MSG_CLEAR = "All active entries deleted.\n";
-	private static final String SUCCESS_MSG_EXIT = "Goodbye.\n";
+//	private static final String SUCCESS_MSG_EXIT = "Goodbye.\n";
 	
 	private static final Logger logger = Logger.getLogger(FingerTips.class.getName());
 	private static final String logFile = "runLog.log";
@@ -181,6 +181,7 @@ class FingerTips {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void display(CMD actionMSG) {
 		Vector<Entry> print = (Vector<Entry>) actionMSG.getData();
 		if(print.isEmpty()){

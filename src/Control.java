@@ -243,6 +243,7 @@ class Control {
 	 * @return
 	 */
 	
+	@SuppressWarnings("unchecked")
 	private CMD undo(CMD command) {
 		if(undo.isEmpty()) {
 			command.setData(ERROR_MSG_UNDO);
