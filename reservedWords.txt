@@ -4,6 +4,10 @@ display display
 d display
 show display
 find display
+display+ display+
+d+ display+
+show+ display+
+find+ display+
 edit edit 
 e edit 
 remove remove
