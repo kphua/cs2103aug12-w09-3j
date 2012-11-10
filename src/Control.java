@@ -278,7 +278,9 @@ class Control {
 			storage.save(true, false);
 		}
 		
+		
 		command.setData("Undo completed.\n");
+		
 		return command;
 		
 	}

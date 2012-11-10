@@ -152,11 +152,10 @@ class Storage {
 	 */
 	public void addEntry(Entry entry) {
 		activeEntries.add(entry);
-		Collections.sort(displayEntries);
+		Collections.sort(activeEntries);
 	}
 
 	/*
-	 * This method should only be called after the display function is called.
 	 * The entry in the displayEntries that match the index specified by the
 	 * user will be removed from the displayEntries list. Subsequently, update
 	 * activeEntries list to remove the specific entry from storage.
@@ -170,12 +169,18 @@ class Storage {
 	}
 	
 	public void removeEntry(Entry entry){
-		boolean a = activeEntries.contains(entry);
-		a = displayEntries.contains(entry);
 		displayEntries.remove(entry);
-		activeEntries.remove(entry);
-		
-		
+		activeEntries.remove(entry);		
+	}
+	
+	public Entry removeEntry(String id) {
+		for(Entry e : activeEntries){
+			if(id.equals(e.getID())){
+				activeEntries.remove(e);
+				return e;
+			}
+		}
+		return null;
 	}
 	
 	/*
@@ -194,6 +199,7 @@ class Storage {
 	public void undoDoneAction(Entry entry){
 		archiveEntries.remove(entry);
 		activeEntries.add(entry);
+		Collections.sort(activeEntries);
 	}
 
 	/*
@@ -312,13 +318,5 @@ class Storage {
 		assert activeEntries.isEmpty();		// assert all entries cleared
 	}
 
-	public Entry removeEntry(String id) {
-		for(Entry e : activeEntries){
-			if(id.equals(e.getID())){
-				activeEntries.remove(e);
-				return e;
-			}
-		}
-		return null;
-	}
+
 }
