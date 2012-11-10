@@ -233,8 +233,14 @@ public class Processor {
 	 * @return
 	 */
 	private CMD add(String[] temp, COMMAND_TYPE userCMD) {
-		if(temp.length <= 1 || temp[1].equals("\"") || temp[1].equals("\" ") || temp[1].equals("\" \"") || temp[1].startsWith("\"  ") || !temp[1].startsWith("\"")) 
-			return new CMD(COMMAND_TYPE.ERROR, ERROR_MSG_ADD_PROPER_FORM);			//add <nothing> or add without " "
+//		if(temp.length <= 1 || temp[1].equals("\"") || temp[1].equals("\" ") || temp[1].equals("\" \"") || temp[1].startsWith("\"  ") || !temp[1].startsWith("\"")) 
+//			return new CMD(COMMAND_TYPE.ERROR, ERROR_MSG_ADD_PROPER_FORM);			//add <nothing> or add without " "
+		if(temp.length <= 1 || !temp[1].startsWith("\"")) return new CMD(COMMAND_TYPE.ERROR, ERROR_MSG_ADD_PROPER_FORM);			//add <nothing> or add without " "
+
+			String[] arr = temp[1].split("\"", 3); //arr[1] == desc arr[2]==the rest
+			arr[1] = arr[1].trim();
+		if(arr[1].length()<1) return new CMD(COMMAND_TYPE.ERROR, ERROR_MSG_ADD_PROPER_FORM);			//add <nothing> or add without " "
+		
 		else {
 			Entry newTask = new Entry();
 			buildEntry(newTask, temp);
@@ -249,7 +255,7 @@ public class Processor {
 		
 		String input = data[1];
 		String[] desc = input.split("\"");
-		newTask.setDesc(desc[1]);  // get the exp in "..."
+		newTask.setDesc(desc[1].trim());  // get the exp in "..."
 		String[] temp2 = null;
 		if (desc.length > 2) {
 			desc[2] = desc[2].trim();

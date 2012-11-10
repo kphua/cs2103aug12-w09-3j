@@ -28,7 +28,7 @@ class Entry implements Serializable, Comparable<Entry> {
 	private String startTime, endTime;
 	private int completeStatus;
 	private Calendar dueDate;
-	
+
 
 	// constructor
 	public Entry() {
@@ -176,9 +176,9 @@ class Entry implements Serializable, Comparable<Entry> {
 		this.completeStatus = completeStatus;
 	}
 
-	
-	
-	
+
+
+
 	// for printing of entries
 	public String toString() {
 		String converted;
@@ -198,7 +198,7 @@ class Entry implements Serializable, Comparable<Entry> {
 	public int compareTo(Entry entry) {
 
 		int i;
-		
+
 		if(ID == entry.getID()) return 0;
 
 		if(dueDate == null || entry.dueDate == null || dueDate.equals(entry.dueDate)){
@@ -249,7 +249,7 @@ class Entry implements Serializable, Comparable<Entry> {
 	public void setTagDesc(String tagDesc) {
 		this.tagDesc = tagDesc;
 	}
-	
+
 	public String getID(){
 		return ID;
 	}
