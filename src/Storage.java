@@ -36,7 +36,7 @@ class Storage {
 	private static final Logger logger = Logger.getLogger(Control.class.getName());
 
 	//Singleton implementation. Call this to create Storage
-	public static Storage getInstance() {
+	protected static Storage getInstance() {
 		
 		if (storage == null) {
 			storage = new Storage();

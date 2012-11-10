@@ -18,7 +18,7 @@ class Control {
 	private static final Logger logger = Logger.getLogger(Control.class.getName());
 
 	//Constructor
-	private Control() {
+	protected Control() {
 		logger.setParent(UI.getLoggingParent());
 		logger.info("Initialising Control.");
 		

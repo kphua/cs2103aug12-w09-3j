@@ -52,6 +52,7 @@ public class UI extends JFrame implements ActionListener {
 				try {
 					UI frame = new UI();
 					frame.setVisible(true);
+					frame.textField.requestFocus();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -220,7 +221,7 @@ public class UI extends JFrame implements ActionListener {
 
 		mainArea.append("\nCommand: ");
 	}
-
+	
 	private void setUserInputField() {
 		textField = new JTextField();
 		textField.setBackground(new Color(240, 240, 240));
