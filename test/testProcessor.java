@@ -21,12 +21,12 @@ public class testProcessor {
 		String[] actualOutput = new String[19];
 		String[] expectedOutput = new String[19];
 		
-		input[0] = "  ";		// returns ERROR & Invalid Input & Input should follow a "<command> <data>" format
-		input[1] = "testing"; 	// returns ERROR & Invalid Input & Input should follow a "<command> <data>" format
-		// returns ADD & Test for add from 1pm to 2pm on 1/1/2012
-		input[2] = "add \"Test for add\" 1pm 2pm 1/1/2012";
+		input[0] = "  ";		// returns ERROR & Invalid Input.
+		input[1] = "testing"; 	// returns ERROR & Invalid Input.
+		// returns ADD & Test for add 1am 2pm 1/1/2012 null null null
+		input[2] = "add \"Test for add\" 1am 2pm 1/1/2012";
 		input[3] = "clear";		// returns CLEAR & null
-		input[4] = "done";		// returns ERROR & Invalid Input & Input should follow a "<command> <data>" format
+		input[4] = "done";		// returns ERROR & Invalid Input.
 		input[5] = "done 2";	// returns DONE & 2
 		input[6] = "display";	// returns DISPLAY & null
 		input[7] = "display 3";	// returns DISPLAY & 3
@@ -43,22 +43,22 @@ public class testProcessor {
 		input[18] = "help";	// returns HELP & null
 		
 		// set expectedOutput results
-		expectedOutput[0] = "ERROR Invalid Input. Input should follow a \"<command> <data>\" format";
-		expectedOutput[1] = "ERROR Invalid Input. Input should follow a \"<command> <data>\" format";
-		expectedOutput[2] = "ADD Test for add from 1pm to 2pm on 1/1/2012 ";
+		expectedOutput[0] = "ERROR Invalid Input. Input should follow a \"<command> <data>\"\nformat.\n";
+		expectedOutput[1] = "ERROR Invalid Input. Input should follow a \"<command> <data>\"\nformat.\n";
+		expectedOutput[2] = "ADD Test for add from 1am to 2pm on 1/1/2012 ";
 		expectedOutput[3] = "CLEAR null";
-		expectedOutput[4] = "ERROR Invalid Input. Input should follow a \"<command> <data>\" format";
+		expectedOutput[4] = "ERROR Invalid Input. Input should follow a \"<command> <data>\"\nformat.\n";
 		expectedOutput[5] = "DONE 2";
 		expectedOutput[6] = "DISPLAY null";
 		expectedOutput[7] = "DISPLAY 3";
 		expectedOutput[8] = "DISPLAY testing display";
 		expectedOutput[9] = "DISPLAY #hash";
-		expectedOutput[10] = "EDIT null";
+		expectedOutput[10] = "ERROR Error: Type \"edit\" with a valid index.\n";
 		expectedOutput[11] = "EDIT 3";
-		expectedOutput[12] = "EDIT null";
-		expectedOutput[13] = "REMOVE null";
+		expectedOutput[12] = "ERROR Error: Type \"edit\" with a valid index.\n";
+		expectedOutput[13] = "ERROR Invalid input. Input for remove should follow \"<command>\n<index>\".\n";
 		expectedOutput[14] = "REMOVE 3";
-		expectedOutput[15] = "REMOVE hello";
+		expectedOutput[15] = "ERROR Invalid input. Input for remove should follow \"<command>\n<index>\".\n";
 		expectedOutput[16] = "UNDO null";
 		expectedOutput[17] = "QUIT null";
 		expectedOutput[18] = "HELP null";
@@ -140,7 +140,7 @@ public class testProcessor {
 		input[4] = "test";			// invalid, returns error
 		input[5] = "endTIME";		// valid, returns endtime
 		input[6] = "q";				// valid, returns end
-		input[7] = "H";				// valid, returns hash
+		input[7] = "#";				// valid, returns hash
 		input[8] = "Display";		// valid, returns display
 		input[9] = "desc";			// valid, returns description
 				
