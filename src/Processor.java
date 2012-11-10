@@ -9,9 +9,6 @@ import java.io.*;
 
 public class Processor {
 
-	private static final String ERROR_MSG_ADD_PROPER_FORM = "Error: add <description> <data>, where description is encapsuled by \" \".\n";
-	private static final String ERROR_MSG_EDIT_INVALID_INDEX = "Error: Type \"edit\" with a valid index.\n";
-	private static final String ERROR_MSG_RMV_INVALID_INPUT = "Invalid input. Input for remove should follow \"<command> <index>\".\n";
 	private Hashtable <String, String> reservedWordsConverter;
 	private Hashtable <String, String> reservedWordsConverterEditMode;
 	private Hashtable <String, String> indicativeWordsIdentifier;
@@ -19,7 +16,10 @@ public class Processor {
 	private Scanner scanner = new Scanner(System.in);
 	private static final Logger logger = Logger.getLogger(Control.class.getName());
 
-	private static final String ERROR_MSG_INVALID_INPUT = "Invalid Input. Input should follow a \"<command> <data>\" format.\n";
+	private static final String ERROR_MSG_ADD_PROPER_FORM = "Error: add <description> <data>, where description is\nencapsuled by \" \".\n";
+	private static final String ERROR_MSG_EDIT_INVALID_INDEX = "Error: Type \"edit\" with a valid index.\n";
+	private static final String ERROR_MSG_RMV_INVALID_INPUT = "Invalid input. Input for remove should follow \"<command>\n<index>\".\n";
+	private static final String ERROR_MSG_INVALID_INPUT = "Invalid Input. Input should follow a \"<command> <data>\"\nformat.\n";
 	private static final String ERROR_MSG_FATAL_ERROR = "Fatal Error. Critical files are missing.\n" +
 														"Re-install Program or contact your service provider.\n" +
 														"Program will now terminate.\n" +
@@ -45,6 +45,7 @@ public class Processor {
 	}
 
 
+	//Read in saved entries from a txt file into the program.
 	private void loadFromFile(File from, Hashtable<String,String> to) {
 		
 		logger.fine("Loading " + from.getName());
@@ -72,24 +73,22 @@ public class Processor {
 	}
 
 	
-	//Checks if the initial input is valid
+	//Checks if the initial input is valid for normal mode
 	//Checks:
 	//1. if there is no input
 	//2. if the first word is a valid word
 	//3. if there is any data
-	private boolean initialInputCheck(String userInput) {
-		if(userInput == null) 
-			return true;
+	//Returns true if input is bad, false if it passes all tests.
+	private boolean isBadInput(String userInput) {
+		if(userInput == null) return true;
 		
 		userInput = userInput.trim();
 		
-		if(userInput.length() == 0) 
-			return true;
+		if(userInput.length() == 0)	return true;
 		
 		String[] temp = userInput.split(" ", 2);
 		
-		if(temp.length==0)	
-			return true;
+		assert temp.length > 0;
 	
 		temp[0] = temp[0].toLowerCase();
 		if(!reservedWordsConverter.containsKey(temp[0])) {
@@ -106,7 +105,7 @@ public class Processor {
 	 */
 	public CMD translateToCMD(String userInput) {
 		
-		if(initialInputCheck(userInput)) 
+		if(isBadInput(userInput)) 
 			return new CMD(COMMAND_TYPE.ERROR, ERROR_MSG_INVALID_INPUT);
 		
 		userInput = userInput.trim();
@@ -137,7 +136,7 @@ public class Processor {
 			return add(inputBreakdown, userCMD);
 		case DONE:
 			return done(inputBreakdown, userCMD);
-		case DISPLAY:
+		case DISPLAY: case DISPLAYP:
 			return display(inputBreakdown, userCMD);
 		case EDIT:
 			return edit(inputBreakdown, userCMD);
@@ -335,6 +334,7 @@ public class Processor {
 		}
 	}
 	
+	//Checks if a given string is a date
 	boolean isDate(String s){
 		String[] strArr = s.split("/");
 		if(strArr.length != 3) return false;
@@ -362,7 +362,7 @@ public class Processor {
 		return mergedString;
 	}
 	
-	
+	//Determines the field to be edited.
 	public String[] determineCmdEditMode(String userInput){
 		String[] data = userInput.split(" ", 2); 
 		data[0] = data[0].toLowerCase();
@@ -378,7 +378,7 @@ public class Processor {
 	}
 	
 	enum COMMAND_TYPE {
-		ADD, REMOVE, UNDO, DISPLAY, EDIT, QUIT, ERROR, HELP, DONE, CLEAR, REDO
+		ADD, REMOVE, UNDO, DISPLAY, DISPLAYP, EDIT, QUIT, ERROR, HELP, DONE, CLEAR, REDO
 	};
 
 	private COMMAND_TYPE determineCommandType(String commandString) {
@@ -388,6 +388,8 @@ public class Processor {
 			return COMMAND_TYPE.REMOVE;
 		} else if (commandString.equalsIgnoreCase("display")) {
 			return COMMAND_TYPE.DISPLAY;
+		} else if (commandString.equalsIgnoreCase("display+")) {
+			return COMMAND_TYPE.DISPLAYP;
 		} else if (commandString.equalsIgnoreCase("undo")) {
 			return COMMAND_TYPE.UNDO;
 		} else if (commandString.equalsIgnoreCase("edit")) {
