@@ -26,7 +26,7 @@ public class Processor {
 														"Press Enter to continue.\n";
 
 	//loads reserved words into hashTables
-	public Processor() {
+	protected Processor() {
 		logger.setParent(UI.getLoggingParent());
 		logger.info("Initialising Processor");
 				
