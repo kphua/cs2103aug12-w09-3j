@@ -118,6 +118,7 @@ public class UI extends JFrame implements ActionListener {
 		mainArea.setEditable(false);
 		mainArea.setFont(new Font("Consolas", Font.PLAIN, 13));
 		mainArea.setBackground(new Color(204, 193, 218));
+		mainArea.setWrapStyleWord(true);
 		mainArea.setLineWrap(true);
 		
 		columnNames = new Vector<String>();
@@ -392,8 +393,8 @@ public class UI extends JFrame implements ActionListener {
 			mainArea.append("\n" +"Entry: ");
 			mainArea.append(control.processEditMode("display")[1]);
 
-			mainArea.append("\n" +"Enter the field you wish to modify, and the new data to \nreplace with.");
-			mainArea.append("\n" +"Type \"end\" to exit edit mode and \"help\" for futher \nassistance.\n");
+			mainArea.append("\n" +"Enter the field you wish to modify, and the new data to replace with.");
+			mainArea.append("\n" +"Type \"end\" to exit edit mode and \"help\" for futher assistance.\n");
 		}
 
 		private void display(CMD actionMSG) {
@@ -472,20 +473,20 @@ public class UI extends JFrame implements ActionListener {
 		
 		// default help message
 		private static String help() {
-			return ("add <data>:\t   add an entry with related dates,\t\t\t   description, priority etc.\n") +
-					("\t\t   prefix @ indicates venue, prefix #\t\t\t   indicates a hashtag.\n") +
-					("\nremove <number>:   remove the selected entry for the\t\t\t   active list.\n") +
+			return ("add <data>:\t   add an entry with related dates,\t\t\t\t   description, priority etc.\n") +
+					("\t\t   prefix @ indicates venue, prefix #\t\t\t\t   indicates a hashtag.\n") +
+					("\nremove <number>:   remove the selected entry for the\t\t\t\t   active list.\n") +
 					("\nedit <number>:\t   enters edit mode for selected entry.\n") +
 					("\nundo:\t\t   reverses the previous action.\n") +
-					("\ndisplay <keyword>: generates a list of entries\t\t\t\t   fulfilling the search criteria.\n") +
+					("\ndisplay <keyword>: generates a list of entries\t\t\t\t\t   fulfilling the search criteria.\n") +
 					("\ndone <number>:\t   marks an entry as completed.\n") +
-					("\nclear:\t\t   deletes all entries permanently\t\t\t   (use with caution!).\n") +
+					("\nclear:\t\t   deletes all entries permanently\t\t\t\t   (use with caution!).\n") +
 					("\nquit:\t\t   terminates the program.\n");
 		}
 
 		//editMode help
 		private static String helpEditMode() {
-			return ("\nEnter a field followed by the new data it should be\nreplaced with.\n") +
+			return ("\nEnter a field followed by the new data it should be replaced with.\n") +
 					("desc:\t  edit description\n") +
 					("ddate:\t  edit due date\n") +
 					("display:  shows data in the current node\n") +
