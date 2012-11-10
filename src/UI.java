@@ -418,7 +418,6 @@ public class UI extends JFrame implements ActionListener {
 	}
 
 	private void remove(CMD actionMSG) {
-			}
 		mainArea.append("\n" +SUCCESS_MSG_REMOVE);
 	}
 
