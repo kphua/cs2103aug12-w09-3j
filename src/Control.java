@@ -343,53 +343,56 @@ class Control {
 		
 		//store pre-edit form for UNDO
 		CMD clone = new CMD(Processor.COMMAND_TYPE.EDIT, new Entry(editHolder));
-		
-		
-		if(cmd.length > 1 && cmd[1] != null) cmd[1] = cmd[1].trim();
-		if(cmd[0].equals("description")){	
-			if(cmd[1]!=null && cmd[1].length()!=0)
-				editHolder.setDesc(cmd[1]);
-		} else if(cmd[0].equals("duedate")){
-			if(processor.isDate(cmd[1])){			//to be amended
-				editHolder.iniDDate();
-				editHolder.setDateCal(cmd[1]);
+
+		if(cmd.length > 1 && cmd[1] != null) {
+			cmd[1] = cmd[1].trim();
+			
+			if(cmd[0].equals("description")){	
+				if(cmd[1]!=null && cmd[1].length()!=0)
+					editHolder.setDesc(cmd[1]);
+	  		} else if(cmd[0].equals("duedate")){
+				if(processor.isDate(cmd[1])){			//to be amended
+					editHolder.iniDDate();
+					editHolder.setDateCal(cmd[1]);
+				}
+				else cmd = new String[] {"Error", "Invalid entry for date."};
+			} else if(cmd[0].equals("starttime")){
+				if(cmd[1].endsWith("am") || cmd[1].endsWith("pm"))
+					editHolder.setStart(cmd[1]);
+				else cmd = new String[] {"Error", "Invalid time entry."};
+			} else if(cmd[0].equals("endtime")){
+				if(cmd[1].endsWith("am") || cmd[1].endsWith("pm"))
+					editHolder.setEnd(cmd[1]);
+				else cmd = new String[] {"Error", "Invalid time entry."};
+			} else if(cmd[0].equals("hash")){
+				if(cmd[1].startsWith("#"))
+					editHolder.setTagDesc(cmd[1]);
+				else cmd = new String[] {"Error", "Not a hashtag"};
+			} else if(cmd[0].equals("priority")){
+				boolean restrictedWords = cmd[1].equalsIgnoreCase("high") || 
+						cmd[1].equalsIgnoreCase("medium") || cmd[1].equalsIgnoreCase("low");
+				if(restrictedWords){
+					editHolder.setPriority(cmd[1].toUpperCase());
+					//sort
+				}
+				else cmd = new String[] {"Error", "Not a priority"};
+			} else if(cmd[0].equals("venue")){
+				if(cmd[1].startsWith("@"))
+					editHolder.setVenue(cmd[1]);
+				else cmd = new String[] {"Error", "Invalid format for location."};
+			} else {
+				cmd = new String[] {"Error", "Invalid edit field."};
 			}
-			else cmd = new String[] {"Error", "Invalid entry for date."};
-		} else if(cmd[0].equals("starttime")){
-			if(cmd[1].endsWith("am") || cmd[1].endsWith("pm"))
-				editHolder.setStart(cmd[1]);
-			else cmd = new String[] {"Error", "Invalid time entry."};
-		} else if(cmd[0].equals("endtime")){
-			if(cmd[1].endsWith("am") || cmd[1].endsWith("pm"))
-				editHolder.setEnd(cmd[1]);
-			else cmd = new String[] {"Error", "Invalid time entry."};
-		} else if(cmd[0].equals("hash")){
-			if(cmd[1].startsWith("#"))
-				editHolder.setTagDesc(cmd[1]);
-			else cmd = new String[] {"Error", "Not a hashtag"};
-		} else if(cmd[0].equals("display")){
+		}
+		
+		if(cmd[0].equals("display")){
 			cmd = new String[]{cmd[0], null};
 			cmd[1] = printEntry(editHolder);
-		} else if(cmd[0].equals("priority")){
-			boolean restrictedWords = cmd[1].equalsIgnoreCase("high") || 
-					cmd[1].equalsIgnoreCase("medium") || cmd[1].equalsIgnoreCase("low");
-			if(restrictedWords){
-				editHolder.setPriority(cmd[1].toUpperCase());
-				//sort
-			}
-			else cmd = new String[] {"Error", "Not a priority"};
-		} else if(cmd[0].equals("venue")){
-			if(cmd[1].startsWith("@"))
-				editHolder.setVenue(cmd[1]);
-			else cmd = new String[] {"Error", "Invalid format for location."};
 		} else if(cmd[0].equals("help")){
 			return cmd;
 		} else if(cmd[0].equals("end")){
 			return cmd;
-		} else {
-			cmd = new String[] {"Error", "Invalid edit field."};
-		}
-		
+		} 
 		
 		if(!cmd[0].equals("Error")) {
 			undo.push(clone);
