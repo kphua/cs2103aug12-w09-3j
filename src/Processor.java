@@ -255,7 +255,7 @@ public class Processor {
 			desc[2] = desc[2].trim();
 			temp2 = desc[2].split(" ");
 			for (int i=0; i<temp2.length; i++) {
-				if (temp2[i].contains("am") || temp2[i].contains("pm")) {
+				if (temp2[i].toLowerCase().contains("am") || temp2[i].toLowerCase().contains("pm")) {
 					if (newTask.getStart() == null) {
 						newTask.setStart(temp2[i]);
 					}
