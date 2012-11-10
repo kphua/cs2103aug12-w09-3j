@@ -63,7 +63,6 @@ public class UI extends JFrame implements ActionListener {
 		};
 		
 		EventQueue.invokeLater(run);
-
 	}
 
 	/**
@@ -83,44 +82,46 @@ public class UI extends JFrame implements ActionListener {
 		
 		//END
 		
+		setMainUIWindow();
+		setUserInputField();
+		setMainOutputField();
+		setMainDisplayField();
+	}
+	
+	private void setMainUIWindow() {
 		setTitle("FingerTips");
-		
 		setResizable(false);
 		setBackground(Color.WHITE);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(1140, 550);
 		getContentPane().setLayout(null);
-		
-		textField = new JTextField();
-		textField.setBackground(new Color(240, 240, 240));
-		textField.setBounds(700, 432, 420, 73);
-		textField.setFont(new Font("Consolas", Font.PLAIN, 13));
-		getContentPane().add(textField);
-		textField.setColumns(10);
-		textField.setBorder(new TitledBorder(new LineBorder(new Color(192, 192, 192), 3), "Enter input:", TitledBorder.LEADING, TitledBorder.TOP, new Font("Consolas", Font.PLAIN, 11), new Color(102, 102, 102)));
-		textField.addActionListener(new inputListener());
-		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(700, 21, 420, 403);
-		getContentPane().add(scrollPane);
-		scrollPane.setBorder(new LineBorder(new Color(139, 0, 139), 2));
-		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-		
-		mainArea = new JTextArea();
-		printWelcomeMSG();
-		scrollPane.setViewportView(mainArea);
-		// set view to stick to the bottom of the message box, but cannot 
-		scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {  
-			public void adjustmentValueChanged(AdjustmentEvent e) {  
-			e.getAdjustable().setValue(e.getAdjustable().getMaximum());  
-			}});
-		
-		mainArea.setEditable(false);
-		mainArea.setFont(new Font("Consolas", Font.PLAIN, 13));
-		mainArea.setBackground(new Color(204, 193, 218));
-		mainArea.setWrapStyleWord(true);
-		mainArea.setLineWrap(true);
-		
+	}
+
+	private void setMainDisplayField() {
+		setMainDisplayHeading();
+		setMainDisplayTable();
+		setMainDisplayFieldBorder();
+	}
+
+	private void setMainDisplayHeading() {
+		JLabel lblCurrentList = new JLabel("Task List");
+		lblCurrentList.setHorizontalAlignment(SwingConstants.CENTER);
+		lblCurrentList.setOpaque(true);
+		lblCurrentList.setBackground(new Color(192, 80, 77));
+		lblCurrentList.setForeground(new Color(255, 255, 255));
+		lblCurrentList.setFont(new Font("Consolas", Font.PLAIN, 22));
+		lblCurrentList.setBounds(15, 26, 670, 24);
+		getContentPane().add(lblCurrentList);
+	}
+
+	private void setMainDisplayTable() {
+		setTableHeading();
+	    setTableColFormat();
+		setTableColSize();
+		setTableScroll();
+	}
+
+	private void setTableHeading() {
 		columnNames = new Vector<String>();
 		columnNames.add("ID");
 		columnNames.add("Task");
@@ -129,14 +130,22 @@ public class UI extends JFrame implements ActionListener {
 		columnNames.add("Due Date");
 		columnNames.add("Priority");
 		
-		Vector<Entry> a = control.getStorage().getDisplayEntries();
-		Vector<Vector<String>> data = convertToVV(a);
+		Vector<Vector<String>> data = getDataToDisplay();
 		
 		table = new JTable(data, columnNames);
 		table.getTableHeader().setFont(new Font("Consolas", Font.BOLD, 13));
 		table.getTableHeader().setBackground(new Color(75, 172, 198));
 		table.getTableHeader().setForeground(new Color(255, 255, 255));
-	    TableCellRenderer renderer = new TableCellRenderer() {
+	}
+
+	private Vector<Vector<String>> getDataToDisplay() {
+		Vector<Entry> a = control.getStorage().getDisplayEntries();
+		Vector<Vector<String>> data = convertToVV(a);
+		return data;
+	}
+
+	private void setTableColFormat() {
+		TableCellRenderer renderer = new TableCellRenderer() {
 	        JLabel label = new JLabel();
 	        @Override
 	        public Component getTableCellRendererComponent(JTable table,
@@ -164,21 +173,18 @@ public class UI extends JFrame implements ActionListener {
 		table.setEnabled(false);
 		table.setFont(new Font("Consolas", Font.PLAIN, 13));
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+	}
+
+	private void setTableColSize() {
 		table.getColumnModel().getColumn(0).setPreferredWidth(20);
 		table.getColumnModel().getColumn(1).setPreferredWidth(290);
 		table.getColumnModel().getColumn(2).setPreferredWidth(80);
 		table.getColumnModel().getColumn(3).setPreferredWidth(80);
 		table.getColumnModel().getColumn(4).setPreferredWidth(90);
 		table.getColumnModel().getColumn(5).setPreferredWidth(89);
-		
-	
-		// automatically resize the columns whenever the data in the table changes
-		table.getModel().addTableModelListener(new TableModelListener() {
-		    public void tableChanged(TableModelEvent e) {
-		        ColumnsAutoSizer.sizeColumnsToFit(table);
-		    }
-		});
-		
+	}
+
+	private void setTableScroll() {
 		JScrollPane scrollPane2 = new JScrollPane(table);
 		scrollPane2.setOpaque(true);
 		scrollPane2.setBorder(new LineBorder(new Color(252, 213, 181)));
@@ -186,24 +192,50 @@ public class UI extends JFrame implements ActionListener {
 		scrollPane2.setBounds(15, 61, 670, 439);
 		scrollPane2.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		getContentPane().add(scrollPane2);
-		
-		JLabel lblCurrentList = new JLabel("Task List");
-		lblCurrentList.setHorizontalAlignment(SwingConstants.CENTER);
-		lblCurrentList.setOpaque(true);
-		lblCurrentList.setBackground(new Color(192, 80, 77));
-		lblCurrentList.setForeground(new Color(255, 255, 255));
-		lblCurrentList.setFont(new Font("Consolas", Font.PLAIN, 22));
-		lblCurrentList.setBounds(15, 26, 670, 24);
-		getContentPane().add(lblCurrentList);
-		
+	}
+
+	private void setMainDisplayFieldBorder() {
 		JPanel panel = new JPanel();
 		panel.setBorder(new LineBorder(new Color(192, 80, 77), 2));
 		panel.setBackground(new Color(252, 213, 181));
 		panel.setBounds(10, 20, 680, 485);
 		getContentPane().add(panel);
+	}
+
+	private void setMainOutputField() {
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(700, 21, 420, 403);
+		getContentPane().add(scrollPane);
+		scrollPane.setBorder(new LineBorder(new Color(139, 0, 139), 2));
+		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		
+		mainArea = new JTextArea();
+		printWelcomeMSG();
+		scrollPane.setViewportView(mainArea);
+		// set view to stick to the bottom of the message box, but cannot 
+		scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {  
+			public void adjustmentValueChanged(AdjustmentEvent e) {  
+			e.getAdjustable().setValue(e.getAdjustable().getMaximum());  
+			}});
+		
+		mainArea.setEditable(false);
+		mainArea.setFont(new Font("Consolas", Font.PLAIN, 13));
+		mainArea.setBackground(new Color(204, 193, 218));
+		mainArea.setWrapStyleWord(true);
+		mainArea.setLineWrap(true);
 		
 		mainArea.append("\nCommand: ");
+	}
 
+	private void setUserInputField() {
+		textField = new JTextField();
+		textField.setBackground(new Color(240, 240, 240));
+		textField.setBounds(700, 432, 420, 73);
+		textField.setFont(new Font("Consolas", Font.PLAIN, 13));
+		getContentPane().add(textField);
+		textField.setColumns(10);
+		textField.setBorder(new TitledBorder(new LineBorder(new Color(192, 192, 192), 3), "Enter input:", TitledBorder.LEADING, TitledBorder.TOP, new Font("Consolas", Font.PLAIN, 11), new Color(102, 102, 102)));
+		textField.addActionListener(new inputListener());
 	}
 	
 	private Vector<Vector<String>> convertToVV(Vector<Entry> a) {
@@ -253,7 +285,6 @@ public class UI extends JFrame implements ActionListener {
 	private Scanner sc;
 	private boolean editMode;
 	
-	
 	/*
 	 * Activates the following block of code when enter is hit for textField.
 	 * Edit Mode:  
@@ -262,7 +293,6 @@ public class UI extends JFrame implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-
 			//Take in userInput
 			userInput = textField.getText().trim();
 			
@@ -329,27 +359,18 @@ public class UI extends JFrame implements ActionListener {
 		logger.info(actionMSG.toString());
 		
 		followUpAction(actionMSG);
-		
-
 	}
 
 	/**
 	 * 
 	 */
 	private void refreshTable() {
-		Vector<Entry> a = control.getStorage().getDisplayEntries();
-		Vector<Vector<String>> data = convertToVV(a);
-		
+		Vector<Vector<String>> data = getDataToDisplay();
 
 		DefaultTableModel dm = new DefaultTableModel(data, columnNames);
 		table.setModel(dm);
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		table.getColumnModel().getColumn(0).setPreferredWidth(20);
-		table.getColumnModel().getColumn(1).setPreferredWidth(290);
-		table.getColumnModel().getColumn(2).setPreferredWidth(80);
-		table.getColumnModel().getColumn(3).setPreferredWidth(80);
-		table.getColumnModel().getColumn(4).setPreferredWidth(90);
-		table.getColumnModel().getColumn(5).setPreferredWidth(89);
+		setTableColSize();
 		dm.fireTableDataChanged();
 	}
 	
@@ -373,18 +394,9 @@ public class UI extends JFrame implements ActionListener {
 	
 	//Add action
 		private void add(CMD actionMSG) {
-			if(actionMSG.getData()==null){
-				mainArea.append("\n" +"Please enter a description for your task:");
-				String description = textField.getText().trim();
-				textField.setText(null);
-				description = "add \"".concat(description);
-				control.performAction(description);
-			}
-			
 			control.setEditHolder(null);
 			Collections.sort(control.getStorage().getActiveEntries());
 			mainArea.append("\n" +SUCCESS_MSG_ADD);
-	
 		}
 		
 		//Edit Mode
@@ -405,40 +417,20 @@ public class UI extends JFrame implements ActionListener {
 		}
 
 		private void remove(CMD actionMSG) {
-			
-			if(actionMSG.getData() == null){
-				mainArea.append("\n" +"Which entry do you want to remove?");
-				int rmvIndex;
-				try{
-					System.out.print("Index: ");
-					rmvIndex = Integer.parseInt(textField.getText());
-					String newInstruction = "remove ".concat(Integer.toString(rmvIndex));
-					control.performAction(newInstruction);
-					mainArea.append("\n");
-					
-				} catch(InputMismatchException e){
-					mainArea.append("\n" +"Invalid input. Action aborted.");
-
-				}
-
-				sc.nextLine();
-			}
 			mainArea.append("\n" +SUCCESS_MSG_REMOVE);
 		}
 
 		//Follow up for DONE
-			private void done(CMD actionMSG) {
-				mainArea.append("\n" +SUCCESS_MSG_DONE);
-			}
+		private void done(CMD actionMSG) {
+			mainArea.append("\n" +SUCCESS_MSG_DONE);
+		}
 		
 		//Prints action taken.
 		private void undo(CMD actionMSG) {
-			
 			mainArea.append("\n" +actionMSG.getData());
 		}
 		
 		private void redo(CMD actionMSG) {
-			
 			mainArea.append("\n" +actionMSG.getData());
 		}
 		
@@ -457,7 +449,6 @@ public class UI extends JFrame implements ActionListener {
 			}
 			System.exit(0);
 		}
-		
 		
 		//Print ERROR msg
 		//Assumes:	CMD.data is a String
@@ -502,5 +493,3 @@ public class UI extends JFrame implements ActionListener {
 			return logger;
 		}
 }
-
-
