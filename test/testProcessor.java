@@ -23,7 +23,7 @@ public class testProcessor {
 		
 		input[0] = "  ";		// returns ERROR & Invalid Input.
 		input[1] = "testing"; 	// returns ERROR & Invalid Input.
-		// returns ADD & Test for add 1am 2pm 1/1/2012 null null null
+		// returns ADD & Test for add 1am 2pm 1/1/2012
 		input[2] = "add \"Test for add\" 1am 2pm 1/1/2012";
 		input[3] = "clear";		// returns CLEAR & null
 		input[4] = "done";		// returns ERROR & Invalid Input.
