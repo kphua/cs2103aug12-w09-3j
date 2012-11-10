@@ -58,7 +58,8 @@ class Control {
 		case CLEAR:			return clear(command);
 		case UNDO:			return undo(command);
 		case REDO:			return redo(command);			
-		case DISPLAY:		return display(command);
+		case DISPLAY:		return display(command, false);
+		case DISPLAYP:		return display(command, true);
 		case EDIT:			return edit(command);
 		case DONE:			return done(command);
 		default:			return command;
@@ -125,9 +126,9 @@ class Control {
 	 * @param command
 	 * @return
 	 */
-	private CMD display(CMD command) {
+	private CMD display(CMD command, boolean arc) {
 		if (command.getData() == null) {
-			command.setData((Vector<Entry>)storage.display());
+			command.setData((Vector<Entry>)storage.display(arc));
 		}
 		else {
 				
@@ -139,7 +140,8 @@ class Control {
 			// if the data is string to be searched
 			else {
 				String keyword = (String) command.getData();
-				command.setData(storage.displayKeyword(keyword));
+				if(arc) command.setData(storage.displayKeyword(keyword, true));
+				else command.setData(storage.displayKeyword(keyword, false));
 			}
 		}
 		
@@ -152,7 +154,7 @@ class Control {
 	 * @return
 	 */
 	private CMD clear(CMD command) {
-		command.setData(storage.getActiveEntries());
+		command.setData(storage.getActiveEntries().clone());
 		undo.push(command);
 		storage.clearActive();
 		storage.save(true, false);
@@ -217,6 +219,12 @@ class Control {
 		undo.push(action);
 		
 		switch(action.getCommandType()){
+		case ADD: 
+			storage.addEntry((Entry)action.getData());
+			break;
+		case REMOVE: 
+			storage.removeEntry((Entry)action.getData());
+			break;
 		case EDIT:
 			Entry original = (Entry)action.getData();
 			action.setData(storage.removeEntry(original.getID()));
@@ -261,11 +269,12 @@ class Control {
 			break;
 		case CLEAR: 
 			storage.setActiveEntries((Vector<Entry>) action.getData());
-			storage.setDisplayEntries(storage.getActiveEntries());
+			storage.display(false);
 			break;
 		case EDIT: 
 			Entry original = (Entry)action.getData();
 			action.setData(storage.removeEntry(original.getID()));
+			
 			storage.addEntry(original);
 			
 			break;		//each entry needs a unique identity for this to work...
@@ -342,7 +351,6 @@ class Control {
 		
 		//store pre-edit form for UNDO
 		CMD clone = new CMD(Processor.COMMAND_TYPE.EDIT, new Entry(editHolder));
-		
 		
 		if(cmd.length > 1 && cmd[1] != null) cmd[1] = cmd[1].trim();
 		if(cmd[0].equals("description")){	
