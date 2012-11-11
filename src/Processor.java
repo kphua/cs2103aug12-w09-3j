@@ -1,3 +1,4 @@
+import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -5,15 +6,12 @@ import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Scanner;
 import java.util.logging.Logger;
-import java.io.*;
 
 public class Processor {
 
 	private Hashtable <String, String> reservedWordsConverter;
 	private Hashtable <String, String> reservedWordsConverterEditMode;
 	private Hashtable <String, String> indicativeWordsIdentifier;
-	private File reservedWords, reservedWordsEditMode, indicativeWords;
-	private Scanner scanner = new Scanner(System.in);
 	private static final Logger logger = Logger.getLogger(Control.class.getName());
 
 	private static final String ERROR_MSG_ADD_PROPER_FORM = "Error: add <description> <data>, where description is\nencapsuled by \" \".\n";
@@ -30,44 +28,41 @@ public class Processor {
 		logger.setParent(UI.getLoggingParent());
 		logger.info("Initialising Processor");
 				
-		reservedWords = new File("reservedWords.txt");
-		reservedWordsEditMode = new File("reservedWordsEditMode.txt");
-		indicativeWords = new File("indicativeWOrds.txt");
+		//Core files. Do Not Touch.
+		String rw = "/CoreDocs/reservedWords.txt";
+		String rwem = "/CoreDocs/reservedWordsEditMode.txt";
+		String iw = "/CoreDocs/indicativeWords.txt";
+		
 		reservedWordsConverter = new Hashtable<String, String>();
 		reservedWordsConverterEditMode = new Hashtable<String, String>();
 		indicativeWordsIdentifier = new Hashtable<String, String>();
 		
-		loadFromFile(reservedWords, reservedWordsConverter);		
-		loadFromFile(reservedWordsEditMode, reservedWordsConverterEditMode);		
-		loadFromFile(indicativeWords, indicativeWordsIdentifier);
+		loadFromFile(rw, reservedWordsConverter);		
+		loadFromFile(rwem, reservedWordsConverterEditMode);		
+		loadFromFile(iw, indicativeWordsIdentifier);
 		
 		logger.info("Processor Initialised.");
 	}
 
 
 	//Read in saved entries from a txt file into the program.
-	private void loadFromFile(File from, Hashtable<String,String> to) {
-		
-		logger.fine("Loading " + from.getName());
-		
-		Scanner sc;
-		BufferedReader reader;
-		
-		try {
-			reader = new BufferedReader(new FileReader(from));
-			sc = new Scanner(reader);
-			
-			while(sc.hasNext()){
-				to.put(sc.next(), sc.next());
-			}
-
-			sc.close();
-		} catch (FileNotFoundException fnfe) {
+	private void loadFromFile(String from, Hashtable<String,String> to) {	
+		logger.fine("Loading " + from);
+				
+		InputStream is = getClass().getResourceAsStream(from);
+		Scanner sc = null;
+		try{
+			sc = new Scanner(is);
+		}catch(NullPointerException e){
 			logger.severe(ERROR_MSG_FATAL_ERROR);
-			System.out.println(ERROR_MSG_FATAL_ERROR);
-			scanner.nextLine();
-			System.exit(0);
+			System.exit(-1);
 		}
+
+		while(sc.hasNext()){
+			to.put(sc.next(), sc.next());
+		}
+
+		sc.close();
 		
 		logger.fine("Done.");
 	}
