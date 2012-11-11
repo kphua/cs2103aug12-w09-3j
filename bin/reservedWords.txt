@@ -28,5 +28,7 @@ finish done
 fin done
 clear clear
 clr clear
+clear+ clear+
+clr+ clear+
 redo redo
 rd	redo
