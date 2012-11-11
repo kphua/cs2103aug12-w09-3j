@@ -356,7 +356,7 @@ public class UI extends JFrame implements ActionListener {
 	}
 
 	/**
-	 * 
+	 * refresh display table according to latest command by user
 	 */
 	private void refreshTable() {
 		Vector<Vector<String>> data = getDataToDisplay();
