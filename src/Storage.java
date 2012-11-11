@@ -50,7 +50,7 @@ class Storage {
 	 * Creates them if they do not exist.
 	 * Load activeFile and archiveFile into activeEntries and archiveEntries
 	 */
-	private Storage(){
+	protected Storage(){
 		logger.setParent(UI.getLoggingParent());
 		logger.info("Initialising Storage.");
 		
