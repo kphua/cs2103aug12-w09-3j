@@ -270,7 +270,8 @@ public class UI extends JFrame implements ActionListener {
 	private static final String SUCCESS_MSG_DONE = "Entry marked as done and shifted to archive.\n";
 	private static final String SUCCESS_MSG_CLEAR = "All active entries deleted.\n";
 	private static final String SUCCESS_MSG_EXIT = "Goodbye.\n";
-
+	private static final String ERROR_MSG_DISPLAY = "There is nothing to print.";
+	
 	private static final Logger logger = Logger.getLogger(UI.class.getName());
 	private static final String logFile = "runLog.log";
 	private static final Level handlerLevel = Level.FINE;
@@ -346,7 +347,6 @@ public class UI extends JFrame implements ActionListener {
 		logger.info("Logger initialization complete.");
 	}
 
-
 	public void runUserInput(String userInput) {
 		CMD actionMSG = control.performAction(userInput);
 
@@ -404,12 +404,13 @@ public class UI extends JFrame implements ActionListener {
 		mainArea.append("\n" +"Type \"end\" to exit edit mode and \"help\" for futher \nassistance.\n");
 	}
 
-		@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	private void display(CMD actionMSG) {
 		Vector<Entry> print = (Vector<Entry>) actionMSG.getData();
 		if(print.isEmpty()){
-			mainArea.append("\n" +"There is nothing to print.\n");
+			mainArea.append("\n" +ERROR_MSG_DISPLAY);
 		}
+		mainArea.append("\n");
 	}
 
 	private void remove(CMD actionMSG) {
@@ -417,9 +418,9 @@ public class UI extends JFrame implements ActionListener {
 	}
 
 	//Follow up for DONE
-		private void done(CMD actionMSG) {
-			mainArea.append("\n" +SUCCESS_MSG_DONE);
-		}
+	private void done(CMD actionMSG) {
+		mainArea.append("\n" +SUCCESS_MSG_DONE);
+	}
 
 	//Prints action taken.
 	private void undo(CMD actionMSG) {
@@ -460,20 +461,20 @@ public class UI extends JFrame implements ActionListener {
 
 	// default help message
 	private static String help() {
-			return ("add <data>:\t   add an entry with related dates,\t\t\t\t   description, priority etc.\n") +
-					("\t\t   prefix @ indicates venue, prefix #\t\t\t\t   indicates a hashtag.\n") +
-					("\nremove <number>:   remove the selected entry for the\t\t\t\t   active list.\n") +
+		return ("add <data>:\t   add an entry with related dates,\t\t\t\t   description, priority etc.\n") +
+				("\t\t   prefix @ indicates venue, prefix #\t\t\t\t   indicates a hashtag.\n") +
+				("\nremove <number>:   remove the selected entry for the\t\t\t\t   active list.\n") +
 				("\nedit <number>:\t   enters edit mode for selected entry.\n") +
 				("\nundo:\t\t   reverses the previous action.\n") +
-					("\ndisplay <keyword>: generates a list of entries\t\t\t\t\t   fulfilling the search criteria.\n") +
+				("\ndisplay <keyword>: generates a list of entries\t\t\t\t\t   fulfilling the search criteria.\n") +
 				("\ndone <number>:\t   marks an entry as completed.\n") +
-					("\nclear:\t\t   deletes all entries permanently\t\t\t\t   (use with caution!).\n") +
+				("\nclear:\t\t   deletes all entries permanently\t\t\t\t   (use with caution!).\n") +
 				("\nquit:\t\t   terminates the program.\n");
 	}
 
 	//editMode help
 	private static String helpEditMode() {
-			return ("\nEnter a field followed by the new data it should be replaced with.\n") +
+		return ("\nEnter a field followed by the new data it should be replaced with.\n") +
 				("desc:\t  edit description\n") +
 				("ddate:\t  edit due date\n") +
 				("display:  shows data in the current node\n") +
