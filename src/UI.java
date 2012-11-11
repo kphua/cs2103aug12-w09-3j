@@ -33,7 +33,8 @@ import javax.swing.table.TableCellRenderer;
 public class UI extends JFrame implements ActionListener {
 
 	/**
-	 * 
+	 * Implements serialization
+	 * Define attributes
 	 */
 	private static final long serialVersionUID = 1L;
 	private JTextField textField;
@@ -83,6 +84,9 @@ public class UI extends JFrame implements ActionListener {
 		setMainDisplayField();
 	}
 	
+	/**
+	 * Create the main UI window with specified size
+	 */
 	private void setMainUIWindow() {
 		setTitle("FingerTips");
 		setResizable(false);
@@ -92,12 +96,18 @@ public class UI extends JFrame implements ActionListener {
 		getContentPane().setLayout(null);
 	}
 
+	/**
+	 * Creates the left component on UI (main display for table)
+	 */
 	private void setMainDisplayField() {
 		setMainDisplayHeading();
 		setMainDisplayTable();
-		setMainDisplayFieldBorder();
+		setMainDisplayBorder();
 	}
-
+	
+	/**
+	 * Creates label component as Table title
+	 */
 	private void setMainDisplayHeading() {
 		JLabel lblCurrentList = new JLabel("Task List");
 		lblCurrentList.setHorizontalAlignment(SwingConstants.CENTER);
@@ -108,14 +118,20 @@ public class UI extends JFrame implements ActionListener {
 		lblCurrentList.setBounds(15, 26, 670, 24);
 		getContentPane().add(lblCurrentList);
 	}
-
+	
+	/**
+	 * Creates Table components
+	 */
 	private void setMainDisplayTable() {
 		setTableHeading();
-	    setTableColFormat();
+	    setTableFormat();
 		setTableColSize();
 		setTableScroll();
 	}
 
+	/**
+	 * Set table headings for individual columns
+	 */
 	private void setTableHeading() {
 		columnNames = new Vector<String>();
 		columnNames.add("ID");
@@ -132,20 +148,45 @@ public class UI extends JFrame implements ActionListener {
 		table.getTableHeader().setBackground(new Color(75, 172, 198));
 		table.getTableHeader().setForeground(new Color(255, 255, 255));
 	}
-
+	
+	/**
+	 * Get data to be displayed in the table
+	 * @return data
+	 */
 	private Vector<Vector<String>> getDataToDisplay() {
 		Vector<Entry> a = control.getStorage().getDisplayEntries();
 		Vector<Vector<String>> data = convertToVV(a);
 		return data;
 	}
+	
+	/**
+	 * Sets the overall format of the table
+	 */
+	private void setTableFormat() {
+		setTableColSize();
+		TableCellRenderer renderer = setTableDesign();
+		table.setDefaultRenderer(Object.class, renderer);
+		table.getTableHeader().getDefaultRenderer();
+		table.setShowVerticalLines(false);
+		table.setShowHorizontalLines(false);
+		table.setEnabled(false);
+		table.setFont(new Font("Consolas", Font.PLAIN, 13));
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+	}
 
-	private void setTableColFormat() {
+	/**
+	 * Sets design of the table (alternate row colour, text alignment)
+	 * @return renderer
+	 */
+	private TableCellRenderer setTableDesign() {
 		TableCellRenderer renderer = new TableCellRenderer() {
 			JLabel label = new JLabel();
+			
 			@Override
 			public Component getTableCellRendererComponent(JTable table,
 					Object value, boolean isSelected, boolean hasFocus,
 					int row, int column) {
+				setTextAlignment(column);
 				label.setOpaque(true);
 				label.setFont(new Font("Consolas", Font.PLAIN, 13));
 				if (value != null) {
@@ -161,15 +202,22 @@ public class UI extends JFrame implements ActionListener {
 				}
 				return label;
 			}
+
+			private void setTextAlignment(int column) {
+				if (column != 1) {
+					label.setHorizontalAlignment(SwingConstants.CENTER);
+				}
+				else {
+					label.setHorizontalAlignment(SwingConstants.LEFT);
+				}
+			}
 		};
-		table.setDefaultRenderer(Object.class, renderer);
-		table.setShowVerticalLines(false);
-		table.setShowHorizontalLines(false);
-		table.setEnabled(false);
-		table.setFont(new Font("Consolas", Font.PLAIN, 13));
-		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		return renderer;
 	}
 
+	/**
+	 * Sets table column width
+	 */
 	private void setTableColSize() {
 		table.getColumnModel().getColumn(0).setPreferredWidth(20);
 		table.getColumnModel().getColumn(1).setPreferredWidth(290);
@@ -178,7 +226,10 @@ public class UI extends JFrame implements ActionListener {
 		table.getColumnModel().getColumn(4).setPreferredWidth(90);
 		table.getColumnModel().getColumn(5).setPreferredWidth(89);
 	}
-
+	
+	/**
+	 * Create scrollbar for table
+	 */
 	private void setTableScroll() {
 		JScrollPane scrollPane2 = new JScrollPane(table);
 		scrollPane2.setOpaque(true);
@@ -188,15 +239,21 @@ public class UI extends JFrame implements ActionListener {
 		scrollPane2.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		getContentPane().add(scrollPane2);
 	}
-
-	private void setMainDisplayFieldBorder() {
+	
+	/**
+	 * Sets the border format and color for left component on UI (main display for table)
+	 */
+	private void setMainDisplayBorder() {
 		JPanel panel = new JPanel();
 		panel.setBorder(new LineBorder(new Color(192, 80, 77), 2));
 		panel.setBackground(new Color(252, 213, 181));
 		panel.setBounds(10, 20, 680, 485);
 		getContentPane().add(panel);
 	}
-
+	
+	/**
+	 * Creates the main output field (top right of UI)
+	 */
 	private void setMainOutputField() {
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(700, 21, 420, 403);
@@ -207,7 +264,6 @@ public class UI extends JFrame implements ActionListener {
 		mainArea = new JTextArea();
 		printWelcomeMSG();
 		scrollPane.setViewportView(mainArea);
-		// set view to stick to the bottom of the message box, but cannot 
 		scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {  
 			public void adjustmentValueChanged(AdjustmentEvent e) {  
 			e.getAdjustable().setValue(e.getAdjustable().getMaximum());  
@@ -222,6 +278,9 @@ public class UI extends JFrame implements ActionListener {
 		mainArea.append("\nCommand: ");
 	}
 	
+	/**
+	 * Creates the field for user input
+	 */
 	private void setUserInputField() {
 		textField = new JTextField();
 		textField.setBackground(new Color(240, 240, 240));
@@ -232,7 +291,10 @@ public class UI extends JFrame implements ActionListener {
 		textField.setBorder(new TitledBorder(new LineBorder(new Color(192, 192, 192), 3), "Enter input:", TitledBorder.LEADING, TitledBorder.TOP, new Font("Consolas", Font.PLAIN, 11), new Color(102, 102, 102)));
 		textField.addActionListener(new inputListener());
 	}
-
+	
+	/**
+	 * Conversion of each entry field from Vector<Entry> to Vector<String>
+	 */
 	private Vector<Vector<String>> convertToVV(Vector<Entry> a) {
 		Vector<Vector<String>> out = new Vector<Vector<String>>();
 		for(int j=0; j<a.size(); j++)
@@ -257,7 +319,6 @@ public class UI extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent a) {
 		userInput = textField.getText();
-		//display_output = control.performAction(userInput);
 	}
 
 	//FingerTips portion
@@ -280,7 +341,7 @@ public class UI extends JFrame implements ActionListener {
 	private Control control;
 	private boolean editMode;
 
-	/*
+	/**
 	 * Activates the following block of code when enter is hit for textField.
 	 * Edit Mode:  
 	 */
@@ -330,7 +391,9 @@ public class UI extends JFrame implements ActionListener {
 		}
 	}
 
-	//Initializes Logger for tracking.
+	/**
+	 * Initializes Logger for tracking.
+	 */
 	private void initialiseLogger() {
 		try {
 			Handler h = new FileHandler(logFile);
@@ -347,6 +410,10 @@ public class UI extends JFrame implements ActionListener {
 		logger.info("Logger initialization complete.");
 	}
 
+	/**
+	 * Process user input
+	 * @param userInput
+	 */
 	public void runUserInput(String userInput) {
 		CMD actionMSG = control.performAction(userInput);
 
@@ -387,14 +454,19 @@ public class UI extends JFrame implements ActionListener {
 		}
 	}
 
-	//Add action
+	/**
+	 * Add Action
+	 * @param actionMSG
+	 */
 	private void add(CMD actionMSG) {
 		control.setEditHolder(null);
 		Collections.sort(control.getStorage().getActiveEntries());
 		mainArea.append("\n" +SUCCESS_MSG_ADD);
 	}
 
-	//Edit Mode
+	/**
+	 * Edit Mode
+	 */
 	private void edit() {
 		editMode = true;
 		mainArea.append("\n" +"Entry: ");
@@ -403,7 +475,11 @@ public class UI extends JFrame implements ActionListener {
 		mainArea.append("\n" +"Enter the field you wish to modify, and the new data to \nreplace with.");
 		mainArea.append("\n" +"Type \"end\" to exit edit mode and \"help\" for futher \nassistance.\n");
 	}
-
+	
+	/**
+	 * Display Action
+	 * @param actionMSG
+	 */
 	@SuppressWarnings("unchecked")
 	private void display(CMD actionMSG) {
 		Vector<Entry> print = (Vector<Entry>) actionMSG.getData();
@@ -412,31 +488,49 @@ public class UI extends JFrame implements ActionListener {
 		}
 		mainArea.append("\n");
 	}
-
+	
+	/**
+	 * Remove Action
+	 * @param actionMSG
+	 */
 	private void remove(CMD actionMSG) {
 		mainArea.append("\n" +SUCCESS_MSG_REMOVE);
 	}
 
-	//Follow up for DONE
+	/**
+	 * Mark done Action
+	 * @param actionMSG
+	 */
 	private void done(CMD actionMSG) {
 		mainArea.append("\n" +SUCCESS_MSG_DONE);
 	}
 
-	//Prints action taken.
+	/**
+	 * Undo Action
+	 * @param actionMSG
+	 */
 	private void undo(CMD actionMSG) {
 		mainArea.append("\n" +actionMSG.getData());
 	}
-
+	
+	/**
+	 * Redo Action
+	 * @param actionMSG
+	 */
 	private void redo(CMD actionMSG) {
 		mainArea.append("\n" +actionMSG.getData());
 	}
 
-	//Prints SUCCESS MSG for Clear
+	/**
+	 * Clear Action
+	 */
 	private void clear() {
 		mainArea.append("\n" +SUCCESS_MSG_CLEAR);
 	}
 
-	//Ending MSG
+	/**
+	 * Quit Action
+	 */
 	private void quit() {
 		mainArea.append("\n" +SUCCESS_MSG_EXIT);
 		try {
@@ -447,19 +541,28 @@ public class UI extends JFrame implements ActionListener {
 		System.exit(0);
 	}
 
-	//Print ERROR msg
-	//Assumes:	CMD.data is a String
+	/**
+	 * Error encountered. Prints ERROR_MSG
+	 * Assumes:	CMD.data is a String
+	 * @param actionMSG
+	 */
 	private void error(CMD actionMSG) {
 		mainArea.append("\n" +actionMSG.getData());
 	}
-
-	//Welcome Message
+	
+	
+	/**
+	 * Print welcome message on launch of program
+	 */
 	private void printWelcomeMSG() {
 		mainArea.append(MSG_WELCOME);
 		mainArea.append(MSG_DEFAULT_ASSISTANCE);
 	}
 
-	// default help message
+	/**
+	 * Prints default help message
+	 * @return string of help messages
+	 */
 	private static String help() {
 		return ("add <data>:\t   add an entry with related dates,\t\t\t\t   description, priority etc.\n") +
 				("\t\t   prefix @ indicates venue, prefix #\t\t\t\t   indicates a hashtag.\n") +
@@ -472,7 +575,10 @@ public class UI extends JFrame implements ActionListener {
 				("\nquit:\t\t   terminates the program.\n");
 	}
 
-	//editMode help
+	/**
+	 * Prints edit mode help message
+	 * @return string of help messages for edit mode
+	 */
 	private static String helpEditMode() {
 		return ("\nEnter a field followed by the new data it should be replaced with.\n") +
 				("desc:\t  edit description\n") +
@@ -485,7 +591,10 @@ public class UI extends JFrame implements ActionListener {
 				("venue @:  edit venue");
 	}
 
-	//for logger initialization use
+	/**
+	 * for logger initialization use
+	 * @return logger
+	 */
 	public static Logger getLoggingParent(){
 		return logger;
 	}
