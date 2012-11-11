@@ -330,6 +330,7 @@ public class UI extends JFrame implements ActionListener {
 	private static final String SUCCESS_MSG_REMOVE = "Removed.\n";
 	private static final String SUCCESS_MSG_DONE = "Entry marked as done and shifted to archive.\n";
 	private static final String SUCCESS_MSG_CLEAR = "All active entries deleted.\n";
+	private static final String SUCCESS_MSG_CLEARP = "All archive entries deleted.\n";
 	private static final String SUCCESS_MSG_EXIT = "Goodbye.\n";
 	private static final String ERROR_MSG_DISPLAY = "There is nothing to print.";
 	
@@ -448,6 +449,7 @@ public class UI extends JFrame implements ActionListener {
 		break;
 		case QUIT: 		quit();					break;
 		case CLEAR:		clear();				break;
+		case CLEARP:	clearP();				break;
 		case ERROR:		error(actionMSG);		break;
 		case REDO:		redo(actionMSG);		break;
 		default: undo(actionMSG);
@@ -522,10 +524,17 @@ public class UI extends JFrame implements ActionListener {
 	}
 
 	/**
-	 * Clear Action
+	 * Clear ActiveList Action
 	 */
 	private void clear() {
 		mainArea.append("\n" +SUCCESS_MSG_CLEAR);
+	}
+	
+	/**
+	 * Clear ArchiveList Action
+	 */
+	private void clearP() {
+		mainArea.append("\n" +SUCCESS_MSG_CLEARP);
 	}
 
 	/**

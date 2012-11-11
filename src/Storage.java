@@ -214,7 +214,8 @@ class Storage {
 	public void undoDoneAction(Entry entry){
 		archiveEntries.remove(entry);
 		activeEntries.add(entry);
-		Collections.sort(activeEntries);
+		displayEntries.add(entry);
+		Collections.sort(displayEntries);
 	}
 
 	/*
@@ -341,6 +342,14 @@ class Storage {
 		activeEntries.clear();
 		displayEntries.clear();
 		assert activeEntries.isEmpty();		// assert all entries cleared
+	}
+	
+	//CLEAR function
+	//removes all entries from archiveEntries
+	public void clearArchive(){
+		displayEntries.removeAll(archiveEntries);
+		archiveEntries.clear();
+		assert archiveEntries.isEmpty();		// assert all entries cleared
 	}
 
 
