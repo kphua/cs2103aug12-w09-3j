@@ -247,35 +247,88 @@ public class Processor {
 	//INCOMPLETE
 	private void buildEntry(Entry newTask, String[] data) {
 		
-		
 		String input = data[1];
 		String[] desc = input.split("\"");
 		newTask.setDesc(desc[1].trim());  // get the exp in "..."
+//		String[] temp2 = null;
+//		if (desc.length > 2) {
+//			desc[2] = desc[2].trim();
+//			temp2 = desc[2].split(" ");
+//			for (int i=0; i<temp2.length; i++) {
+//				if (temp2[i].toLowerCase().contains("am") || temp2[i].toLowerCase().contains("pm")) {
+//					if (newTask.getStart() == null) {
+//						newTask.setStart(temp2[i]);
+//					}
+//					else
+//						newTask.setEnd(temp2[i]);
+//				}
+//				else if (isDate(temp2[i])) {
+//					newTask.iniDDate();
+//					newTask.setDateCal(temp2[i]);
+//				}
+//				else if (temp2[i].startsWith("@")) {
+//					newTask.setVenue(temp2[i]);
+//				}
+//				else if (temp2[i].startsWith("#")) {
+//					newTask.setTagDesc(temp2[i]);
+//				}
+//				else if (temp2[i].equalsIgnoreCase("HIGH") || temp2[i].equalsIgnoreCase("MED") 
+//						|| temp2[i].equalsIgnoreCase("LOW")) {
+//					newTask.setPriority(temp2[i].toUpperCase());
+//				}
+//			}
+//		}
 		String[] temp2 = null;
 		if (desc.length > 2) {
 			desc[2] = desc[2].trim();
 			temp2 = desc[2].split(" ");
+			int rep = 0;
 			for (int i=0; i<temp2.length; i++) {
-				if (temp2[i].toLowerCase().contains("am") || temp2[i].toLowerCase().contains("pm")) {
-					if (newTask.getStart() == null) {
-						newTask.setStart(temp2[i]);
+				if(indicativeWordsIdentifier.containsKey(temp2[i].toLowerCase())) 
+					rep = Integer.parseInt((indicativeWordsIdentifier.get(temp2[i])));
+				else 
+					rep = 8;
+				
+				switch (rep){
+				// incomplete
+				case 9: 
+					if(isDate(temp2[i+1])){
+						newTask.iniDDate();
+						newTask.setDateCal(temp2[i+1]);
 					}
-					else
-						newTask.setEnd(temp2[i]);
-				}
-				else if (isDate(temp2[i])) {
+					break;
+				case 10: break;
+				
+				// today
+				case 11: 						
 					newTask.iniDDate();
-					newTask.setDateCal(temp2[i]);
-				}
-				else if (temp2[i].startsWith("@")) {
-					newTask.setVenue(temp2[i]);
-				}
-				else if (temp2[i].startsWith("#")) {
-					newTask.setTagDesc(temp2[i]);
-				}
-				else if (temp2[i].equalsIgnoreCase("HIGH") || temp2[i].equalsIgnoreCase("MED") 
+					newTask.setDateCal(newTask.getDate());
+					break;
+				
+				// tomorrow
+				case 12: break;
+				
+				// all other cases
+				case 8: 
+					if (temp2[i].toLowerCase().contains("am") || temp2[i].toLowerCase().contains("pm")) {
+						if (newTask.getStart() == null) {
+							newTask.setStart(temp2[i]);
+						}
+						else {
+							newTask.setEnd(temp2[i]);
+						}
+					}
+					else if (temp2[i].startsWith("#")) {
+						newTask.setTagDesc(temp2[i]);
+					}
+					else if (temp2[i].startsWith("@")) {
+						newTask.setVenue(temp2[i]);
+					}
+					else if (temp2[i].equalsIgnoreCase("HIGH") || temp2[i].equalsIgnoreCase("MED") 
 						|| temp2[i].equalsIgnoreCase("LOW")) {
-					newTask.setPriority(temp2[i].toUpperCase());
+						newTask.setPriority(temp2[i].toUpperCase());
+					}
+					break;
 				}
 			}
 		}
