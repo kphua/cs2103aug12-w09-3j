@@ -146,6 +146,7 @@ class Storage {
 				objWriter.writeObject(entry);
 				bw.write(entry + "\n");
 			}
+			bw.close();
 			objWriter.close();
 		} catch (IOException ioe) {
 			System.out.println(ERROR_MSG_WRITING);
