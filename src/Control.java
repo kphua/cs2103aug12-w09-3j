@@ -10,6 +10,7 @@ class Control {
 	private static final String ERROR_MSG_REDO = "There are no further redo-s.\n";
 	private static final String ERROR_MSG_INVALID_INDEX = "Invalid index. Enter a valid index number.\n";
 	private static final String ERROR_MSG_EDIT_EMPTY_ACTIVELIST = "There is nothing to edit.\n";
+	
 	private static Control control;
 	private Processor processor;
 	private Storage storage;

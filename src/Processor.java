@@ -29,9 +29,9 @@ public class Processor {
 		logger.info("Initialising Processor");
 				
 		//Core files. Do Not Touch.
-		String rw = "/" + "reservedWords.txt";
-		String rwem = "/" + "reservedWordsEditMode.txt";
-		String iw = "/" + "indicativeWords.txt";
+		String rw = "/reservedWords.txt";
+		String rwem = "/reservedWordsEditMode.txt";
+		String iw = "/indicativeWords.txt";
 		
 		reservedWordsConverter = new Hashtable<String, String>();
 		reservedWordsConverterEditMode = new Hashtable<String, String>();
