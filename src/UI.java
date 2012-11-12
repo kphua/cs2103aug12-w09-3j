@@ -92,7 +92,7 @@ public class UI extends JFrame implements ActionListener {
 		setResizable(false);
 		setBackground(Color.WHITE);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(1140, 550);
+		setSize(1150, 650);
 		getContentPane().setLayout(null);
 	}
 
@@ -115,7 +115,7 @@ public class UI extends JFrame implements ActionListener {
 		lblCurrentList.setBackground(new Color(192, 80, 77));
 		lblCurrentList.setForeground(new Color(255, 255, 255));
 		lblCurrentList.setFont(new Font("Consolas", Font.PLAIN, 22));
-		lblCurrentList.setBounds(15, 26, 670, 24);
+		lblCurrentList.setBounds(15, 28, 670, 24);
 		getContentPane().add(lblCurrentList);
 	}
 	
@@ -235,7 +235,7 @@ public class UI extends JFrame implements ActionListener {
 		scrollPane2.setOpaque(true);
 		scrollPane2.setBorder(new LineBorder(new Color(252, 213, 181)));
 		scrollPane2.setBackground(new Color(252, 213, 181));
-		scrollPane2.setBounds(15, 61, 670, 439);
+		scrollPane2.setBounds(15, 59, 670, 543);
 		scrollPane2.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		getContentPane().add(scrollPane2);
 	}
@@ -247,7 +247,7 @@ public class UI extends JFrame implements ActionListener {
 		JPanel panel = new JPanel();
 		panel.setBorder(new LineBorder(new Color(192, 80, 77), 2));
 		panel.setBackground(new Color(252, 213, 181));
-		panel.setBounds(10, 20, 680, 485);
+		panel.setBounds(10, 20, 680, 591);
 		getContentPane().add(panel);
 	}
 	
@@ -256,7 +256,7 @@ public class UI extends JFrame implements ActionListener {
 	 */
 	private void setMainOutputField() {
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(700, 21, 420, 403);
+		scrollPane.setBounds(700, 21, 434, 505);
 		getContentPane().add(scrollPane);
 		scrollPane.setBorder(new LineBorder(new Color(139, 0, 139), 2));
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -284,11 +284,11 @@ public class UI extends JFrame implements ActionListener {
 	private void setUserInputField() {
 		textField = new JTextField();
 		textField.setBackground(new Color(240, 240, 240));
-		textField.setBounds(700, 432, 420, 73);
+		textField.setBounds(700, 537, 434, 74);
 		textField.setFont(new Font("Consolas", Font.PLAIN, 13));
 		getContentPane().add(textField);
 		textField.setColumns(10);
-		textField.setBorder(new TitledBorder(new LineBorder(new Color(192, 192, 192), 3), "Enter input:", TitledBorder.LEADING, TitledBorder.TOP, new Font("Consolas", Font.PLAIN, 11), new Color(102, 102, 102)));
+		textField.setBorder(new TitledBorder(new LineBorder(new Color(192, 192, 192), 3), "Enter input:", TitledBorder.LEADING, TitledBorder.TOP, new Font("Consolas", Font.PLAIN, 12), new Color(102, 102, 102)));
 		textField.addActionListener(new inputListener());
 	}
 	
@@ -328,9 +328,9 @@ public class UI extends JFrame implements ActionListener {
 
 	private static final String SUCCESS_MSG_ADD = "Added.\n";
 	private static final String SUCCESS_MSG_REMOVE = "Removed.\n";
-	private static final String SUCCESS_MSG_DONE = "Entry marked as done and shifted to archive.\n";
-	private static final String SUCCESS_MSG_CLEAR = "All active entries deleted.\n";
-	private static final String SUCCESS_MSG_CLEARP = "All archive entries deleted.\n";
+	private static final String SUCCESS_MSG_DONE = "Task marked as done and shifted to archive.\n";
+	private static final String SUCCESS_MSG_CLEAR = "All active tasks deleted.\n";
+	private static final String SUCCESS_MSG_CLEARP = "All archive tasks deleted.\n";
 	private static final String SUCCESS_MSG_EXIT = "Goodbye.\n";
 	private static final String ERROR_MSG_DISPLAY = "There is nothing to print.";
 	
@@ -573,15 +573,17 @@ public class UI extends JFrame implements ActionListener {
 	 * @return string of help messages
 	 */
 	private static String help() {
-		return ("add <data>:\t   add an entry with related dates,\t\t\t\t   description, priority etc.\n") +
-				("\t\t   prefix @ indicates venue, prefix #\t\t\t\t   indicates a hashtag.\n") +
-				("\nremove <number>:   remove the selected entry for the\t\t\t\t   active list.\n") +
-				("\nedit <number>:\t   enters edit mode for selected entry.\n") +
-				("\nundo:\t\t   reverses the previous action.\n") +
-				("\ndisplay <keyword>: generates a list of entries\t\t\t\t\t   fulfilling the search criteria.\n") +
-				("\ndone <number>:\t   marks an entry as completed.\n") +
-				("\nclear:\t\t   deletes all entries permanently\t\t\t\t   (use with caution!).\n") +
-				("\nquit:\t\t   terminates the program.\n");
+		return ("\nadd <data>:\t    add a task with related dates,\n\t\t    description, priority etc.\n") +
+				("\t\t    prefix @ indicates venue, prefix #\n\t\t    indicates a hashtag.\n") +
+				("\nremove <number>:    remove the selected task from the\n\t\t    active list.\n") +
+				("\nedit <number>:\t    enters edit mode for selected task.\n") +
+				("\nundo:\t\t    reverses the previous action.\n") +
+				("\ndisplay <keyword>:  generates a list of active tasks\n\t\t    fulfilling the search criteria.\n") +
+				("\ndisplay+ <keyword>: generates a list of archived tasks\n\t\t    fulfilling the search criteria.\n") +
+				("\ndone <number>:\t    marks a task as completed.\n") +
+				("\nclear:\t\t    deletes all active tasks permanently\n\t\t    (use with caution!).\n") +
+				("\nclear+:\t\t    deletes all archived tasks permanently\n\t\t    (use with caution!).\n") +
+				("\nquit:\t\t    terminates the program.\n");
 	}
 
 	/**
@@ -592,7 +594,7 @@ public class UI extends JFrame implements ActionListener {
 		return ("\nEnter a field followed by the new data it should be replaced with.\n") +
 				("desc:\t  edit description\n") +
 				("ddate:\t  edit due date\n") +
-				("display:  shows data in the current node\n") +
+				("display:  shows all details of the selected task\n") +
 				("priority: edit priority\n") +
 				("hash #:\t  edit hash tags\n") +
 				("st:\t  edit start time\n") +
