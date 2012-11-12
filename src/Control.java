@@ -213,7 +213,7 @@ class Control {
 			editHolder = (Entry) command.getData();
 			storage.addEntry(editHolder);
 			storage.save(true, false);
-			command.setData(editHolder);
+//			command.setData(editHolder);
 			undo.push(command);
 		}
 					
