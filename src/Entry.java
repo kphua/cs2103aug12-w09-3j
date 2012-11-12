@@ -1,10 +1,8 @@
 import java.io.Serializable;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 // Events to be printed in the following order
 // desc | start time | end time | date | venue | priority | tagDesc
@@ -232,86 +230,71 @@ class Entry implements Serializable, Comparable<Entry> {
 		boolean et = endTime != null;
 		boolean sd = startDate != null;
 		boolean ed = endDate != null;
-		Calendar endFinal, startFinal;
+		Calendar endFinal =null , startFinal = null;
 		
-		if(!(st || sd || et || ed)){
+		if(!et && !ed) {
 			dueDate = null;
 			from = null;
 			return;
 		}
 		
-		if(ed && sd && endDate.after(startDate)) {
-			endFinal = endDate;
-			endDate = startDate;
-			startDate = endFinal;
+		if(st && et && !sd && !ed){
+			Calendar cal = Calendar.getInstance();
+			startFinal = mergeCal(startTime, (Calendar)cal.clone());
+			endFinal = mergeCal(endTime, (Calendar)cal.clone());
+			st = false; et = false;
+			
+			if(cal.after(startFinal)){
+				startFinal.add(Calendar.DATE, 1);
+				endFinal.add(Calendar.DATE, 1);
+			}
+		}
+		
+		if(et && ed) {
+			endFinal = mergeCal(endTime, endDate); 
+		} else if(et && !ed) {
+			Calendar cal = Calendar.getInstance();
+			endTime.set(Calendar.DATE, cal.get(Calendar.DATE));
+			endTime.set(Calendar.MONTH, cal.get(Calendar.MONTH));
+			endTime.set(Calendar.YEAR, cal.get(Calendar.YEAR));
+			ed = true;
+			if(endTime.before(cal)){
+				endTime.add(Calendar.DATE, 1);
+			}
 			endFinal = endTime;
-			endTime = startTime;
-			startTime = endFinal;
-			endFinal = null;
+		} else if(!et && ed) {
+			endFinal = mergeCal(endTime, endDate);
 		}
 		
-		if(et){
-			if(ed){
-				endFinal = mergeCal(endTime, endDate);
-			}
-			else{
-				endFinal = mergeCal(endTime, Calendar.getInstance());
-			}
-		} else {
-			if(ed){
-				endFinal = mergeCal(endTime, endDate);
-			}
-			else{
-				endFinal = null;
-			}
+		if(st && sd){
+			startFinal = mergeCal(startTime, startDate);
+		} else if(st && !sd){
+			startFinal = mergeCal(startTime, endFinal);
+		} else if(!st && sd){
+			startFinal = mergeCal(startTime, startDate);
 		}
 		
-		if(st){
-			if(sd){
-				startFinal = mergeCal(startTime, startDate);
-			}
-			else{
-				startFinal = mergeCal(startTime, Calendar.getInstance());
-			}
-		} else {
-			if(sd){
-				startFinal = mergeCal(startTime, startDate);
-			}
-			else{
-				startFinal = null;
-			}
-		}
 		
-		if(endFinal==null && startFinal!=null){
-			endFinal = startFinal;
-			startFinal = null;
-			return;
-		}
 		
-		if(startFinal.after(endFinal)){
+		if(endFinal!=null && startFinal!=null){
 			Calendar temp = endFinal;
 			endFinal = startFinal;
 			startFinal = temp;
+			if(startFinal.after(endFinal)){
+				endFinal.add(Calendar.DATE, 1);
+			}
 		}
 		
 		dueDate = endFinal;
 		from = startFinal;
 		
-		
 	}
 	
+	
+	//will only receive 2 types of input:
+	// null, date or time, date
+	
 	public Calendar mergeCal(Calendar time, Calendar date) {
-		if(time==null && date==null) return null;
-		if(date==null){
-			date = Calendar.getInstance();
-			time.set(Calendar.YEAR, date.get(Calendar.YEAR));
-			time.set(Calendar.MONTH, date.get(Calendar.MONTH));
-			time.set(Calendar.DATE, date.get(Calendar.DATE));
-			time.set(Calendar.AM_PM, date.get(Calendar.AM_PM));
-			if(time.after(date)) {
-				date.add(Calendar.DATE, 1);
-			}
-		}
 		
 		if(date.get(Calendar.YEAR)<2000) date.add(Calendar.YEAR, 2000);
 		
@@ -325,7 +308,10 @@ class Entry implements Serializable, Comparable<Entry> {
 			date.set(Calendar.MINUTE, time.get(Calendar.MINUTE));
 			date.set(Calendar.SECOND, time.get(Calendar.SECOND));
 			date.set(Calendar.AM_PM, time.get(Calendar.AM_PM));
+			
 		}
+		
+//		System.out.println(new SimpleDateFormat("d/M/y h.mma").format(date.getTime()));
 		
 		return date;
 	}
