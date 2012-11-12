@@ -171,18 +171,21 @@ class Entry implements Serializable, Comparable<Entry> {
 	}
 	
 	public String getFromString(){
-		if(from==null) return "-";
-		String converted = "";
-		converted = converted.concat("from " + from.get(Calendar.DATE)+"/"+from.get(Calendar.MONTH)+"/"+from.get(Calendar.YEAR)+ " ");
-		converted = converted.concat(from.get(Calendar.HOUR_OF_DAY)+"."+ from.get(Calendar.MINUTE) + " " + from.get(Calendar.AM_PM) + " ");
-		return converted;
+//		if(from==null) return "-";
+//		String converted = "";
+//		converted = converted.concat("from " + from.get(Calendar.DATE)+"/"+from.get(Calendar.MONTH)+"/"+from.get(Calendar.YEAR)+ " ");
+//		converted = converted.concat(from.get(Calendar.HOUR_OF_DAY)+"."+ from.get(Calendar.MINUTE) + " " + from.get(Calendar.AM_PM) + " ");
+		SimpleDateFormat sdf = new SimpleDateFormat("d/M/y h.mma");
+		return sdf.format(from.getTime());
 	}
 	public String getToString(){
-		if(from==null) return "-";
-		String converted = "";
-		if(dueDate != null) converted = converted.concat("to " + getDate() + " "); 
-		if(dueDate != null) converted = converted.concat(dueDate.get(Calendar.HOUR_OF_DAY)+"."+ dueDate.get(Calendar.MINUTE) + " " + dueDate.get(Calendar.AM_PM) + " ");
-		return converted;
+//		if(from==null) return "-";
+//		String converted = "";
+//		if(dueDate != null) converted = converted.concat("to " + getDate() + " "); 
+//		if(dueDate != null) converted = converted.concat(dueDate.get(Calendar.HOUR_OF_DAY)+"."+ dueDate.get(Calendar.MINUTE) + " " + dueDate.get(Calendar.AM_PM) + " ");
+//		return converted;
+		SimpleDateFormat sdf = new SimpleDateFormat("d/M/y h.mma");
+		return sdf.format(dueDate.getTime());
 	}
 	
 

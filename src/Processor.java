@@ -363,7 +363,17 @@ public class Processor {
 					current.add(Calendar.DAY_OF_MONTH, 7-day+type2);
 				}
 				d = current.getTime();
-					
+			
+			} else if(type2>20 && type2<33){
+				type2 = type2 - 20;
+				int month = current.get(Calendar.MONTH);
+				if(month==type2){
+					current.add(Calendar.MONTH, 12);
+				} else {
+					current.add(Calendar.DAY_OF_MONTH, 12-month+type2);
+				}
+				d = current.getTime();
+				
 			} else if(type2>12 && type2<17){
 				switch(type2){
 				case 13:
