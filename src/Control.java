@@ -85,7 +85,7 @@ class Control {
 				command.setCommandType(Processor.COMMAND_TYPE.ERROR);
 				command.setData(ERROR_MSG_INVALID_INDEX);
 			} else {
-				Entry e = storage.updateCompletedEntry(--i);
+				Entry e = storage.updateCompletedEntry(i);
 				command.setData(e);
 				undo.push(command);
 				storage.save(true, true);
