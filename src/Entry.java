@@ -193,7 +193,7 @@ class Entry implements Serializable, Comparable<Entry> {
 		return sdf.format(from.getTime());
 	}
 	public String getToString(){
-		if(from==null) return "-";
+		if(dueDate==null) return "-";
 //		String converted = "";
 //		if(dueDate != null) converted = converted.concat("to " + getDate() + " "); 
 //		if(dueDate != null) converted = converted.concat(dueDate.get(Calendar.HOUR_OF_DAY)+"."+ dueDate.get(Calendar.MINUTE) + " " + dueDate.get(Calendar.AM_PM) + " ");
