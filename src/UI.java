@@ -92,7 +92,7 @@ public class UI extends JFrame implements ActionListener {
 		setResizable(false);
 		setBackground(Color.WHITE);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(1150, 650);
+		setSize(1160, 636);
 		getContentPane().setLayout(null);
 	}
 
@@ -115,7 +115,7 @@ public class UI extends JFrame implements ActionListener {
 		lblCurrentList.setBackground(new Color(192, 80, 77));
 		lblCurrentList.setForeground(new Color(255, 255, 255));
 		lblCurrentList.setFont(new Font("Consolas", Font.PLAIN, 22));
-		lblCurrentList.setBounds(15, 28, 670, 24);
+		lblCurrentList.setBounds(16, 18, 703, 24);
 		getContentPane().add(lblCurrentList);
 	}
 	
@@ -235,7 +235,7 @@ public class UI extends JFrame implements ActionListener {
 		scrollPane2.setOpaque(true);
 		scrollPane2.setBorder(new LineBorder(new Color(252, 213, 181)));
 		scrollPane2.setBackground(new Color(252, 213, 181));
-		scrollPane2.setBounds(15, 59, 670, 543);
+		scrollPane2.setBounds(16, 48, 705, 545);
 		scrollPane2.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		getContentPane().add(scrollPane2);
 	}
@@ -247,7 +247,7 @@ public class UI extends JFrame implements ActionListener {
 		JPanel panel = new JPanel();
 		panel.setBorder(new LineBorder(new Color(192, 80, 77), 2));
 		panel.setBackground(new Color(252, 213, 181));
-		panel.setBounds(10, 20, 680, 591);
+		panel.setBounds(9, 10, 718, 591);
 		getContentPane().add(panel);
 	}
 	
@@ -256,7 +256,7 @@ public class UI extends JFrame implements ActionListener {
 	 */
 	private void setMainOutputField() {
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(700, 21, 434, 505);
+		scrollPane.setBounds(734, 10, 411, 505);
 		getContentPane().add(scrollPane);
 		scrollPane.setBorder(new LineBorder(new Color(139, 0, 139), 2));
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -284,7 +284,7 @@ public class UI extends JFrame implements ActionListener {
 	private void setUserInputField() {
 		textField = new JTextField();
 		textField.setBackground(new Color(240, 240, 240));
-		textField.setBounds(700, 537, 434, 74);
+		textField.setBounds(734, 526, 412, 76);
 		textField.setFont(new Font("Consolas", Font.PLAIN, 13));
 		getContentPane().add(textField);
 		textField.setColumns(10);
@@ -574,15 +574,15 @@ public class UI extends JFrame implements ActionListener {
 	 */
 	private static String help() {
 		return ("\nadd <data>:\t    add a task with related dates,\n\t\t    description, priority etc.\n") +
-				("\t\t    prefix @ indicates venue, prefix #\n\t\t    indicates a hashtag.\n") +
-				("\nremove <number>:    remove the selected task from the\n\t\t    active list.\n") +
-				("\nedit <number>:\t    enters edit mode for selected task.\n") +
+				("\t\t    prefix @ indicates venue, prefix\n\t\t    # indicates a hashtag.\n") +
+				("\nremove <ID>:\t    remove selected task from active\n\t\t    list.\n") +
+				("\nedit <ID>:\t    enters edit mode for selected task.\n") +
 				("\nundo:\t\t    reverses the previous action.\n") +
 				("\ndisplay <keyword>:  generates a list of active tasks\n\t\t    fulfilling the search criteria.\n") +
 				("\ndisplay+ <keyword>: generates a list of archived tasks\n\t\t    fulfilling the search criteria.\n") +
 				("\ndone <number>:\t    marks a task as completed.\n") +
-				("\nclear:\t\t    deletes all active tasks permanently\n\t\t    (use with caution!).\n") +
-				("\nclear+:\t\t    deletes all archived tasks permanently\n\t\t    (use with caution!).\n") +
+				("\nclear:\t\t    deletes all active tasks\n\t\t    permanently (use with caution!).\n") +
+				("\nclear+:\t\t    deletes all archived task\n\t\t    permanently (use with caution!).\n") +
 				("\nquit:\t\t    terminates the program.\n");
 	}
 
