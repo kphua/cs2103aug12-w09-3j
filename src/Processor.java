@@ -272,7 +272,7 @@ public class Processor {
 				continue;
 			}
 			else if(s.startsWith("#")) {
-				newTask.getHashTags().add(s); 	
+				newTask.addHashTag(s); 	
 				continue;
 			}
 			else if(s.equals("HIGH") || s.equals("MED") || s.equals("LOW")){
