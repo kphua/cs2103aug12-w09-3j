@@ -1,4 +1,6 @@
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.Vector;
 import java.util.logging.Logger;
@@ -360,20 +362,43 @@ class Control {
 			if(cmd[0].equals("description")){	
 				if(cmd[1]!=null && cmd[1].length()!=0)
 					editHolder.setDesc(cmd[1]);
+				
 	  		} else if(cmd[0].equals("duedate")){
-				if(processor.isDate(cmd[1])){			//to be amended
-					editHolder.iniDDate();
-					editHolder.setDateCal(cmd[1]);
+				Date date = processor.isDate(cmd[1]);
+				if(date == null) cmd = new String[] {"Error", "Invalid entry for date."};
+				else {
+					Calendar cal = Calendar.getInstance();
+					cal.setTime(date);
+					editHolder.setDueDate(editHolder.mergeCal(editHolder.getDueDate(), cal));
 				}
-				else cmd = new String[] {"Error", "Invalid entry for date."};
+				
+	  		} else if(cmd[0].equals("duetime")){
+				Date date = processor.isTime(cmd[1]);
+				if(date == null) cmd = new String[] {"Error", "Invalid time entry."};
+				else {
+					Calendar cal = Calendar.getInstance();
+					cal.setTime(date);
+					editHolder.setDueDate(editHolder.mergeCal(cal, editHolder.getDueDate()));
+				}
+			
+	  		} else if(cmd[0].equals("startdate")){
+	  			Date date = processor.isDate(cmd[1]);
+				if(date == null) cmd = new String[] {"Error", "Invalid entry for date."};
+				else {
+					Calendar cal = Calendar.getInstance();
+					cal.setTime(date);
+					editHolder.setFrom(editHolder.mergeCal(editHolder.getFrom(), cal));
+				}
+				
 			} else if(cmd[0].equals("starttime")){
-				if(cmd[1].endsWith("am") || cmd[1].endsWith("pm"))
-					editHolder.setStart(cmd[1]);
-				else cmd = new String[] {"Error", "Invalid time entry."};
-			} else if(cmd[0].equals("endtime")){
-				if(cmd[1].endsWith("am") || cmd[1].endsWith("pm"))
-					editHolder.setEnd(cmd[1]);
-				else cmd = new String[] {"Error", "Invalid time entry."};
+				Date date = processor.isTime(cmd[1]);
+				if(date == null) cmd = new String[] {"Error", "Invalid time entry."};
+				else {
+					Calendar cal = Calendar.getInstance();
+					cal.setTime(date);
+					editHolder.setFrom(editHolder.mergeCal(cal, editHolder.getFrom()));
+				}
+				
 			} else if(cmd[0].equals("hash")){
 				if(cmd[1].startsWith("#"))
 					editHolder.setTagDesc(cmd[1]);
@@ -397,7 +422,7 @@ class Control {
 		
 		if(cmd[0].equals("display")){
 			cmd = new String[]{cmd[0], null};
-			cmd[1] = printEntry(editHolder);
+			cmd[1] = editHolder.toString();
 		} else if(cmd[0].equals("help")){
 			return cmd;
 		} else if(cmd[0].equals("end")){
@@ -413,20 +438,5 @@ class Control {
 		return cmd;
 	}
 	
-	private String printEntry(Entry entry) {
-		String lineToPrint = entry.getDesc();
-		if (entry.getStart() != null) 
-			lineToPrint = lineToPrint.concat(" at " + entry.getStart());
-		if (entry.getEnd() != null) 
-			lineToPrint = lineToPrint.concat(" to " + entry.getEnd());
-		if (entry.getDate() != null) 
-			lineToPrint = lineToPrint.concat(" on " + entry.getDate());
-		if (entry.getVenue() != null) 
-			lineToPrint = lineToPrint.concat(" " + entry.getVenue());
-		if (entry.getPriority() != null) 
-			lineToPrint = lineToPrint.concat(" " + entry.getPriority());
-		if (entry.getTagDesc() != null) 
-			lineToPrint = lineToPrint.concat(" " + entry.getTagDesc());
-		return lineToPrint;
-	}
+
 }

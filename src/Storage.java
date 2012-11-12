@@ -316,24 +316,6 @@ class Storage {
 		return temp;
 	}
 
-	/*
-	 * Method to display entries by specified date. Entries will be copied over
-	 * to displayEntries for printing. displayEntries will be initialized each
-	 * time this method is called. User to enter date in the form dd/mm/yyyy.
-	 * ~storage.displayDate(dd/mm/yyyy)
-	 */
-	public Vector<Entry> displayDate(String date) {
-		displayEntries.clear();
-		Entry newEntry = new Entry();
-		newEntry.setDateCal(date);
-		for (Entry entry : activeEntries) {
-			if (entry.getDate().equals(newEntry.getDate())) {
-				displayEntries.add(entry);
-			}
-		}
-		return displayEntries;
-	}
-
 	//CLEAR function
 	//removes all entries from activeEntries
 	public void clearActive(){

@@ -1,9 +1,11 @@
 import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Hashtable;
-import java.util.Locale;
+import java.util.LinkedList;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
@@ -12,6 +14,8 @@ public class Processor {
 	private Hashtable <String, String> reservedWordsConverter;
 	private Hashtable <String, String> reservedWordsConverterEditMode;
 	private Hashtable <String, String> indicativeWordsIdentifier;
+	private SimpleDateFormat[] dateChecks;
+	
 	private static final Logger logger = Logger.getLogger(Control.class.getName());
 
 	private static final String ERROR_MSG_ADD_PROPER_FORM = "Error: add <description> <data>, where description is\nencapsuled by \" \".\n";
@@ -41,9 +45,25 @@ public class Processor {
 		loadFromFile(rwem, reservedWordsConverterEditMode);		
 		loadFromFile(iw, indicativeWordsIdentifier);
 		
+		dateChecks = new SimpleDateFormat[6];
+		loadDateCheck();
+		
 		logger.info("Processor Initialised.");
 	}
 
+
+	private void loadDateCheck() {
+		dateChecks[0] = new SimpleDateFormat("d/M/y h.mma");
+		dateChecks[1] = new SimpleDateFormat("d/M/y");
+		dateChecks[2] = new SimpleDateFormat("d/M");
+		dateChecks[3] = new SimpleDateFormat("d-M-y");
+		dateChecks[4] = new SimpleDateFormat("d.M.y");
+		dateChecks[5] = new SimpleDateFormat("h.mma");
+		dateChecks[6] = new SimpleDateFormat("hha");
+		dateChecks[7] = new SimpleDateFormat("HHmm");
+		dateChecks[8] = new SimpleDateFormat("H.m");
+		dateChecks[9] = new SimpleDateFormat("H:m");
+	}
 
 	//Read in saved entries from a txt file into the program.
 	private void loadFromFile(String from, Hashtable<String,String> to) {	
@@ -228,152 +248,292 @@ public class Processor {
 	 * @return
 	 */
 	private CMD add(String[] temp, COMMAND_TYPE userCMD) {
-//		if(temp.length <= 1 || temp[1].equals("\"") || temp[1].equals("\" ") || temp[1].equals("\" \"") || temp[1].startsWith("\"  ") || !temp[1].startsWith("\"")) 
-//			return new CMD(COMMAND_TYPE.ERROR, ERROR_MSG_ADD_PROPER_FORM);			//add <nothing> or add without " "
-		if(temp.length <= 1 || !temp[1].startsWith("\"")) return new CMD(COMMAND_TYPE.ERROR, ERROR_MSG_ADD_PROPER_FORM);			//add <nothing> or add without " "
+		if(temp.length <= 1 || !temp[1].startsWith("\"")) {
+			return new CMD(COMMAND_TYPE.ERROR, ERROR_MSG_ADD_PROPER_FORM);			//add <nothing> or add without " "
+		}
 
-			String[] arr = temp[1].split("\"", 3); //arr[1] == desc arr[2]==the rest
-			arr[1] = arr[1].trim();
-		if(arr[1].length()<1) return new CMD(COMMAND_TYPE.ERROR, ERROR_MSG_ADD_PROPER_FORM);			//add <nothing> or add without " "
+		String[] arr = temp[1].split("\"", 3); //arr[1] == desc arr[2]==the rest
+		arr[1] = arr[1].trim();
+		
+		if(arr[1].length()<1) {
+			return new CMD(COMMAND_TYPE.ERROR, ERROR_MSG_ADD_PROPER_FORM);			//add <nothing> or add without " "
+		}
 		
 		else {
 			Entry newTask = new Entry();
-			buildEntry(newTask, temp);
+//			buildEntry(newTask, temp);
+			buildEntry(newTask, temp[1]);
 			return new CMD(userCMD, newTask);						//add <long string of data>
 		}
 	}
 
 
-	//INCOMPLETE
-	private void buildEntry(Entry newTask, String[] data) {
-		
-		String input = data[1];
-		String[] desc = input.split("\"");
-		newTask.setDesc(desc[1].trim());  // get the exp in "..."
+//	//INCOMPLETE
+//	private void buildEntry(Entry newTask, String[] data) {
+//		
+//		String input = data[1];
+//		String[] desc = input.split("\"");
+//		newTask.setDesc(desc[1].trim());  // get the exp in "..."
+////		String[] temp2 = null;
+////		if (desc.length > 2) {
+////			desc[2] = desc[2].trim();
+////			temp2 = desc[2].split(" ");
+////			for (int i=0; i<temp2.length; i++) {
+////				if (temp2[i].toLowerCase().contains("am") || temp2[i].toLowerCase().contains("pm")) {
+////					if (newTask.getStart() == null) {
+////						newTask.setStart(temp2[i]);
+////					}
+////					else
+////						newTask.setEnd(temp2[i]);
+////				}
+////				else if (isDate(temp2[i])) {
+////					newTask.iniDDate();
+////					newTask.setDateCal(temp2[i]);
+////				}
+////				else if (temp2[i].startsWith("@")) {
+////					newTask.setVenue(temp2[i]);
+////				}
+////				else if (temp2[i].startsWith("#")) {
+////					newTask.setTagDesc(temp2[i]);
+////				}
+////				else if (temp2[i].equalsIgnoreCase("HIGH") || temp2[i].equalsIgnoreCase("MED") 
+////						|| temp2[i].equalsIgnoreCase("LOW")) {
+////					newTask.setPriority(temp2[i].toUpperCase());
+////				}
+////			}
+////		}
 //		String[] temp2 = null;
 //		if (desc.length > 2) {
 //			desc[2] = desc[2].trim();
 //			temp2 = desc[2].split(" ");
+//			int rep = 0;
 //			for (int i=0; i<temp2.length; i++) {
-//				if (temp2[i].toLowerCase().contains("am") || temp2[i].toLowerCase().contains("pm")) {
-//					if (newTask.getStart() == null) {
-//						newTask.setStart(temp2[i]);
+//				if(indicativeWordsIdentifier.containsKey(temp2[i].toLowerCase())) 
+//					rep = Integer.parseInt((indicativeWordsIdentifier.get(temp2[i])));
+//				else 
+//					rep = 8;
+//				
+//				switch (rep){
+//				// incomplete
+//				case 9: 
+//					if(isDate(temp2[i+1])){
+//						newTask.iniDDate();
+//						newTask.setDateCal(temp2[i+1]);
 //					}
-//					else
-//						newTask.setEnd(temp2[i]);
-//				}
-//				else if (isDate(temp2[i])) {
+//					break;
+//				case 10: break;
+//				
+//				// today
+//				case 11: 						
 //					newTask.iniDDate();
-//					newTask.setDateCal(temp2[i]);
-//				}
-//				else if (temp2[i].startsWith("@")) {
-//					newTask.setVenue(temp2[i]);
-//				}
-//				else if (temp2[i].startsWith("#")) {
-//					newTask.setTagDesc(temp2[i]);
-//				}
-//				else if (temp2[i].equalsIgnoreCase("HIGH") || temp2[i].equalsIgnoreCase("MED") 
+//					newTask.setDateCal(newTask.getDate());
+//					break;
+//				
+//				// tomorrow
+//				case 12: break;
+//				
+//				// all other cases
+//				case 8: 
+//					if (temp2[i].toLowerCase().contains("am") || temp2[i].toLowerCase().contains("pm")) {
+//						if (newTask.getStart() == null) {
+//							newTask.setStart(temp2[i]);
+//						}
+//						else {
+//							newTask.setEnd(temp2[i]);
+//						}
+//					}
+//					else if (temp2[i].startsWith("#")) {
+//						newTask.setTagDesc(temp2[i]);
+//					}
+//					else if (temp2[i].startsWith("@")) {
+//						newTask.setVenue(temp2[i]);
+//					}
+//					else if (temp2[i].equalsIgnoreCase("HIGH") || temp2[i].equalsIgnoreCase("MED") 
 //						|| temp2[i].equalsIgnoreCase("LOW")) {
-//					newTask.setPriority(temp2[i].toUpperCase());
+//						newTask.setPriority(temp2[i].toUpperCase());
+//					}
+//					break;
 //				}
 //			}
 //		}
-		String[] temp2 = null;
-		if (desc.length > 2) {
-			desc[2] = desc[2].trim();
-			temp2 = desc[2].split(" ");
-			int rep = 0;
-			for (int i=0; i<temp2.length; i++) {
-				if(indicativeWordsIdentifier.containsKey(temp2[i].toLowerCase())) 
-					rep = Integer.parseInt((indicativeWordsIdentifier.get(temp2[i])));
-				else 
-					rep = 8;
-				
-				switch (rep){
-				// incomplete
-				case 9: 
-					if(isDate(temp2[i+1])){
-						newTask.iniDDate();
-						newTask.setDateCal(temp2[i+1]);
+//		
+////		LinkedList<String> dataList = new LinkedList<String>();
+////		String description;
+////		int rep;
+////		for(int i=1; i<data.length; i++){
+////			if(indicativeWordsIdentifier.contains(data[i].toLowerCase()))
+////				rep = indicativeWordsIdentifier.get(data[i]);
+////			else rep = 8;
+////			
+////			switch (rep){
+////			case 9: 
+////				if(i+1<data.length){
+////					if(isDate(data[i+1])){
+////						try {
+////							newTask.setDate(new SimpleDateFormat("dd/MM/yyyy", Locale.US).parse(data[i+1]));
+////						} catch (ParseException e) {
+////							e.printStackTrace();
+////						}
+////					} else if(indicativeWordsIdentifier.get(i+1)<8){
+////						Calendar cal = Calendar.getInstance();
+////						int target = indicativeWordsIdentifier.get(i+1);
+////						if(cal.get(cal.DAY_OF_WEEK) < target){
+////							cal.add(cal.DAY_OF_MONTH, target - cal.get(cal.DAY_OF_WEEK));
+////						}
+////						else{
+////							cal.add(cal.DAY_OF_MONTH, 7 - cal.DAY_OF_WEEK + target);
+////						}
+////					}
+////					else if(indicativeWordsIdentifier.get(i+1) == 10 && i+2 < data.length){
+////						/***********************************/
+////					}
+////				}
+////				break;
+////			case 10: break;
+////			case 11: break;
+////			case 8: 
+////				if(data[i].startsWith("#")) newTask.getHashTags().add(data[i]);
+////				if(data[i].startsWith("@")) newTask.setVenue(data[i].substring(1));
+////				break;
+////			}
+////		}
+//	}
+	
+	private void buildEntry(Entry newTask, String data) {
+		LinkedList<String> l = new LinkedList<String> (Arrays.asList(data.split(" ")));
+		LinkedList<String> desc = new LinkedList<String>();
+		Calendar startDate = null, endDate = null, startTime = null, endTime = null;
+		boolean checkTime=true, checkPriority=true, checkVenue=true, checkTag=true;
+		
+		while(!l.isEmpty()){
+			String s = l.pop().trim();
+			if(s.startsWith("@")) {
+				newTask.setVenue(s); 
+				continue;
+			}
+			if(s.startsWith("#")) {
+				newTask.getHashTags().add(s); 	
+				continue;
+			}
+			if(s.equalsIgnoreCase("HIGH") || s.equalsIgnoreCase("MED") || s.equalsIgnoreCase("LOW")){
+				newTask.setPriority(s.toUpperCase());
+			}
+			l.push(s);
+			
+			Date newDate = parseDateTime(newTask, l, desc);
+			
+			if(newDate == null){
+				desc.add(s);
+			} else {
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(newDate);
+				if(cal.get(Calendar.YEAR)==1970) {
+					if(endTime==null) endTime = cal;
+					else if(startTime==null){
+						startTime = cal;
 					}
-					break;
-				case 10: break;
-				
-				// today
-				case 11: 						
-					newTask.iniDDate();
-					newTask.setDateCal(newTask.getDate());
-					break;
-				
-				// tomorrow
-				case 12: break;
-				
-				// all other cases
-				case 8: 
-					if (temp2[i].toLowerCase().contains("am") || temp2[i].toLowerCase().contains("pm")) {
-						if (newTask.getStart() == null) {
-							newTask.setStart(temp2[i]);
-						}
-						else {
-							newTask.setEnd(temp2[i]);
-						}
+				} else {
+					if(endDate==null) endDate = cal;
+					else if(startDate==null){
+						startDate = cal;
 					}
-					else if (temp2[i].startsWith("#")) {
-						newTask.setTagDesc(temp2[i]);
-					}
-					else if (temp2[i].startsWith("@")) {
-						newTask.setVenue(temp2[i]);
-					}
-					else if (temp2[i].equalsIgnoreCase("HIGH") || temp2[i].equalsIgnoreCase("MED") 
-						|| temp2[i].equalsIgnoreCase("LOW")) {
-						newTask.setPriority(temp2[i].toUpperCase());
-					}
-					break;
 				}
 			}
+			
 		}
 		
-//		LinkedList<String> dataList = new LinkedList<String>();
-//		String description;
-//		int rep;
-//		for(int i=1; i<data.length; i++){
-//			if(indicativeWordsIdentifier.contains(data[i].toLowerCase()))
-//				rep = indicativeWordsIdentifier.get(data[i]);
-//			else rep = 8;
-//			
-//			switch (rep){
-//			case 9: 
-//				if(i+1<data.length){
-//					if(isDate(data[i+1])){
-//						try {
-//							newTask.setDate(new SimpleDateFormat("dd/MM/yyyy", Locale.US).parse(data[i+1]));
-//						} catch (ParseException e) {
-//							e.printStackTrace();
-//						}
-//					} else if(indicativeWordsIdentifier.get(i+1)<8){
-//						Calendar cal = Calendar.getInstance();
-//						int target = indicativeWordsIdentifier.get(i+1);
-//						if(cal.get(cal.DAY_OF_WEEK) < target){
-//							cal.add(cal.DAY_OF_MONTH, target - cal.get(cal.DAY_OF_WEEK));
-//						}
-//						else{
-//							cal.add(cal.DAY_OF_MONTH, 7 - cal.DAY_OF_WEEK + target);
-//						}
-//					}
-//					else if(indicativeWordsIdentifier.get(i+1) == 10 && i+2 < data.length){
-//						/***********************************/
-//					}
-//				}
-//				break;
-//			case 10: break;
-//			case 11: break;
-//			case 8: 
-//				if(data[i].startsWith("#")) newTask.getHashTags().add(data[i]);
-//				if(data[i].startsWith("@")) newTask.setVenue(data[i].substring(1));
-//				break;
-//			}
-//		}
+		newTask.setDate(startTime, endTime, startDate, endDate);
+		//merge files in desc
 	}
+
+
+	/**
+	 * @param newTask
+	 * @param l
+	 * Returns a date if string given is either a time or a date
+	 * Returns null otherwise
+	 */
+	private Date parseDateTime(Entry newTask, LinkedList<String> l, LinkedList<String> desc) {
+		if(l.isEmpty()) return null;
+		String s = l.pop().trim();
+		int type = 0;
+		if(indicativeWordsIdentifier.containsKey(s.toLowerCase())){
+			type = Integer.parseInt(indicativeWordsIdentifier.get(s));
+		} else {
+			Date date = isDate(s);
+			if(date==null) date = isTime(s);
+			if(date==null) desc.add(s);
+			return date;
+		}
+		
+		assert (type>0 && type<17 && type!=8);
+		
+		switch(type){
+		case 9:
+			// "by" type words
+			// recursive call handles 3 forms:
+			// 1. by <date> -> returns date with proper date.
+			// 2. by next <date> -> returns date with proper date.
+			// 3. by (next) <non-date element> -> returns null
+			Date date = parseDateTime(newTask, l, desc);			
+			if(date==null){					
+				l.push(s);
+			}	
+			return date;
+		case 10:
+			/* "next" type words
+			*  handles:
+			*  1. next <specific time> -> returns specific date
+			*  2. next <time field> <specific date> -> increments time field of specific date by 1, and return
+			*  3. next <non-time field or specific time element> -> returns null
+			*  
+			*/  
+			
+			int type2 = Integer.parseInt(indicativeWordsIdentifier.get(l.peek()));
+			Date d = parseDateTime(newTask, l, desc);
+			Calendar current = Calendar.getInstance();
+			
+			if(d==null){
+				l.push(s);
+			} else if(type2>0 && type2<8){
+				
+				int day = current.get(Calendar.DAY_OF_WEEK);
+				if(day==type2){
+					current.add(Calendar.DAY_OF_MONTH, 7);
+				} else {
+					current.add(Calendar.DAY_OF_MONTH, 7-day+type2);
+				}
+				d = current.getTime();
+					
+			} else if(type2>12 && type2<17){
+				switch(type2){
+				case 13:
+					current.add(Calendar.DAY_OF_MONTH, 7); break;
+				case 14:
+					current.add(Calendar.MONTH, 7); break;
+				case 15:
+					current.add(Calendar.YEAR, 7); break;
+				case 16:
+					current.add(Calendar.DAY_OF_MONTH, 1); break;
+				}
+				d = current.getTime();
+			}
+			return d;
+		
+		case 12:
+			Calendar cal = Calendar.getInstance();
+			cal.add(Calendar.DAY_OF_MONTH, 1);
+			return cal.getTime();
+			
+		case 13: case 14: case 15: case 16:
+			return parseDateTime(newTask, l, desc);
+			
+		default: //case 1-7, case 11
+			return Calendar.getInstance().getTime();
+		}
+		
+	}
+
 
 
 	//checks if a string can be converted into an integer
@@ -388,25 +548,31 @@ public class Processor {
 		}
 	}
 	
+	
 	//Checks if a given string is a date
-	boolean isDate(String s){
-		String[] strArr = s.split("/");
-		if(strArr.length != 3) return false;
-		boolean dayFalse = Integer.parseInt(strArr[0]) > 31 || Integer.parseInt(strArr[0]) < 1;
-		boolean monthFalse = Integer.parseInt(strArr[1]) > 12 || Integer.parseInt(strArr[1]) < 1;
-		boolean yearFalse = Integer.parseInt(strArr[2]) > 2100 || Integer.parseInt(strArr[2]) < 1900;
+	Date isDate(String s){
 		
-		if(dayFalse || monthFalse || yearFalse) return false;
-		
-		try {
-			@SuppressWarnings("unused")
-			Date date = new SimpleDateFormat("dd/MM/yyyy", Locale.US).parse(s);
-			return true;
-		} catch (ParseException e) {
-			return false;
+		for(int i=0; i<5; i++){
+			try{
+				return dateChecks[i].parse(s);
+			}
+			catch(ParseException e){}
 		}
+		
+		return null;
 	}
 	
+	Date isTime(String s){
+		
+		for(int i=5; i<10; i++){
+			try{
+				return dateChecks[i].parse(s);
+			}
+			catch(ParseException e){}
+		}
+		
+		return null;
+	}
 	
 	private String mergeString(String[] temp, int i, int length) {
 		String mergedString = temp[i];
@@ -460,5 +626,9 @@ public class Processor {
 			return COMMAND_TYPE.REDO;	
 		} else
 			return COMMAND_TYPE.ERROR;
+	}
+	
+	public SimpleDateFormat getDateChecks(){
+		return dateChecks[0];
 	}
 }
