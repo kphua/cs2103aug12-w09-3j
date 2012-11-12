@@ -349,6 +349,7 @@ public class UI extends JFrame implements ActionListener {
 	private boolean editMode;
 
 	/**
+	 * @Author A0081146L
 	 * Activates the following block of code when enter is hit for textField.
 	 * Edit Mode:  
 	 */
@@ -399,6 +400,7 @@ public class UI extends JFrame implements ActionListener {
 	}
 
 	/**
+	 * @Author A0081146L
 	 * Initializes Logger for tracking.
 	 */
 	private void initialiseLogger() {
@@ -418,6 +420,7 @@ public class UI extends JFrame implements ActionListener {
 	}
 
 	/**
+	 * @Author A0081146L
 	 * Process user input
 	 * @param userInput
 	 */
@@ -430,6 +433,7 @@ public class UI extends JFrame implements ActionListener {
 	}
 
 	/**
+	 * @Author A0081146L
 	 * refresh display table according to latest command by user
 	 */
 	private void refreshTable() {
@@ -442,6 +446,7 @@ public class UI extends JFrame implements ActionListener {
 		dm.fireTableDataChanged();
 	}
 
+	//@Author A0081146L
 	private void followUpAction(CMD actionMSG) {
 		switch(actionMSG.getCommandType()){
 		case ADD: 		add(actionMSG); 		break;

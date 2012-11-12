@@ -30,8 +30,8 @@ public class testControl {
 		// run test
 		for (int i=0; i<input.length; i++) {
 			String[] cmd = c.processEditMode(input[i]);
-			actualOutput[i] = cmd.getData.toString();
-			if (cmd.getData() != null) {
+			actualOutput[i] = cmd[i].getData().toString();
+			if (cmd[i].getData() != null) {
 				actualOutput[i] = actualOutput[i] + " " + cmd.getData().toString();
 			}
 			else {

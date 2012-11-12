@@ -26,7 +26,8 @@ public class Processor {
 														"Re-install Program or contact your service provider.\n" +
 														"Program will now terminate.\n" +
 														"Press Enter to continue.\n";
-
+	// @Author A0081146L
+	//Processor constructor
 	//loads reserved words into hashTables
 	protected Processor() {
 		logger.setParent(UI.getLoggingParent());
@@ -51,7 +52,8 @@ public class Processor {
 		logger.info("Processor Initialised.");
 	}
 
-
+	// @Author A0081146L
+	// date and time parser 
 	private void loadDateCheck() {
 		dateChecks[0] = new SimpleDateFormat("d/M/y h.mma");
 		dateChecks[1] = new SimpleDateFormat("d/M/y");
@@ -65,6 +67,7 @@ public class Processor {
 		dateChecks[9] = new SimpleDateFormat("h:m a");
 	}
 
+	// @Author A0081146L
 	//Read in saved entries from a txt file into the program.
 	private void loadFromFile(String from, Hashtable<String,String> to) {	
 		logger.fine("Loading " + from);
@@ -87,7 +90,7 @@ public class Processor {
 		logger.fine("Done.");
 	}
 
-	
+	// @Author A0081146L
 	//Checks if the initial input is valid for normal mode
 	//Checks:
 	//1. if there is no input
@@ -114,7 +117,7 @@ public class Processor {
 	}
 	
 	/**
-	 * 
+	 * @Author A0081146L
 	 * @param userInput
 	 * @return completed CMD
 	 */
@@ -131,6 +134,7 @@ public class Processor {
 
 
 	/**
+	 * @Author A0081146L
 	 * @param inputBreakdown
 	 * @return CMD
 	 */
@@ -166,9 +170,10 @@ public class Processor {
 
 
 	/**
+	 * @Author A0081146L
 	 * @param inputBreakdown
 	 * @param userCMD
-	 * @return
+	 * @return CMD
 	 */
 	private CMD remove(String[] inputBreakdown, COMMAND_TYPE userCMD) {
 		if(inputBreakdown.length==1) {								//remove <nothing>
@@ -185,6 +190,7 @@ public class Processor {
 
 
 	/**
+	 * @Author A0081146L
 	 * @param inputBreakdown
 	 * @param userCMD
 	 * @return
@@ -205,6 +211,7 @@ public class Processor {
 
 
 	/**
+	 * @Author A0081146L
 	 * @param inputBreakdown
 	 * @param userCMD
 	 * @return
@@ -229,6 +236,7 @@ public class Processor {
 
 
 	/**
+	 * @Author A0081146L
 	 * @param inputBreakdown
 	 * @param userCMD
 	 * @return
@@ -243,6 +251,7 @@ public class Processor {
 
 
 	/**
+	 * @Author A0081146L
 	 * @param temp
 	 * @param userCMD
 	 * @return
@@ -259,7 +268,8 @@ public class Processor {
 		}
 	}
 
-	
+	//@Author A0081146L
+	//Runs through userinput and produces the Entry to be entered into activeList
 	private boolean buildEntry(Entry newTask, String data) {
 		LinkedList<String> l = new LinkedList<String> (Arrays.asList(data.split(" ")));
 		LinkedList<String> desc = new LinkedList<String>();
@@ -319,6 +329,7 @@ public class Processor {
 
 
 	/**
+	 * @Author A0081146L
 	 * @param newTask
 	 * @param l
 	 * Returns a date if string given is either a time or a date
@@ -416,7 +427,7 @@ public class Processor {
 	}
 
 
-
+	//@Author A0081146L
 	//checks if a string can be converted into an integer
 	private boolean isInteger(String string) {
 		try{
@@ -429,7 +440,7 @@ public class Processor {
 		}
 	}
 	
-	
+	//@Author A0081146L
 	//Checks if a given string is a date
 	Date isDate(String s){
 		
@@ -455,12 +466,14 @@ public class Processor {
 		return null;
 	}
 	
+	//@Author A0081146L
 	private String mergeString(LinkedList<String> temp) {
 		String mergedString = "";
 		while(!temp.isEmpty()) mergedString = mergedString.concat(temp.pop()+" ");
 		return mergedString;
 	}
 	
+	//@Author A0081146L
 	private String mergeString(String[] temp, int i, int length) {
 		String mergedString = temp[i];
 		for(i+=1; i<length; i++){
@@ -468,6 +481,8 @@ public class Processor {
 		}
 		return mergedString;
 	}
+	
+	//@Author A0081146L
 	//Determines the field to be edited.
 	public String[] determineCmdEditMode(String userInput){
 		String[] data = userInput.split(" ", 2); 
@@ -483,10 +498,13 @@ public class Processor {
 		
 	}
 	
+	//@Author A0081146L
 	enum COMMAND_TYPE {
 		ADD, REMOVE, UNDO, DISPLAY, DISPLAYP, EDIT, QUIT, ERROR, HELP, DONE, CLEAR, CLEARP, REDO
 	};
 
+	
+	//@Author A0081146L
 	private COMMAND_TYPE determineCommandType(String commandString) {
 		if (commandString.equalsIgnoreCase("add")) {
 			return COMMAND_TYPE.ADD;
@@ -516,7 +534,4 @@ public class Processor {
 			return COMMAND_TYPE.ERROR;
 	}
 	
-	public SimpleDateFormat getDateChecks(){
-		return dateChecks[0];
-	}
 }

@@ -36,6 +36,7 @@ class Storage {
 	private static final Logger logger = Logger.getLogger(Control.class.getName());
 
 	//Singleton implementation. Call this to create Storage
+	//@author: 
 	protected static Storage getInstance() {
 		
 		if (storage == null) {
@@ -45,6 +46,7 @@ class Storage {
 	}
 	
 	/*
+	 * @author: Kathy
 	 * Initialise attributes. 
 	 * Checks if activeFile and archiveFile exists.
 	 * Creates them if they do not exist.
@@ -311,11 +313,8 @@ class Storage {
 	 * each time this method is called. Keyword can be description, hashtag
 	 * "#tagname", venue "@location". ~storage.displayKeyword(KEYWORD_TO_FIND)
 	 */
-	public Vector<Entry> displayIndex(int index) {
-		Vector<Entry> temp = new Vector<Entry>();
-		Entry e = displayEntries.get(index); 
-		temp.add(e);
-		return temp;
+	public Entry displayIndex(int index) {
+		return displayEntries.get(index); 
 	}
 
 	//CLEAR function
