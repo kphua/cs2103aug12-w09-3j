@@ -1,6 +1,5 @@
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
@@ -131,6 +130,14 @@ class Entry implements Serializable, Comparable<Entry> {
 	// venue of the event, identified by @location
 	public void setVenue(String venue) {
 		this.venue = venue;
+	}
+	
+	public void addHashTag(String hashtag){
+		hashTags.add(hashtag);
+	}
+	
+	public void rmvHashTag(String hashtag){
+		hashTags.remove(hashtag);
 	}
 
 	public String getPriority() {
@@ -339,7 +346,7 @@ class Entry implements Serializable, Comparable<Entry> {
 		if(st && sd){
 			startFinal = mergeCal(startTime, startDate);
 		} else if(st && !sd){
-			startFinal = mergeCal(startTime, endFinal);
+			startFinal = mergeCal(startTime, (Calendar)endFinal.clone());
 		} else if(!st && sd){
 			startFinal = mergeCal(startTime, startDate);
 		}
