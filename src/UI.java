@@ -499,7 +499,7 @@ public class UI extends JFrame implements ActionListener {
 		if(print.isEmpty()){
 			mainArea.append("\n" +ERROR_MSG_DISPLAY);
 		}
-		mainArea.append("\n" + print.get(0).toString());
+		mainArea.append("\n");
 	}
 	
 	/**
