@@ -55,7 +55,7 @@ public class Processor {
 	private void loadDateCheck() {
 		dateChecks[0] = new SimpleDateFormat("d/M/y h.mma");
 		dateChecks[1] = new SimpleDateFormat("d/M/y");
-		dateChecks[2] = new SimpleDateFormat("d/M");
+		dateChecks[2] = new SimpleDateFormat("dd/MM");
 		dateChecks[3] = new SimpleDateFormat("d-M-y");
 		dateChecks[4] = new SimpleDateFormat("d.M.y");
 		dateChecks[5] = new SimpleDateFormat("h.mma");
@@ -358,6 +358,7 @@ public class Processor {
 			*  3. next <non-time field or specific time element> -> returns null
 			*  
 			*/  
+			
 			
 			int type2 = Integer.parseInt(indicativeWordsIdentifier.get(l.peek()));
 			Date d = parseDateTime(newTask, l, desc);
