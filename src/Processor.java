@@ -60,9 +60,9 @@ public class Processor {
 		dateChecks[4] = new SimpleDateFormat("d.M.y");
 		dateChecks[5] = new SimpleDateFormat("h.mma");
 		dateChecks[6] = new SimpleDateFormat("hha");
-		dateChecks[7] = new SimpleDateFormat("HHmm");
-		dateChecks[8] = new SimpleDateFormat("H.m");
-		dateChecks[9] = new SimpleDateFormat("H:m");
+		dateChecks[7] = new SimpleDateFormat("h-m a");
+		dateChecks[8] = new SimpleDateFormat("h.m a");
+		dateChecks[9] = new SimpleDateFormat("h:m a");
 	}
 
 	//Read in saved entries from a txt file into the program.
@@ -277,6 +277,7 @@ public class Processor {
 			}
 			else if(s.equals("HIGH") || s.equals("MED") || s.equals("LOW")){
 				newTask.setPriority(s);
+				continue;
 			}
 			else l.push(s);
 			
