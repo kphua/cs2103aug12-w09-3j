@@ -45,7 +45,7 @@ public class Processor {
 		loadFromFile(rwem, reservedWordsConverterEditMode);		
 		loadFromFile(iw, indicativeWordsIdentifier);
 		
-		dateChecks = new SimpleDateFormat[6];
+		dateChecks = new SimpleDateFormat[10];
 		loadDateCheck();
 		
 		logger.info("Processor Initialised.");
@@ -248,162 +248,22 @@ public class Processor {
 	 * @return
 	 */
 	private CMD add(String[] temp, COMMAND_TYPE userCMD) {
-		if(temp.length <= 1 || !temp[1].startsWith("\"")) {
-			return new CMD(COMMAND_TYPE.ERROR, ERROR_MSG_ADD_PROPER_FORM);			//add <nothing> or add without " "
-		}
-
-		String[] arr = temp[1].split("\"", 3); //arr[1] == desc arr[2]==the rest
-		arr[1] = arr[1].trim();
-		
-		if(arr[1].length()<1) {
-			return new CMD(COMMAND_TYPE.ERROR, ERROR_MSG_ADD_PROPER_FORM);			//add <nothing> or add without " "
+		if(temp.length <= 1) {
+			return new CMD(COMMAND_TYPE.ERROR, ERROR_MSG_ADD_PROPER_FORM);			//add <nothing>
 		}
 		
 		else {
 			Entry newTask = new Entry();
-//			buildEntry(newTask, temp);
 			buildEntry(newTask, temp[1]);
 			return new CMD(userCMD, newTask);						//add <long string of data>
 		}
 	}
 
-
-//	//INCOMPLETE
-//	private void buildEntry(Entry newTask, String[] data) {
-//		
-//		String input = data[1];
-//		String[] desc = input.split("\"");
-//		newTask.setDesc(desc[1].trim());  // get the exp in "..."
-////		String[] temp2 = null;
-////		if (desc.length > 2) {
-////			desc[2] = desc[2].trim();
-////			temp2 = desc[2].split(" ");
-////			for (int i=0; i<temp2.length; i++) {
-////				if (temp2[i].toLowerCase().contains("am") || temp2[i].toLowerCase().contains("pm")) {
-////					if (newTask.getStart() == null) {
-////						newTask.setStart(temp2[i]);
-////					}
-////					else
-////						newTask.setEnd(temp2[i]);
-////				}
-////				else if (isDate(temp2[i])) {
-////					newTask.iniDDate();
-////					newTask.setDateCal(temp2[i]);
-////				}
-////				else if (temp2[i].startsWith("@")) {
-////					newTask.setVenue(temp2[i]);
-////				}
-////				else if (temp2[i].startsWith("#")) {
-////					newTask.setTagDesc(temp2[i]);
-////				}
-////				else if (temp2[i].equalsIgnoreCase("HIGH") || temp2[i].equalsIgnoreCase("MED") 
-////						|| temp2[i].equalsIgnoreCase("LOW")) {
-////					newTask.setPriority(temp2[i].toUpperCase());
-////				}
-////			}
-////		}
-//		String[] temp2 = null;
-//		if (desc.length > 2) {
-//			desc[2] = desc[2].trim();
-//			temp2 = desc[2].split(" ");
-//			int rep = 0;
-//			for (int i=0; i<temp2.length; i++) {
-//				if(indicativeWordsIdentifier.containsKey(temp2[i].toLowerCase())) 
-//					rep = Integer.parseInt((indicativeWordsIdentifier.get(temp2[i])));
-//				else 
-//					rep = 8;
-//				
-//				switch (rep){
-//				// incomplete
-//				case 9: 
-//					if(isDate(temp2[i+1])){
-//						newTask.iniDDate();
-//						newTask.setDateCal(temp2[i+1]);
-//					}
-//					break;
-//				case 10: break;
-//				
-//				// today
-//				case 11: 						
-//					newTask.iniDDate();
-//					newTask.setDateCal(newTask.getDate());
-//					break;
-//				
-//				// tomorrow
-//				case 12: break;
-//				
-//				// all other cases
-//				case 8: 
-//					if (temp2[i].toLowerCase().contains("am") || temp2[i].toLowerCase().contains("pm")) {
-//						if (newTask.getStart() == null) {
-//							newTask.setStart(temp2[i]);
-//						}
-//						else {
-//							newTask.setEnd(temp2[i]);
-//						}
-//					}
-//					else if (temp2[i].startsWith("#")) {
-//						newTask.setTagDesc(temp2[i]);
-//					}
-//					else if (temp2[i].startsWith("@")) {
-//						newTask.setVenue(temp2[i]);
-//					}
-//					else if (temp2[i].equalsIgnoreCase("HIGH") || temp2[i].equalsIgnoreCase("MED") 
-//						|| temp2[i].equalsIgnoreCase("LOW")) {
-//						newTask.setPriority(temp2[i].toUpperCase());
-//					}
-//					break;
-//				}
-//			}
-//		}
-//		
-////		LinkedList<String> dataList = new LinkedList<String>();
-////		String description;
-////		int rep;
-////		for(int i=1; i<data.length; i++){
-////			if(indicativeWordsIdentifier.contains(data[i].toLowerCase()))
-////				rep = indicativeWordsIdentifier.get(data[i]);
-////			else rep = 8;
-////			
-////			switch (rep){
-////			case 9: 
-////				if(i+1<data.length){
-////					if(isDate(data[i+1])){
-////						try {
-////							newTask.setDate(new SimpleDateFormat("dd/MM/yyyy", Locale.US).parse(data[i+1]));
-////						} catch (ParseException e) {
-////							e.printStackTrace();
-////						}
-////					} else if(indicativeWordsIdentifier.get(i+1)<8){
-////						Calendar cal = Calendar.getInstance();
-////						int target = indicativeWordsIdentifier.get(i+1);
-////						if(cal.get(cal.DAY_OF_WEEK) < target){
-////							cal.add(cal.DAY_OF_MONTH, target - cal.get(cal.DAY_OF_WEEK));
-////						}
-////						else{
-////							cal.add(cal.DAY_OF_MONTH, 7 - cal.DAY_OF_WEEK + target);
-////						}
-////					}
-////					else if(indicativeWordsIdentifier.get(i+1) == 10 && i+2 < data.length){
-////						/***********************************/
-////					}
-////				}
-////				break;
-////			case 10: break;
-////			case 11: break;
-////			case 8: 
-////				if(data[i].startsWith("#")) newTask.getHashTags().add(data[i]);
-////				if(data[i].startsWith("@")) newTask.setVenue(data[i].substring(1));
-////				break;
-////			}
-////		}
-//	}
 	
 	private void buildEntry(Entry newTask, String data) {
 		LinkedList<String> l = new LinkedList<String> (Arrays.asList(data.split(" ")));
 		LinkedList<String> desc = new LinkedList<String>();
 		Calendar startDate = null, endDate = null, startTime = null, endTime = null;
-		boolean checkTime=true, checkPriority=true, checkVenue=true, checkTag=true;
 		
 		while(!l.isEmpty()){
 			String s = l.pop().trim();
@@ -443,7 +303,7 @@ public class Processor {
 		}
 		
 		newTask.setDate(startTime, endTime, startDate, endDate);
-		//merge files in desc
+		newTask.setDesc(mergeString(desc));
 	}
 
 
@@ -462,7 +322,6 @@ public class Processor {
 		} else {
 			Date date = isDate(s);
 			if(date==null) date = isTime(s);
-			if(date==null) desc.add(s);
 			return date;
 		}
 		
@@ -574,6 +433,12 @@ public class Processor {
 		return null;
 	}
 	
+	private String mergeString(LinkedList<String> temp) {
+		String mergedString = "";
+		while(!temp.isEmpty()) mergedString = mergedString.concat(temp.pop()+" ");
+		return mergedString;
+	}
+	
 	private String mergeString(String[] temp, int i, int length) {
 		String mergedString = temp[i];
 		for(i+=1; i<length; i++){
@@ -581,7 +446,6 @@ public class Processor {
 		}
 		return mergedString;
 	}
-	
 	//Determines the field to be edited.
 	public String[] determineCmdEditMode(String userInput){
 		String[] data = userInput.split(" ", 2); 
