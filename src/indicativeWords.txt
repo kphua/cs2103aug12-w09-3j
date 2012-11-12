@@ -38,11 +38,6 @@ year 15
 yr 15
 day 16
 
-at 17
-from 18
-frm 18
-to 19
-
 january 21
 jan 21
 february 22
