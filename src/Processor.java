@@ -271,14 +271,14 @@ public class Processor {
 				newTask.setVenue(s); 
 				continue;
 			}
-			if(s.startsWith("#")) {
+			else if(s.startsWith("#")) {
 				newTask.getHashTags().add(s); 	
 				continue;
 			}
-			if(s.equalsIgnoreCase("HIGH") || s.equalsIgnoreCase("MED") || s.equalsIgnoreCase("LOW")){
-				newTask.setPriority(s.toUpperCase());
+			else if(s.equals("HIGH") || s.equals("MED") || s.equals("LOW")){
+				newTask.setPriority(s);
 			}
-			l.push(s);
+			else l.push(s);
 			
 			Date newDate = parseDateTime(newTask, l, desc);
 			
@@ -303,6 +303,10 @@ public class Processor {
 		}
 		
 		newTask.setDate(startTime, endTime, startDate, endDate);
+		if(desc.isEmpty()) {
+			newTask = null;
+			return;
+		}
 		newTask.setDesc(mergeString(desc));
 	}
 
