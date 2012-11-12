@@ -3,16 +3,13 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 
+/**
+ * @author A0084960X
+ * Unit testing for Processor.java
+ */
 public class testProcessor {
 	
 	Processor p = new Processor();
-
-/*
-	@Test
-	public void testProcessor() {
-		fail("Not yet implemented");
-	}
-*/
 
 	@Test
 	public void testTranslateToCMD() {
@@ -23,13 +20,13 @@ public class testProcessor {
 		
 		input[0] = "  ";		// returns ERROR & Invalid Input.
 		input[1] = "testing"; 	// returns ERROR & Invalid Input.
-		// returns ADD & Test for add 1am 2pm 1/1/2012
-		input[2] = "add \"Test for add\" 1am 2pm 1/1/2012";
+		// returns ADD & Test for add 25/12/2012
+		input[2] = "add Test for add 12pm 25/12/2012";
 		input[3] = "clear";		// returns CLEAR & null
 		input[4] = "done";		// returns ERROR & Invalid Input.
 		input[5] = "done 2";	// returns DONE & 2
 		input[6] = "display";	// returns DISPLAY & null
-		input[7] = "display 3";	// returns DISPLAY & 3
+		input[7] = "display HIGH";	// returns DISPLAY & HIGH
 		input[8] = "display testing display";	// returns DISPLAY & testing display
 		input[9] = "display #hash";	// returns DISPLAY & #hash
 		input[10] = "edit";	// returns EDIT & null
@@ -45,12 +42,12 @@ public class testProcessor {
 		// set expectedOutput results
 		expectedOutput[0] = "ERROR Invalid Input. Input should follow a \"<command> <data>\"\nformat.\n";
 		expectedOutput[1] = "ERROR Invalid Input. Input should follow a \"<command> <data>\"\nformat.\n";
-		expectedOutput[2] = "ADD Test for add from 1am to 2pm on 1/1/2012 ";
+		expectedOutput[2] = "ADD Test for add  25/12/2012 12.00PM ";
 		expectedOutput[3] = "CLEAR null";
 		expectedOutput[4] = "ERROR Invalid Input. Input should follow a \"<command> <data>\"\nformat.\n";
 		expectedOutput[5] = "DONE 2";
 		expectedOutput[6] = "DISPLAY null";
-		expectedOutput[7] = "DISPLAY 3";
+		expectedOutput[7] = "DISPLAY HIGH";
 		expectedOutput[8] = "DISPLAY testing display";
 		expectedOutput[9] = "DISPLAY #hash";
 		expectedOutput[10] = "ERROR Error: Type \"edit\" with a valid index.\n";
@@ -68,7 +65,7 @@ public class testProcessor {
 			CMD userCMD = p.translateToCMD(input[i]);
 			actualOutput[i] = userCMD.getCommandType().toString();
 			if (userCMD.getData() != null) {
-				actualOutput[i] = actualOutput[i] + " " + userCMD.getData().toString();
+				actualOutput[i] = actualOutput[i] + " " + userCMD.getData();
 			}
 			else {
 				actualOutput[i] = actualOutput[i] + " null";
@@ -93,33 +90,33 @@ public class testProcessor {
 		}
 		
 		// set test cases
-		input[0] = "1/12/12/12";// false - strArr != 3
-		input[1] = "32/10/2012";// false - day is more than 31
-		input[2] = "0/10/2012";	// false - day is less than 1
-		input[3] = "1/13/2012";	// false - month is more than 12
-		input[4] = "1/12/2222";	// false - year exceeds limit
-		input[5] = "28/02/12";	// false - not a valid format
-		input[6] = "12122012";	// false - not a valid format
-		input[7] = "12May2012";	// false - not a valid format
+		input[0] = "12May2012";	// false - not a valid format
+		input[1] = "12 10 12";// false - not a valid format
+		input[2] = "12122012";// false - not a valid format
+		input[3] = "0/10/2012";	// true - will re-calculate to 30 sep
+		input[4] = "1/12/12/12";// true - will take in first 3 fields only
+		input[5] = "1-13-2012";	// true - valid date
+		input[6] = "14.10.12";	// true - valid date
+		input[7] = "28/02/12";	// true - valid date
 		input[8] = "24/01/1999";// true - valid date
 		input[9] = "28/10/2012";// true - valid date
 		
 		// set expectedOutput results
-		// expectedOutput[8] and [9] will be true
-		for (int i=0; i<8; i++) {
+		// expectedOutput[0], [1] and [2] will be false
+		for (int i=0; i<3; i++) {
 			expectedOutput[i] = "false";
 		}
 		
 		// run test
 		for (int i=0; i<input.length; i++) {
-			if (p.isDate(input[i])) {
+			if (p.isDate(input[i]) != null) {
 				actualOutput[i] = "true";
 			}
 			else {
 				actualOutput[i] = "false";
 			}
 		}
-
+		
 		assertArrayEquals(expectedOutput, actualOutput);	
 	}
 
@@ -148,7 +145,7 @@ public class testProcessor {
 		for (int i=0; i<5; i++) {
 			expectedOutput[i] = "error";
 		}
-		expectedOutput[5] = "endtime";
+		expectedOutput[5] = "duetime";
 		expectedOutput[6] = "end";
 		expectedOutput[7] = "hash";
 		expectedOutput[8] = "display";
