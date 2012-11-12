@@ -288,6 +288,12 @@ class Entry implements Serializable, Comparable<Entry> {
 			return;
 		}
 		
+		if(startFinal.after(endFinal)){
+			Calendar temp = endFinal;
+			endFinal = startFinal;
+			startFinal = temp;
+		}
+		
 		dueDate = endFinal;
 		from = startFinal;
 		
