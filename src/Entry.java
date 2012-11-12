@@ -58,7 +58,7 @@ class Entry implements Serializable, Comparable<Entry> {
 	}
 
 	/**
-	 * @return 
+	 * @Author A0081146L 
 	 * 
 	 */
 	private String assignID() {
@@ -72,6 +72,7 @@ class Entry implements Serializable, Comparable<Entry> {
 		return year.concat(month+day+hr+min+sec);
 	}
 
+	//@Author A0081146L
 	//clone constructor
 	public Entry(Entry copy){
 		ID = copy.ID;
@@ -105,6 +106,7 @@ class Entry implements Serializable, Comparable<Entry> {
 		this.description = desc;
 	}
 
+	//@Author A0081146L
 	public String getDate() {
 		int day, month, year;
 		if(dueDate != null){
@@ -158,9 +160,6 @@ class Entry implements Serializable, Comparable<Entry> {
 		this.completeStatus = completeStatus;
 	}
 
-
-
-
 	// for printing of entries
 	public String toString() {
 		String converted;
@@ -183,6 +182,7 @@ class Entry implements Serializable, Comparable<Entry> {
 		return s;
 	}
 
+	//@Author A0081146L
 	public String getFromString(){
 		if(from==null) return "-";
 //		String converted = "";
@@ -192,6 +192,8 @@ class Entry implements Serializable, Comparable<Entry> {
 		SimpleDateFormat sdf = new SimpleDateFormat("d/M/y h.mma");
 		return sdf.format(from.getTime());
 	}
+	
+	//@Author A0081146L
 	public String getToString(){
 		if(dueDate==null) return "-";
 //		String converted = "";
@@ -202,7 +204,7 @@ class Entry implements Serializable, Comparable<Entry> {
 		return sdf.format(dueDate.getTime());
 	}
 	
-
+	//@Author A0081146L
 	@Override
 	public int compareTo(Entry entry) {
 		
@@ -323,6 +325,7 @@ class Entry implements Serializable, Comparable<Entry> {
 
 	}
 
+	//@Author A0081146L
 	public void setDate(Calendar startTime, Calendar endTime,
 			Calendar startDate, Calendar endDate) {
 		boolean st = startTime != null;
@@ -389,7 +392,7 @@ class Entry implements Serializable, Comparable<Entry> {
 		
 	}
 	
-	
+	//@Author A0081146L
 	//will only receive 2 types of input:
 	// null, date or time, date
 	
