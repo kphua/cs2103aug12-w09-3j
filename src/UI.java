@@ -130,6 +130,7 @@ public class UI extends JFrame implements ActionListener {
 	}
 
 	/**
+	 * @A0086103N
 	 * Set table headings for individual columns
 	 */
 	private void setTableHeading() {
@@ -160,6 +161,7 @@ public class UI extends JFrame implements ActionListener {
 	}
 	
 	/**
+	 * @A0086103N
 	 * Sets the overall format of the table
 	 */
 	private void setTableFormat() {
@@ -176,6 +178,7 @@ public class UI extends JFrame implements ActionListener {
 	}
 
 	/**
+	 * @A0086103N
 	 * Sets design of the table (alternate row colour, text alignment)
 	 * @return renderer
 	 */
@@ -221,6 +224,7 @@ public class UI extends JFrame implements ActionListener {
 	}
 
 	/**
+	 * @A0086103N
 	 * Sets table column width
 	 */
 	private void setTableColSize() {
@@ -233,6 +237,7 @@ public class UI extends JFrame implements ActionListener {
 	}
 	
 	/**
+	 * @A0086103N
 	 * Create scrollbar for table
 	 */
 	private void setTableScroll() {
@@ -270,10 +275,6 @@ public class UI extends JFrame implements ActionListener {
 		mainArea = new JTextArea();
 		printWelcomeMSG();
 		scrollPane.setViewportView(mainArea);
-//		scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {  
-//			public void adjustmentValueChanged(AdjustmentEvent e) {  
-//			e.getAdjustable().setValue(e.getAdjustable().getMaximum());  
-//			}});
 		
 		mainArea.setEditable(false);
 		mainArea.setFont(new Font("Consolas", Font.PLAIN, 13));
