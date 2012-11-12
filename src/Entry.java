@@ -3,6 +3,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedList;
 
 // Events to be printed in the following order
 // desc | start time | end time | date | venue | priority | tagDesc
@@ -19,9 +20,9 @@ class Entry implements Serializable, Comparable<Entry> {
 	private String ID;
 	private String description;
 	private String priority;
-	private ArrayList <String> hashTags;
+	private LinkedList <String> hashTags;
 	private String venue;
-	private String tagDesc;
+//	private String tagDesc;
 
 	public String getDescription() {
 		return description;
@@ -54,6 +55,7 @@ class Entry implements Serializable, Comparable<Entry> {
 	// constructor
 	public Entry() {
 		ID = assignID();
+		hashTags = new LinkedList<String>();
 	}
 
 	/**
@@ -163,11 +165,19 @@ class Entry implements Serializable, Comparable<Entry> {
 		if(dueDate != null) converted = converted.concat(dueDate.get(Calendar.HOUR_OF_DAY)+"."+ dueDate.get(Calendar.MINUTE) + " " + dueDate.get(Calendar.AM_PM) + " ");
 		if(venue != null) converted = converted.concat(venue + " ");
 		if(priority != null) converted = converted.concat(priority + " "); 
-		if(tagDesc != null) converted = converted.concat(tagDesc);
+		if(!hashTags.isEmpty()) converted = converted.concat(getHTags());
 
 		return converted;
 	}
 	
+	private String getHTags() {
+		String s = "";
+		while(!hashTags.isEmpty()){
+			s = s.concat(hashTags.pop()+" ");
+		}
+		return s;
+	}
+
 	public String getFromString(){
 		if(from==null) return "-";
 //		String converted = "";
@@ -190,34 +200,94 @@ class Entry implements Serializable, Comparable<Entry> {
 
 	@Override
 	public int compareTo(Entry entry) {
-
-		int i;
+		
+		int i=0;
 
 		if(ID == entry.getID()) return 0;
 
-		if(dueDate == null || entry.dueDate == null || dueDate.equals(entry.dueDate)){
+		if(dueDate == null || entry.dueDate == null){
 
 			if(dueDate!=null && entry.dueDate == null) return 1;
 			if(dueDate==null && entry.dueDate != null) return -1;
 
-			if(priority == null || entry.priority == null || priority.equals(entry.priority)){
-				if(priority!=null && entry.priority == null) return -1;
-				if(priority==null && entry.priority != null) return 1;
-				if(description.equals(entry.description)){
-					return 0;
+			if(from == null || entry.from == null){
+				
+				if(from!=null && entry.from == null) return 1;
+				if(from==null && entry.from != null) return -1;
+				
+				if(priority == null || entry.priority == null || priority.equals(entry.priority)){
+					
+					if(priority!=null && entry.priority == null) return -1;
+					if(priority==null && entry.priority != null) return 1;
+					
+					if(description.equals(entry.description)){
+						return 0;
+					}
+					else{
+						i = description.compareTo(entry.description);
+					}
 				}
 				else{
-					i = description.compareTo(entry.description);
+					if(priority.equals("high")) return 1;
+					if(priority.equals("low")) return -1;
+					if(entry.priority.equals("high")) return -1;
+					else return 1;
+				}
+			} else {
+				if(from.compareTo(entry.from)==0){
+					if(priority == null || entry.priority == null || priority.equals(entry.priority)){
+						
+						if(priority!=null && entry.priority == null) return -1;
+						if(priority==null && entry.priority != null) return 1;
+						
+						if(description.equals(entry.description)){
+							return 0;
+						}
+						else{
+							i = description.compareTo(entry.description);
+						}
+					}
+					else{
+						if(priority.equals("high")) return 1;
+						if(priority.equals("low")) return -1;
+						if(entry.priority.equals("high")) return -1;
+						else return 1;
+					}
+				}
+				else {
+					return from.compareTo(entry.from);
 				}
 			}
-			else{
-				if(priority.equals("high")) return 1;
-				if(priority.equals("low")) return -1;
-				if(entry.priority.equals("high")) return -1;
-				else return 1;
+		} else{ 
+			
+			if(dueDate.compareTo(entry.dueDate)==0){
+				if(from.compareTo(entry.from)==0){
+					if(priority == null || entry.priority == null || priority.equals(entry.priority)){
+						
+						if(priority!=null && entry.priority == null) return -1;
+						if(priority==null && entry.priority != null) return 1;
+						
+						if(description.equals(entry.description)){
+							return 0;
+						}
+						else{
+							i = description.compareTo(entry.description);
+						}
+					}
+					else{
+						if(priority.equals("high")) return 1;
+						if(priority.equals("low")) return -1;
+						if(entry.priority.equals("high")) return -1;
+						else return 1;
+					}
+				}
+				else{
+					return from.compareTo(entry.from);
+				}
+			} else{
+				return dueDate.compareTo(entry.dueDate);
 			}
-		} else i = dueDate.compareTo(entry.dueDate);
-
+		}
 		return i;
 
 
@@ -320,20 +390,12 @@ class Entry implements Serializable, Comparable<Entry> {
 		dueDate.setTime(date);
 	}
 
-	public ArrayList<String> getHashTags() {
+	public LinkedList<String> getHashTags() {
 		return hashTags;
 	}
 
-	public void setHashTags(ArrayList<String> hashTags) {
+	public void setHashTags(LinkedList<String> hashTags) {
 		this.hashTags = hashTags;
-	}
-
-	public String getTagDesc() {
-		return tagDesc;
-	}
-
-	public void setTagDesc(String tagDesc) {
-		this.tagDesc = tagDesc;
 	}
 
 	public String getID(){

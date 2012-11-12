@@ -418,7 +418,7 @@ class Control {
 				
 			} else if(cmd[0].equals("hash")){
 				if(cmd[1].startsWith("#"))
-					editHolder.setTagDesc(cmd[1]);
+					editHolder.getHashTags().add(cmd[1]);
 				else cmd = new String[] {"Error", "Not a hashtag"};
 			} else if(cmd[0].equals("priority")){
 				boolean restrictedWords = cmd[1].equalsIgnoreCase("high") || 

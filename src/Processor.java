@@ -56,8 +56,8 @@ public class Processor {
 		dateChecks[0] = new SimpleDateFormat("d/M/y h.mma");
 		dateChecks[1] = new SimpleDateFormat("d/M/y");
 		dateChecks[2] = new SimpleDateFormat("dd/MM");
-		dateChecks[3] = new SimpleDateFormat("d-M-y");
-		dateChecks[4] = new SimpleDateFormat("d.M.y");
+		dateChecks[3] = new SimpleDateFormat("dd-MM-yyyy");
+		dateChecks[4] = new SimpleDateFormat("dd.MM.yyyy");
 		dateChecks[5] = new SimpleDateFormat("h.mma");
 		dateChecks[6] = new SimpleDateFormat("hha");
 		dateChecks[7] = new SimpleDateFormat("h-m a");
