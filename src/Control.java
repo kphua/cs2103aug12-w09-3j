@@ -59,6 +59,7 @@ class Control {
 		case ADD:			return add(command);
 		case REMOVE:		return remove(command);
 		case CLEAR:			return clear(command);
+		case CLEARP:		return clearP(command);
 		case UNDO:			return undo(command);
 		case REDO:			return redo(command);			
 		case DISPLAY:		return display(command, false);
@@ -161,6 +162,18 @@ class Control {
 		undo.push(command);
 		storage.clearActive();
 		storage.save(true, false);
+		return command;
+	}
+	
+	/**
+	 * @param command
+	 * @return
+	 */
+	private CMD clearP(CMD command) {
+		command.setData(storage.getArchiveEntries().clone());
+		undo.push(command);
+		storage.clearArchive();
+		storage.save(true, true);
 		return command;
 	}
 
@@ -273,6 +286,10 @@ class Control {
 			break;
 		case CLEAR: 
 			storage.setActiveEntries((Vector<Entry>) action.getData());
+			storage.display(false);
+			break;
+		case CLEARP: 
+			storage.setArchiveEntries((Vector<Entry>) action.getData());
 			storage.display(false);
 			break;
 		case EDIT: 

@@ -42,6 +42,9 @@ class CMD {
 		case CLEAR:
 			strVer = "clear";
 			break;
+		case CLEARP:
+			strVer = "clear+";
+			break;
 		case UNDO:
 			strVer = "undo";
 			break;
