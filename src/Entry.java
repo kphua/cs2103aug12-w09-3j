@@ -164,12 +164,10 @@ class Entry implements Serializable, Comparable<Entry> {
 	// for printing of entries
 	public String toString() {
 		String converted;
-
+		SimpleDateFormat sdf = new SimpleDateFormat("d/M/y h.mma");
 		converted = description + " "; 
-		if(from!=null) converted = converted.concat("from " + from.get(Calendar.DATE)+"/"+from.get(Calendar.MONTH)+"/"+from.get(Calendar.YEAR)+ " ");
-		if(from!=null) converted = converted.concat(from.get(Calendar.HOUR_OF_DAY)+"."+ from.get(Calendar.MINUTE) + " " + from.get(Calendar.AM_PM) + " ");
-		if(dueDate != null) converted = converted.concat("to " + getDate() + " "); 
-		if(dueDate != null) converted = converted.concat(dueDate.get(Calendar.HOUR_OF_DAY)+"."+ dueDate.get(Calendar.MINUTE) + " " + dueDate.get(Calendar.AM_PM) + " ");
+		if(from!=null) converted = converted.concat(sdf.format(from.getTime())+ " ");
+		if(dueDate != null) converted = converted.concat(sdf.format(dueDate.getTime()) + " "); 
 		if(venue != null) converted = converted.concat(venue + " ");
 		if(priority != null) converted = converted.concat(priority + " "); 
 		if(!hashTags.isEmpty()) converted = converted.concat(getHTags());
@@ -268,7 +266,11 @@ class Entry implements Serializable, Comparable<Entry> {
 		} else{ 
 			
 			if(dueDate.compareTo(entry.dueDate)==0){
-				if(from.compareTo(entry.from)==0){
+				if(from == null || entry.from == null){
+					
+					if(from!=null && entry.from == null) return 1;
+					if(from==null && entry.from != null) return -1;
+					
 					if(priority == null || entry.priority == null || priority.equals(entry.priority)){
 						
 						if(priority!=null && entry.priority == null) return -1;
@@ -287,11 +289,31 @@ class Entry implements Serializable, Comparable<Entry> {
 						if(entry.priority.equals("high")) return -1;
 						else return 1;
 					}
+				} else {
+					if(from.compareTo(entry.from)==0){
+						if(priority == null || entry.priority == null || priority.equals(entry.priority)){
+							
+							if(priority!=null && entry.priority == null) return -1;
+							if(priority==null && entry.priority != null) return 1;
+							
+							if(description.equals(entry.description)){
+								return 0;
+							}
+							else{
+								i = description.compareTo(entry.description);
+							}
+						}
+						else{
+							if(priority.equals("high")) return 1;
+							if(priority.equals("low")) return -1;
+							if(entry.priority.equals("high")) return -1;
+							else return 1;
+						}
+					}
+					else {
+						return from.compareTo(entry.from);
+					}
 				}
-				else{
-					return from.compareTo(entry.from);
-				}
-			} else{
 				return dueDate.compareTo(entry.dueDate);
 			}
 		}
