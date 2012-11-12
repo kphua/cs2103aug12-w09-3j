@@ -220,7 +220,7 @@ public class Processor {
 			} else {
 				if(isInteger(inputBreakdown[1])){						//display <number>
 					Integer i = Integer.parseInt(inputBreakdown[1]);
-					return new CMD(userCMD, i);
+					return new CMD(userCMD, --i);
 				}
 				return new CMD(userCMD, inputBreakdown[1]);			//display <hash/search criteria>
 			}
