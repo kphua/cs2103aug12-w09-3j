@@ -157,7 +157,7 @@ public class Processor {
 			return edit(inputBreakdown, userCMD);
 		case REMOVE: 
 			return remove(inputBreakdown, userCMD);
-		case CLEAR:	case QUIT: case HELP: case UNDO: case REDO: 
+		case CLEAR:	case CLEARP: case QUIT: case HELP: case UNDO: case REDO: 
 			return new CMD(userCMD, null);
 		default:
 			return new CMD(userCMD, ERROR_MSG_INVALID_INPUT);
@@ -598,7 +598,7 @@ public class Processor {
 	}
 	
 	enum COMMAND_TYPE {
-		ADD, REMOVE, UNDO, DISPLAY, DISPLAYP, EDIT, QUIT, ERROR, HELP, DONE, CLEAR, REDO
+		ADD, REMOVE, UNDO, DISPLAY, DISPLAYP, EDIT, QUIT, ERROR, HELP, DONE, CLEAR, CLEARP, REDO
 	};
 
 	private COMMAND_TYPE determineCommandType(String commandString) {
@@ -622,6 +622,8 @@ public class Processor {
 			return COMMAND_TYPE.DONE;
 		} else if (commandString.equalsIgnoreCase("clear")) {
 			return COMMAND_TYPE.CLEAR;
+		} else if (commandString.equalsIgnoreCase("clear+")) {
+			return COMMAND_TYPE.CLEARP;
 		} else if (commandString.equalsIgnoreCase("redo")) {
 			return COMMAND_TYPE.REDO;	
 		} else
