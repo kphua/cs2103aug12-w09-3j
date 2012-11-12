@@ -23,11 +23,34 @@ class Entry implements Serializable, Comparable<Entry> {
 	private String priority;
 	private ArrayList <String> hashTags;
 	private String venue;
-	//	String date;w
 	private String tagDesc;
-	private String startTime, endTime;
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public Calendar getDueDate() {
+		return dueDate;
+	}
+
+	public void setDueDate(Calendar dueDate) {
+		this.dueDate = dueDate;
+	}
+
+	public Calendar getFrom() {
+		return from;
+	}
+
+	public void setFrom(Calendar from) {
+		this.from = from;
+	}
+
 	private int completeStatus;
-	private Calendar dueDate;
+	private Calendar dueDate, from;
 
 
 	// constructor
@@ -58,8 +81,7 @@ class Entry implements Serializable, Comparable<Entry> {
 		hashTags = copy.hashTags;
 		venue = copy.venue;
 		dueDate = copy.dueDate;
-		startTime = copy.startTime;
-		endTime = copy.endTime;
+		from = copy.from;
 		completeStatus = copy.completeStatus;
 	}
 
@@ -84,24 +106,6 @@ class Entry implements Serializable, Comparable<Entry> {
 		this.description = desc;
 	}
 
-	public String getStart() {
-		return startTime;
-	}
-
-	// start time (displayed in 12h format)
-	public void setStart(String start) {
-		this.startTime = start;
-	}
-
-	public String getEnd() {
-		return endTime;
-	}
-
-	// end time (displayed in 12h format)
-	public void setEnd(String end) {
-		this.endTime = end;
-	}
-
 	public String getDate() {
 		int day, month, year;
 		if(dueDate != null){
@@ -119,35 +123,6 @@ class Entry implements Serializable, Comparable<Entry> {
 		}
 	}
 
-	// date displayed as e.g. Mon, Dec 14, 2012
-	//	public void setDate(String _date) {
-	//
-	//		String[] dateArr = _date.split("/");
-	//		
-	//		int month = Integer.parseInt(dateArr[1]);
-	//	    int day = Integer.parseInt(dateArr[0]);
-	//	    int year = Integer.parseInt(dateArr[2]);
-	//
-	//		Calendar cal = Calendar.getInstance();
-	//		cal.set(year, month - 1, day);
-	//		Date date = cal.getTime();
-	//		// Transformation of the date
-	//		SimpleDateFormat sdf = new SimpleDateFormat("EEE, MMM dd, yyyy");
-	//		this.date = sdf.format(date);
-	//
-	//	}
-
-	//setDate for calendar
-	public void setDateCal(String newdate){
-
-		Date date = null;
-		try {
-			date = new SimpleDateFormat("dd/MM/yyyy", Locale.US).parse(newdate);
-		} catch (ParseException e) {}
-
-		dueDate.setTime(date);
-
-	}
 
 	public String getVenue() {
 		return venue;
@@ -184,15 +159,32 @@ class Entry implements Serializable, Comparable<Entry> {
 		String converted;
 
 		converted = description + " "; 
-		if(startTime!=null) converted = converted.concat("from " + startTime + " ");
-		if(endTime != null) converted = converted.concat("to " + endTime + " ");
-		if(dueDate != null) converted = converted.concat("on " + getDate() + " ");
+		if(from!=null) converted = converted.concat("from " + from.get(Calendar.DATE)+"/"+from.get(Calendar.MONTH)+"/"+from.get(Calendar.YEAR)+ " ");
+		if(from!=null) converted = converted.concat(from.get(Calendar.HOUR_OF_DAY)+"."+ from.get(Calendar.MINUTE) + " " + from.get(Calendar.AM_PM) + " ");
+		if(dueDate != null) converted = converted.concat("to " + getDate() + " "); 
+		if(dueDate != null) converted = converted.concat(dueDate.get(Calendar.HOUR_OF_DAY)+"."+ dueDate.get(Calendar.MINUTE) + " " + dueDate.get(Calendar.AM_PM) + " ");
 		if(venue != null) converted = converted.concat(venue + " ");
 		if(priority != null) converted = converted.concat(priority + " "); 
 		if(tagDesc != null) converted = converted.concat(tagDesc);
 
 		return converted;
 	}
+	
+	public String getFromString(){
+		if(from==null) return "-";
+		String converted = "";
+		converted = converted.concat("from " + from.get(Calendar.DATE)+"/"+from.get(Calendar.MONTH)+"/"+from.get(Calendar.YEAR)+ " ");
+		converted = converted.concat(from.get(Calendar.HOUR_OF_DAY)+"."+ from.get(Calendar.MINUTE) + " " + from.get(Calendar.AM_PM) + " ");
+		return converted;
+	}
+	public String getToString(){
+		if(from==null) return "-";
+		String converted = "";
+		if(dueDate != null) converted = converted.concat("to " + getDate() + " "); 
+		if(dueDate != null) converted = converted.concat(dueDate.get(Calendar.HOUR_OF_DAY)+"."+ dueDate.get(Calendar.MINUTE) + " " + dueDate.get(Calendar.AM_PM) + " ");
+		return converted;
+	}
+	
 
 	@Override
 	public int compareTo(Entry entry) {
@@ -230,6 +222,104 @@ class Entry implements Serializable, Comparable<Entry> {
 
 	}
 
+	public void setDate(Calendar startTime, Calendar endTime,
+			Calendar startDate, Calendar endDate) {
+		boolean st = startTime != null;
+		boolean et = endTime != null;
+		boolean sd = startDate != null;
+		boolean ed = endDate != null;
+		Calendar endFinal, startFinal;
+		
+		if(!(st && sd && et && ed)){
+			dueDate = null;
+			from = null;
+			return;
+		}
+		
+		if(ed && sd && endDate.after(startDate)) {
+			endFinal = endDate;
+			endDate = startDate;
+			startDate = endFinal;
+			endFinal = endTime;
+			endTime = startTime;
+			startTime = endFinal;
+			endFinal = null;
+		}
+		
+		if(et){
+			if(ed){
+				endFinal = mergeCal(endTime, endDate);
+			}
+			else{
+				endFinal = mergeCal(endTime, Calendar.getInstance());
+			}
+		} else {
+			if(ed){
+				endFinal = mergeCal(endTime, endDate);
+			}
+			else{
+				endFinal = null;
+			}
+		}
+		
+		if(st){
+			if(sd){
+				startFinal = mergeCal(startTime, startDate);
+			}
+			else{
+				startFinal = mergeCal(startTime, Calendar.getInstance());
+			}
+		} else {
+			if(sd){
+				startFinal = mergeCal(startTime, startDate);
+			}
+			else{
+				startFinal = null;
+			}
+		}
+		
+		if(endFinal==null && startFinal!=null){
+			endFinal = startFinal;
+			startFinal = null;
+			return;
+		}
+		
+		dueDate = endFinal;
+		from = startFinal;
+		
+		
+	}
+	
+	public Calendar mergeCal(Calendar time, Calendar date) {
+		if(time==null && date==null) return null;
+		if(date==null){
+			date = Calendar.getInstance();
+			time.set(Calendar.YEAR, date.get(Calendar.YEAR));
+			time.set(Calendar.MONTH, date.get(Calendar.MONTH));
+			time.set(Calendar.DATE, date.get(Calendar.DATE));
+			time.set(Calendar.AM_PM, date.get(Calendar.AM_PM));
+			if(time.after(date)) {
+				date.add(Calendar.DATE, 1);
+			}
+		}
+		
+		if(date.get(Calendar.YEAR)<2000) date.add(Calendar.YEAR, 2000);
+		
+		if(time==null) {
+			date.set(Calendar.HOUR, 0);
+			date.set(Calendar.MINUTE, 0);
+			date.set(Calendar.SECOND, 0);
+		}
+		else{
+			date.set(Calendar.HOUR, time.get(Calendar.HOUR));
+			date.set(Calendar.MINUTE, time.get(Calendar.MINUTE));
+			date.set(Calendar.SECOND, time.get(Calendar.SECOND));
+			date.set(Calendar.AM_PM, time.get(Calendar.AM_PM));
+		}
+		
+		return date;
+	}
+
 	public void setDate(Date date) {
 		dueDate.setTime(date);
 	}
@@ -253,4 +343,6 @@ class Entry implements Serializable, Comparable<Entry> {
 	public String getID(){
 		return ID;
 	}
+
+
 }
