@@ -4,8 +4,6 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.AdjustmentEvent;
-import java.awt.event.AdjustmentListener;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Vector;
@@ -44,13 +42,15 @@ public class UI extends JFrame implements ActionListener {
 	private String userInput;
 
 	/**
+	 * @Author A084644Y
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {	
 
 		Runnable run = new Runnable(){
 			public void run() {
-				try {
+				try {	
+					UIManager.setLookAndFeel("com.jtattoo.plaf.hifi.HiFiLookAndFeel");
 					UI frame = new UI();
 					frame.setVisible(true);
 					frame.textField.requestFocus();
@@ -114,7 +114,7 @@ public class UI extends JFrame implements ActionListener {
 		lblCurrentList.setOpaque(true);
 		lblCurrentList.setBackground(new Color(192, 80, 77));
 		lblCurrentList.setForeground(new Color(255, 255, 255));
-		lblCurrentList.setFont(new Font("Consolas", Font.PLAIN, 22));
+		lblCurrentList.setFont(new Font("Century Gothic", Font.PLAIN, 22));
 		lblCurrentList.setBounds(16, 18, 703, 24);
 		getContentPane().add(lblCurrentList);
 	}
@@ -145,7 +145,7 @@ public class UI extends JFrame implements ActionListener {
 
 		table = new JTable(data, columnNames);
 		table.getTableHeader().setFont(new Font("Consolas", Font.BOLD, 13));
-		table.getTableHeader().setBackground(new Color(75, 172, 198));
+		table.getTableHeader().setBackground(new Color(24, 26, 28));
 		table.getTableHeader().setForeground(new Color(255, 255, 255));
 	}
 	
@@ -171,6 +171,7 @@ public class UI extends JFrame implements ActionListener {
 		table.setShowHorizontalLines(false);
 		table.setEnabled(false);
 		table.setFont(new Font("Consolas", Font.PLAIN, 13));
+		//table.textShadow = false;
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 	}
 
@@ -188,7 +189,7 @@ public class UI extends JFrame implements ActionListener {
 					int row, int column) {
 				setTextAlignment(column);
 				label.setOpaque(true);
-				label.setFont(new Font("Consolas", Font.PLAIN, 13));
+				label.setFont(new Font("Century Gothic", Font.PLAIN, 13));
 				if (value != null) {
 					label.setText("" + value);
 				} else {
@@ -197,8 +198,10 @@ public class UI extends JFrame implements ActionListener {
 				Color alternate = UIManager.getColor("table.alternateRowColor");
 				if (row % 2 == 1) {
 					label.setBackground(alternate);
+					label.setForeground(alternate);
 				} else {
-					label.setBackground(new Color(198, 217, 241));
+					label.setBackground(new Color(220, 220, 220));
+					label.setForeground(new Color(97, 20, 3));
 				}
 				return label;
 			}
@@ -211,6 +214,8 @@ public class UI extends JFrame implements ActionListener {
 					label.setHorizontalAlignment(SwingConstants.LEFT);
 				}
 			}
+		
+			
 		};
 		return renderer;
 	}
@@ -233,8 +238,8 @@ public class UI extends JFrame implements ActionListener {
 	private void setTableScroll() {
 		JScrollPane scrollPane2 = new JScrollPane(table);
 		scrollPane2.setOpaque(true);
-		scrollPane2.setBorder(new LineBorder(new Color(252, 213, 181)));
-		scrollPane2.setBackground(new Color(252, 213, 181));
+		scrollPane2.setBorder(new LineBorder(new Color(4, 5, 6)));
+		scrollPane2.setBackground(new Color(24, 26, 28));
 		scrollPane2.setBounds(16, 48, 705, 545);
 		scrollPane2.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		getContentPane().add(scrollPane2);
@@ -246,7 +251,7 @@ public class UI extends JFrame implements ActionListener {
 	private void setMainDisplayBorder() {
 		JPanel panel = new JPanel();
 		panel.setBorder(new LineBorder(new Color(192, 80, 77), 2));
-		panel.setBackground(new Color(252, 213, 181));
+		panel.setBackground(new Color(4, 5, 6));
 		panel.setBounds(9, 10, 718, 591);
 		getContentPane().add(panel);
 	}
@@ -257,21 +262,18 @@ public class UI extends JFrame implements ActionListener {
 	private void setMainOutputField() {
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(734, 10, 411, 505);
+		scrollPane.setAutoscrolls(true);
 		getContentPane().add(scrollPane);
-		scrollPane.setBorder(new LineBorder(new Color(139, 0, 139), 2));
+		scrollPane.setBorder(new LineBorder(new Color(192, 80, 77), 2));
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		
 		mainArea = new JTextArea();
 		printWelcomeMSG();
 		scrollPane.setViewportView(mainArea);
-		scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {  
-			public void adjustmentValueChanged(AdjustmentEvent e) {  
-			e.getAdjustable().setValue(e.getAdjustable().getMaximum());  
-			}});
 		
 		mainArea.setEditable(false);
 		mainArea.setFont(new Font("Consolas", Font.PLAIN, 13));
-		mainArea.setBackground(new Color(204, 193, 218));
+		mainArea.setBackground(new Color(48, 48, 48));
 		mainArea.setWrapStyleWord(true);
 		mainArea.setLineWrap(true);
 
@@ -283,12 +285,12 @@ public class UI extends JFrame implements ActionListener {
 	 */
 	private void setUserInputField() {
 		textField = new JTextField();
-		textField.setBackground(new Color(240, 240, 240));
+		textField.setBackground(new Color(48, 48, 48));
 		textField.setBounds(734, 526, 412, 76);
 		textField.setFont(new Font("Consolas", Font.PLAIN, 13));
 		getContentPane().add(textField);
 		textField.setColumns(10);
-		textField.setBorder(new TitledBorder(new LineBorder(new Color(192, 192, 192), 3), "Enter input:", TitledBorder.LEADING, TitledBorder.TOP, new Font("Consolas", Font.PLAIN, 12), new Color(102, 102, 102)));
+		textField.setBorder(new TitledBorder(new LineBorder(new Color(192, 80, 77), 3), "Enter input:", TitledBorder.LEADING, TitledBorder.TOP, new Font("Consolas", Font.PLAIN, 12), new Color(105, 105, 105)));
 		textField.addActionListener(new inputListener());
 	}
 	
