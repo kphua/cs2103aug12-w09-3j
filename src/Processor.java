@@ -18,7 +18,7 @@ public class Processor {
 	
 	private static final Logger logger = Logger.getLogger(Control.class.getName());
 
-	private static final String ERROR_MSG_ADD_PROPER_FORM = "Error: add <description> <data>, where description is\nencapsuled by \" \".\n";
+	private static final String ERROR_MSG_ADD_PROPER_FORM = "Error: add <description> <data>.\n";
 	private static final String ERROR_MSG_EDIT_INVALID_INDEX = "Error: Type \"edit\" with a valid index.\n";
 	private static final String ERROR_MSG_RMV_INVALID_INPUT = "Invalid input. Input for remove should follow \"<command>\n<index>\".\n";
 	private static final String ERROR_MSG_INVALID_INPUT = "Invalid Input. Input should follow a \"<command> <data>\"\nformat.\n";
@@ -55,7 +55,7 @@ public class Processor {
 	private void loadDateCheck() {
 		dateChecks[0] = new SimpleDateFormat("d/M/y h.mma");
 		dateChecks[1] = new SimpleDateFormat("d/M/y");
-		dateChecks[2] = new SimpleDateFormat("d/M");
+		dateChecks[2] = new SimpleDateFormat("dd/MM");
 		dateChecks[3] = new SimpleDateFormat("d-M-y");
 		dateChecks[4] = new SimpleDateFormat("d.M.y");
 		dateChecks[5] = new SimpleDateFormat("h.mma");
@@ -254,13 +254,13 @@ public class Processor {
 		
 		else {
 			Entry newTask = new Entry();
-			buildEntry(newTask, temp[1]);
-			return new CMD(userCMD, newTask);						//add <long string of data>
+			if(buildEntry(newTask, temp[1])) return new CMD(userCMD, newTask);						//add <long string of data>
+			else return new CMD(COMMAND_TYPE.ERROR, "This entry needs a description.");
 		}
 	}
 
 	
-	private void buildEntry(Entry newTask, String data) {
+	private boolean buildEntry(Entry newTask, String data) {
 		LinkedList<String> l = new LinkedList<String> (Arrays.asList(data.split(" ")));
 		LinkedList<String> desc = new LinkedList<String>();
 		Calendar startDate = null, endDate = null, startTime = null, endTime = null;
@@ -303,12 +303,18 @@ public class Processor {
 			
 		}
 		
-		newTask.setDate(startTime, endTime, startDate, endDate);
+		
 		if(desc.isEmpty()) {
 			newTask = null;
-			return;
+			return false;
 		}
+		
+//		System.out.println(new SimpleDateFormat("d/M/y h.mma").format(startTime.getTime()));
+//		System.out.println(new SimpleDateFormat("d/M/y h.mma").format(endTime.getTime()));
+		
+		newTask.setDate(startTime, endTime, startDate, endDate);
 		newTask.setDesc(mergeString(desc));
+		return true;
 	}
 
 
@@ -353,6 +359,7 @@ public class Processor {
 			*  
 			*/  
 			
+			
 			int type2 = Integer.parseInt(indicativeWordsIdentifier.get(l.peek()));
 			Date d = parseDateTime(newTask, l, desc);
 			Calendar current = Calendar.getInstance();
@@ -365,7 +372,7 @@ public class Processor {
 				if(day==type2){
 					current.add(Calendar.DAY_OF_MONTH, 7);
 				} else {
-					current.add(Calendar.DAY_OF_MONTH, 7-day+type2);
+					while(current.get(Calendar.DATE)!=day) current.add(Calendar.DATE, 1);
 				}
 				d = current.getTime();
 			
@@ -375,7 +382,7 @@ public class Processor {
 				if(month==type2){
 					current.add(Calendar.MONTH, 12);
 				} else {
-					current.add(Calendar.DAY_OF_MONTH, 12-month+type2);
+					while(current.get(Calendar.MONTH)!=month) current.add(Calendar.MONTH, 1);
 				}
 				d = current.getTime();
 				
@@ -384,9 +391,9 @@ public class Processor {
 				case 13:
 					current.add(Calendar.DAY_OF_MONTH, 7); break;
 				case 14:
-					current.add(Calendar.MONTH, 7); break;
+					current.add(Calendar.MONTH, 1); break;
 				case 15:
-					current.add(Calendar.YEAR, 7); break;
+					current.add(Calendar.YEAR, 1); break;
 				case 16:
 					current.add(Calendar.DAY_OF_MONTH, 1); break;
 				}

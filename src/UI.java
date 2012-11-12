@@ -270,6 +270,10 @@ public class UI extends JFrame implements ActionListener {
 		mainArea = new JTextArea();
 		printWelcomeMSG();
 		scrollPane.setViewportView(mainArea);
+//		scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {  
+//			public void adjustmentValueChanged(AdjustmentEvent e) {  
+//			e.getAdjustable().setValue(e.getAdjustable().getMaximum());  
+//			}});
 		
 		mainArea.setEditable(false);
 		mainArea.setFont(new Font("Consolas", Font.PLAIN, 13));
