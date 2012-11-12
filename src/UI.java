@@ -306,8 +306,8 @@ public class UI extends JFrame implements ActionListener {
 			Vector<String> v = out.get(i);
 			v.add(i+1+"");
 			v.add(e.getDesc());
-			v.add(e.getStart());
-			v.add(e.getEnd());
+			v.add(e.getFromString());
+			v.add(e.getToString());
 			v.add(e.getDate());
 			v.add(e.getPriority());
 			i++;
