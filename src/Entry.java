@@ -230,7 +230,7 @@ class Entry implements Serializable, Comparable<Entry> {
 		boolean ed = endDate != null;
 		Calendar endFinal, startFinal;
 		
-		if(!(st && sd && et && ed)){
+		if(!(st || sd || et || ed)){
 			dueDate = null;
 			from = null;
 			return;

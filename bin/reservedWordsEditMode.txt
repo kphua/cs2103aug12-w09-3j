@@ -3,6 +3,9 @@ desc description
 duedate duedate
 ddate duedate
 dd duedate
+duetime duetime
+dtime duetime
+dt duetime
 display display
 disp display
 d display
@@ -12,10 +15,12 @@ pri priority
 p priority
 hash hash
 # hash
+startdate startdate
+sd startdate
 starttime starttime
 st starttime
-endtime endtime
-et endtime
+endtime duetime
+et duetime
 venue venue
 v venue
 help help
