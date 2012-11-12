@@ -38,8 +38,26 @@ year 15
 yr 15
 day 16
 
-at 17
-from 18
-frm 18
-to 19
-
+january 21
+jan 21
+february 22
+feb 22
+march 23
+mar 23
+april 24
+apr 24
+may 25
+june 26
+jun 26
+july 27
+jul 27
+august 28
+aug 28
+september 29
+sept 29
+october 30
+oct 30
+november 31
+nov 31
+december 32
+dec 32
