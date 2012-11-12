@@ -138,7 +138,7 @@ public class UI extends JFrame implements ActionListener {
 		columnNames.add("Task");
 		columnNames.add("Start Time");
 		columnNames.add("End Time");
-		columnNames.add("Due Date");
+		columnNames.add("Venue");
 		columnNames.add("Priority");
 
 		Vector<Vector<String>> data = getDataToDisplay();
@@ -225,11 +225,11 @@ public class UI extends JFrame implements ActionListener {
 	 */
 	private void setTableColSize() {
 		table.getColumnModel().getColumn(0).setPreferredWidth(20);
-		table.getColumnModel().getColumn(1).setPreferredWidth(290);
-		table.getColumnModel().getColumn(2).setPreferredWidth(80);
-		table.getColumnModel().getColumn(3).setPreferredWidth(80);
-		table.getColumnModel().getColumn(4).setPreferredWidth(90);
-		table.getColumnModel().getColumn(5).setPreferredWidth(89);
+		table.getColumnModel().getColumn(1).setPreferredWidth(240);
+		table.getColumnModel().getColumn(2).setPreferredWidth(130);
+		table.getColumnModel().getColumn(3).setPreferredWidth(130);
+		table.getColumnModel().getColumn(4).setPreferredWidth(110);
+		table.getColumnModel().getColumn(5).setPreferredWidth(55);
 	}
 	
 	/**
@@ -314,7 +314,7 @@ public class UI extends JFrame implements ActionListener {
 			v.add(e.getDesc());
 			v.add(e.getFromString());
 			v.add(e.getToString());
-			v.add(e.getDate());
+			v.add(e.getVenue());
 			v.add(e.getPriority());
 			i++;
 		}
