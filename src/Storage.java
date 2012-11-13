@@ -35,8 +35,11 @@ class Storage {
 	private BufferedWriter bw;
 	private static final Logger logger = Logger.getLogger(Control.class.getName());
 
-	//Singleton implementation. Call this to create Storage
-	//@author: 
+	/**
+	 * Singleton implementation. Call this to create Storage
+	 * @author A0084960X
+	 * @return storage
+	 */
 	protected static Storage getInstance() {
 		
 		if (storage == null) {
@@ -46,7 +49,7 @@ class Storage {
 	}
 	
 	/*
-	 * @author: Kathy
+	 * @author: A0084960X
 	 * Initialise attributes. 
 	 * Checks if activeFile and archiveFile exists.
 	 * Creates them if they do not exist.
