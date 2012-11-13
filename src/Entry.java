@@ -176,8 +176,8 @@ class Entry implements Serializable, Comparable<Entry> {
 	
 	private String getHTags() {
 		String s = "";
-		while(!hashTags.isEmpty()){
-			s = s.concat(hashTags.pop()+" ");
+		for(String h : hashTags){
+			s = s.concat(h+" ");
 		}
 		return s;
 	}
