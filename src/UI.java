@@ -486,8 +486,8 @@ public class UI extends JFrame implements ActionListener {
 		mainArea.append("\n" +"Entry: ");
 		mainArea.append(control.processEditMode("display")[1]);
 
-		mainArea.append("\n" +"Enter the field you wish to modify, and the new data to \nreplace with.");
-		mainArea.append("\n" +"Type \"end\" to exit edit mode and \"help\" for futher \nassistance.\n");
+		mainArea.append("\n" +"Enter the field you wish to modify, and the new data to replace with.");
+		mainArea.append("\n" +"Type \"end\" to exit edit mode and \"help\" for futher assistance.\n");
 	}
 	
 	/**
@@ -605,10 +605,11 @@ public class UI extends JFrame implements ActionListener {
 	private static String helpEditMode() {
 		return ("\nEnter a field followed by the new data it should be replaced with.\n") +
 				("desc:\t  edit description\n") +
-				("ddate:\t  edit due date\n") +
 				("display:  shows all details of the selected task\n") +
 				("priority: edit priority\n") +
 				("hash #:\t  edit hash tags\n") +
+				("sd:\t  edit start date\n") +
+				("dd:\t  edit end date\n") +
 				("st:\t  edit start time\n") +
 				("et:\t  edit end time\n") +
 				("venue @:  edit venue");

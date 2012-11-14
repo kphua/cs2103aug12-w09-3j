@@ -114,12 +114,12 @@ class Control {
 			return command;
 		}
 		
-		if((int)command.getData() > storage.getActiveEntries().size() || (int)command.getData()<1) {	
+		if((int)command.getData() > storage.getDisplayEntries().size() || (int)command.getData()<1) {	
 			command.setCommandType(Processor.COMMAND_TYPE.ERROR);
 			command.setData(ERROR_MSG_INVALID_INDEX);
 		}
 		else{
-			editHolder = storage.getActiveEntries().get((int)command.getData()-1);
+			editHolder = storage.getDisplayEntries().get((int)command.getData()-1);
 			command.setData(null);
 		}
 		
@@ -395,7 +395,8 @@ class Control {
 				else {
 					Calendar cal = Calendar.getInstance();
 					cal.setTime(date);
-					editHolder.setDueDate(editHolder.mergeCal(cal, editHolder.getDueDate()));
+					if(editHolder.getDueDate()==null) editHolder.setDueDate(editHolder.mergeCal(cal, Calendar.getInstance()));
+					else editHolder.setDueDate(editHolder.mergeCal(cal, editHolder.getDueDate()));
 				}
 			
 	  		} else if(cmd[0].equals("startdate")){
@@ -404,6 +405,9 @@ class Control {
 				else {
 					Calendar cal = Calendar.getInstance();
 					cal.setTime(date);
+					if(editHolder.getDueDate()==null) {
+						editHolder.setDueDate(editHolder.mergeCal(editHolder.getDueDate(), (Calendar)cal.clone())); 
+					}
 					editHolder.setFrom(editHolder.mergeCal(editHolder.getFrom(), cal));
 				}
 				
@@ -413,7 +417,14 @@ class Control {
 				else {
 					Calendar cal = Calendar.getInstance();
 					cal.setTime(date);
-					editHolder.setFrom(editHolder.mergeCal(cal, editHolder.getFrom()));
+					if(editHolder.getFrom()==null) editHolder.setFrom(editHolder.mergeCal(cal, Calendar.getInstance()));
+					else editHolder.setFrom(editHolder.mergeCal(cal, editHolder.getFrom()));
+					
+					if(editHolder.getDueDate()==null) {
+						cal = (Calendar) cal.clone();
+						cal.add(Calendar.HOUR, 1);
+						editHolder.setDueDate(editHolder.mergeCal(cal, Calendar.getInstance()));  
+					}
 				}
 				
 			} else if(cmd[0].equals("hash")){
